@@ -31,10 +31,9 @@ export const Button = styled.button`
   height: 100%;
   background-color: #FFC86A;
   color: black;
+  font-family: 'OurFont1';
+  font-weight: bold;
   font-size: 1.3vw;
-  font: David Libre;
-  font weight:Bold;
-  /*font-family: 'OurFont1';*/
   cursor: pointer;
   border: none;
 `;
