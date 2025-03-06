@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const PageHeader = styled.header`
   width: 100%;
-  background-color: #FAE0B4;
+  background-color: #FFC86A;
   display: flex; /* Flexbox 활성화 */
   justify-content: center; /* 가로 정렬: 중앙 */
   align-items: center; /* 세로 정렬: 중앙 */
@@ -19,7 +19,7 @@ export const Nav = styled.nav`
 `;
 
 export const NavRight = styled.nav`
-  width: 95%;
+  width: 96%;
   display: flex; /* Flexbox 활성화 */
   justify-content: flex-end; /* 우측 정렬 */
   align-items: center; /* 세로 방향으로 중앙 정렬 */
@@ -29,7 +29,7 @@ export const Button = styled.button`
   padding: 20px;
   width: 100%;
   height: 100%;
-  background-color: #FAE0B4;
+  background-color: #FFC86A;
   color: black;
   font-size: 1.3vw;
   font: David Libre;
@@ -47,8 +47,8 @@ export const ImageButton1 = styled.button`
   margin-top:2px; 
 
   img {
-    width: 60px; /* 버튼의 크기에 맞게 이미지 크기 설정 */
-    height: 50px; /* 비율에 맞게 높이 자동 조정 */
+    width: 95px; /* 버튼의 크기에 맞게 이미지 크기 설정 */
+    height: 55px; /* 비율에 맞게 높이 자동 조정 */
     
   }
 `;
