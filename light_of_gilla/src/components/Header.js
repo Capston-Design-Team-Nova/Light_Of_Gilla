@@ -1,31 +1,45 @@
-import { PageHeader, Nav, NavRight, Button, ImageButton1, ImageButton2  } from '../styles/HeaderStyles';
-import { Link } from 'react-router-dom';
+import { useState } from "react";
+import {
+  PageHeader,
+  Nav,
+  NavRight,
+  Button,
+  ImageButton1,
+  ImageButton2,
+} from "../styles/HeaderStyles";
+import { Link } from "react-router-dom";
+import LoginModal from "../pages/LoginPage/LoginModal";
 
 function Header() {
+  const [isModalOpen, setIsModalOpen] = useState(false); // 로그인 모달 상태 관리
+
   return (
-    <PageHeader>
-      <Nav>
-        {/* 버튼 클릭시 url 이 /~~ 으로 변경됨. 이후 이 url 변경을 Router.js 모듈의 BrowserRouter 컴포넌트가 감지하여 url에 따른 컴포넌트를 화면에 렌더링시켜줌*/}
-        <Link to="/">
-          <ImageButton1> {/* 버튼을 이미지 버튼으로 대체 */}
-            <img src={require('../assets/images/길라로고3.png')} alt=" " />
-          </ImageButton1>
-        </Link>
-        <NavRight>
-        <Link to="/HospitalMap">
-          <Button>병원&약국 찾기</Button>
-        </Link>
-        <Link to="/Community">
-          <Button>Q&A</Button>
-        </Link>
-        <Link to="/Login">
-          <ImageButton2>
-            <img src={require('../assets/images/login2.png')} alt=" " />
-          </ImageButton2>
-        </Link>        
-        </NavRight>
-      </Nav>
-    </PageHeader>
+    <>
+      <PageHeader>
+        <Nav>
+          <Link to="/">
+            <ImageButton1>
+              <img src={require("../assets/images/길라로고3.png")} alt=" " />
+            </ImageButton1>
+          </Link>
+          <NavRight>
+            <Link to="/HospitalMap">
+              <Button>병원&약국 찾기</Button>
+            </Link>
+            <Link to="/Community">
+              <Button>Q&A</Button>
+            </Link>
+            {/* 로그인 버튼 클릭 시 로그인 모달 열기 */}
+            <ImageButton2 onClick={() => setIsModalOpen(true)}>
+              <img src={require("../assets/images/login2.png")} alt=" " />
+            </ImageButton2>
+          </NavRight>
+        </Nav>
+      </PageHeader>
+
+      {/* 모달 렌더링 (isModalOpen이 true일 때만 보이게) */}
+      {isModalOpen && <LoginModal onClose={() => setIsModalOpen(false)} />}
+    </>
   );
 }
 
