@@ -1,14 +1,14 @@
-package com.example.test1;
+package com.example.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
-public class Test1Application {
+public class GatewayApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Test1Application.class, args);
+		SpringApplication.run(GatewayApplication.class, args);
 	}
 
 }
