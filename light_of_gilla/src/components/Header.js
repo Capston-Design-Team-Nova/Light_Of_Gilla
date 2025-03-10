@@ -8,7 +8,7 @@ import {
   ImageButton2,
 } from "../styles/HeaderStyles";
 import { Link } from "react-router-dom";
-import LoginModal from "../pages/LoginPage/LoginModal";
+import LoginModal from "../pages/LoginModal";
 
 function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false); // 로그인 모달 상태 관리

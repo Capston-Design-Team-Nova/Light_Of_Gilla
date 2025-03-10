@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainScreen from '../pages/MainScreen';
 import HospitalMap from '../pages/HospitalMap';
 import Community from '../pages/Community';
-import Login from '../pages/LoginPage/LoginModal';
+import Login from '../pages/LoginModal';
 
 
 
