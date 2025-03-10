@@ -1,25 +1,15 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Router from './routes/Router';
 
-function App() {
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      {/* Router 컴포넌트를 호출하여 라우팅 기능을 포함시킴. 
+      따라서 사용자가 애플리케이션 내에서 경로를 탐색할 때, Router에 정의된 대로 적절한 컴포넌트가 화면에 표시됨*/}
+      <Router />
+    </>
   );
-}
+};
 
 export default App;
