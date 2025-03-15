@@ -1,0 +1,45 @@
+package com.example.Community.Entity;
+
+import com.example.Community.CategoryId;
+import com.example.Community.Dto.PostDTO;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Getter
+@Setter
+@Table(name="Posts")
+public class PostEntity extends BaseEntity{
+    @EmbeddedId
+    private CategoryId id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", referencedColumnName = "category_id", insertable = false, updatable = false)
+    private CategoryEntity category;  // 외래키 관계
+
+    @Column
+    private String title;
+
+    @Column
+    private String content;
+
+    @Column
+    private String user_id;
+
+    @OneToMany(mappedBy="postEntity",cascade = CascadeType.REMOVE,orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<CommentEntity> commentEntityList=new ArrayList<>();
+
+    public static PostEntity toSaveEntity(PostDTO postDTO){
+      PostEntity postEntity = new PostEntity();
+      CategoryId categoryId = new CategoryId(postDTO.getCategory_Id(), postDTO.getPost_Id());
+      postEntity.setId(categoryId);
+      postEntity.setTitle(postDTO.getTitle());
+      postEntity.setContent(postDTO.getContent());
+      postEntity.setUser_id(postDTO.getUser_id());
+      return postEntity;
+    }
+
+}
