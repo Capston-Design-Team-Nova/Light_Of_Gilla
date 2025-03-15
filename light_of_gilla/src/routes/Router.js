@@ -2,9 +2,9 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainScreen from '../pages/MainScreen';
 import HospitalMap from '../pages/HospitalMap';
-import Community from '../pages/Community';
+import Community from '../pages/CommunityPage/Community';
 import Login from '../pages/LoginPage/LoginModal';
-
+import Write from '../pages/CommunityPage/CommunityWS';
 
 
 
@@ -35,7 +35,7 @@ function Router() {
                     <Route path="/HospitalMap" element={<HospitalMap />} />
                     <Route path="/Community" element={<Community />} />
                     <Route path="/Login" element={<Login />} />
-                    
+                    <Route path="/Write" element={<Write />}/>
 
                 </Routes>
             
