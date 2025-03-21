@@ -1,7 +1,8 @@
 import React,{useState} from 'react';
 import Header from '../../components/Header';
-import { Main, Center, Content } from '../../styles/CommunityStyles';
-import { Button, TitleInput, ContentTextArea } from '../../styles/CommunityStyles';
+import { Main, Center, Content, Button, TitleInput, ContentTextArea, LowRow } from '../../styles/CommunityStyles';
+import { Link } from "react-router-dom";
+import CustomSelect from './CustomSelect';
 
 function CommunityWS() {
     const [title, setTitle] = useState('');
@@ -28,8 +29,14 @@ function CommunityWS() {
                         placeholder="내용을 입력하세요"
                         value={content}
                         onChange={(e) => setContent(e.target.value)}/>
+                    <LowRow>
+                        <CustomSelect />
+                        {/*<CustomSelect />, CustomSelect 에서 선택한거 보내는 코드 작성*/}
+                        <Link to="/Community">
+                        <Button onClick={handleSubmit}>올리기</Button>
+                        </Link>
+                    </LowRow>    
                     
-                    <Button onClick={handleSubmit}>올리기</Button>
                 </Content>
                 
             </Center>

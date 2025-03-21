@@ -5,6 +5,9 @@ import HospitalMap from '../pages/HospitalMap';
 import Community from '../pages/CommunityPage/Community';
 import Login from '../pages/LoginPage/LoginModal';
 import Write from '../pages/CommunityPage/CommunityWS';
+import MyArticles from '../pages/CommunityPage/MyArticles';
+import MyComments from '../pages/CommunityPage/MyComments';
+import MyLikes from '../pages/CommunityPage/MyLikes';
 
 
 
@@ -36,6 +39,9 @@ function Router() {
                     <Route path="/Community" element={<Community />} />
                     <Route path="/Login" element={<Login />} />
                     <Route path="/Write" element={<Write />}/>
+                    <Route path="/MyArticles" element={<MyArticles />}/>
+                    <Route path="/MyComments" element={<MyComments />}/>
+                    <Route path="/MyLikes" element={<MyLikes />}/>
 
                 </Routes>
             

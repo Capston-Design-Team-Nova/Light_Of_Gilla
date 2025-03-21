@@ -1,8 +1,14 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { Main, Center, P, FeaturesSection, Feature, FeaturesContainer, Footer } from '../styles/MainScreenStyles';
 import Header from '../components/Header';
 
 function MainScreen() {
+    useEffect(() => {
+        document.body.className = 'body-MainScreen';
+        return () => {
+            document.body.className = '';
+        };
+    }, []);
 
     return (
         <Main>
