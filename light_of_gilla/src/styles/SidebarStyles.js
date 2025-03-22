@@ -23,6 +23,7 @@ export const SidebarButton = styled.button`
     color: black;
     background-color: #FAF2E8;
     font-family: Ourfont4;
+    font-weight: bold;
     font-size: 16px;
     cursor: pointer;
     border: none;

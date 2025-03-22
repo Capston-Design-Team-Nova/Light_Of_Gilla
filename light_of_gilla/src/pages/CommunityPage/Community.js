@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import CustomSelect from './CustomSelect';
 import CommunityList from './CommunityList';
 import Sidebar from '../../components/Sidebar';
+//import Searchbar from '../../components/Searchbar';
 
 function Community() {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -19,12 +20,11 @@ function Community() {
         <Main>
             <Header />
             {/* Sidebar */}
-            <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-            
-
-            <Center>    
+            <Center>
+                <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />    
                 <TopRow>
                     <Button onClick={toggleSidebar}>Toggle Sidebar</Button>
+                    
                     <CustomSelect />
                     <Link to="/Write">
                     <Button>글쓰기</Button>

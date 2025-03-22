@@ -21,7 +21,7 @@ function MainScreen() {
                 <FeaturesContainer>
                 <Feature>
                     <h3>기능 1</h3>
-                    <P>이곳에서 첫 번째 기능을 설명합니다.</P>
+                    <p>이곳에서 첫 번째 기능을 설명합니다.</p>
                 </Feature>
                 <Feature>
                     <h3>기능 2</h3>

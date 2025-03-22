@@ -41,7 +41,7 @@ export const Content = styled.div`
 export const Button = styled.button`
   padding: 2px;
   width: 50px;
-  height: 20px;
+  height: 25px;
   background-color: #F8C743;
   color: white;
   font-family: 'OurFont1';
@@ -56,7 +56,7 @@ export const TitleInput = styled.input`
   padding: 10px;
   font-size: 11px;
   margin-bottom: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid #00000059;
   border-radius: 5px;
 `;
 
@@ -66,7 +66,7 @@ export const ContentTextArea = styled.textarea`
   padding: 10px;
   font-size: 16px;
   margin-bottom: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #00000059;
   border-radius: 5px;
   resize: none;
 `;

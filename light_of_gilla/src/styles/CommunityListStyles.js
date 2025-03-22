@@ -6,6 +6,12 @@ export const ListContainer = styled.div`
   margin-left: 3px;
   margin-right: 3px;
   min-height: 500px;
+  display: flex;
+  width: 90%;
+  height: 45px;
+  padding: 12px 16px;
+  align-items: flex-start;
+  gap: 16px;
 `;
 
 export const ListTitle = styled.div`
@@ -26,6 +32,13 @@ export const ListItem = styled.div`
 export const CenteredText = styled.div`
   text-align: center;
 `;
+
+export const Title = styled.div`
+
+`;
+
+export const 
+
 
 {/*
 export const Wrapper1 = styled.div`
