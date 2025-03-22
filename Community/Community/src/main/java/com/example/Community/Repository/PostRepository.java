@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<PostEntity,Long> {
-    List<PostEntity> findAllByUser_id(String userId);
+    List<PostEntity> findAllByUserid(String userId);
 
 }

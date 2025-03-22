@@ -14,10 +14,10 @@ import java.util.List;
 public class CategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int categoryId;
+    private int category_id;
 
     @Column(name = "category_name")
-    private String categoryName;
+    private String category_name;
     @OneToMany(mappedBy="category",cascade = CascadeType.REMOVE,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<PostEntity> postEntityList=new ArrayList<>();
 

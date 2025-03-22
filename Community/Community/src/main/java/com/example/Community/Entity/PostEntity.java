@@ -30,7 +30,7 @@ public class PostEntity extends BaseEntity{
     private String content;
 
     @Column
-    private String user_id;
+    private String userid;
 
     @OneToMany(mappedBy="postEntity",cascade = CascadeType.REMOVE,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList=new ArrayList<>();
@@ -40,7 +40,7 @@ public class PostEntity extends BaseEntity{
       postEntity.setTitle(postDTO.getTitle());
       postEntity.setCategory(categoryEntity);
       postEntity.setContent(postDTO.getContent());
-      postEntity.setUser_id(postDTO.getUser_id());
+      postEntity.setUserid(postDTO.getUser_id());
 
       return postEntity;
     }
@@ -49,7 +49,7 @@ public class PostEntity extends BaseEntity{
         postEntity.setPost_id(postDTO.getPost_Id());
         postEntity.setTitle(postDTO.getTitle());
         postEntity.setContent(postDTO.getContent());
-        postEntity.setUser_id(postDTO.getUser_id());
+        postEntity.setUserid(postDTO.getUser_id());
 
         return postEntity;
     }

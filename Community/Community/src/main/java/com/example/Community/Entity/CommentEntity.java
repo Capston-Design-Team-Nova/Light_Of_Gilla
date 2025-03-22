@@ -12,7 +12,7 @@ import lombok.Setter;
 public class CommentEntity extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long comment_id;
+    private Long id;
 
     @Column
     private String comment;
@@ -21,7 +21,7 @@ public class CommentEntity extends BaseEntity{
     private String user_id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_comment_id", referencedColumnName = "comment_id")
+    @JoinColumn(name = "parent_comment_id", referencedColumnName = "id")
     private CommentEntity commentEntity;  // 부모 댓글
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,7 +46,7 @@ public class CommentEntity extends BaseEntity{
     }
     public static CommentEntity toUpdateEntity(CommentDTO commentDTO,PostEntity postEntity,CommentEntity parentComment) {
         CommentEntity commentEntity=new CommentEntity();
-        commentEntity.setComment_id(commentDTO.getComment_id());
+        commentEntity.setId(commentDTO.getId());
         commentEntity.setComment(commentDTO.getComment());
         commentEntity.setUser_id(commentDTO.getUser_id());
         if (parentComment != null) {

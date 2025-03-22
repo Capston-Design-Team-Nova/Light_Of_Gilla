@@ -25,10 +25,10 @@ public class PostDTO {
 
         PostDTO postDTO=new PostDTO();
         postDTO.setPost_Id(postEntity.getPost_id());
-        postDTO.setCategory_Id(postEntity.getCategory().getCategoryId());
+        postDTO.setCategory_Id(postEntity.getCategory().getCategory_id());
         postDTO.setTitle(postEntity.getTitle());
         postDTO.setContent(postEntity.getContent());
-        postDTO.setUser_id(postEntity.getUser_id());
+        postDTO.setUser_id(postEntity.getUserid());
         postDTO.setPostCreated_date(postEntity.getCreatedTime());
         postDTO.setPostUpdated_date(postEntity.getUpdatedTime());
         return postDTO;

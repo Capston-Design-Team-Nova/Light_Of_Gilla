@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor//기본생성자
 @AllArgsConstructor//모든 필드를 매개변수로 하는 생성자
 public class CommentDTO {
-    private Long comment_id;
+    private Long id;
     private String comment;
     private String user_id;
     private Long post_id;
@@ -23,7 +23,7 @@ public class CommentDTO {
 
     public static CommentDTO toCommentDTO(CommentEntity commentEntity,Long post_id) {
         CommentDTO commentDTO=new CommentDTO();
-        commentDTO.setComment_id(commentEntity.getComment_id());
+        commentDTO.setId(commentEntity.getId());
         commentDTO.setComment(commentEntity.getComment());
         commentDTO.setUser_id(commentEntity.getUser_id());
         commentDTO.setPost_id(post_id);

@@ -44,7 +44,7 @@ public class PostService {
     }
 
     public List<PostDTO> findByUserId(String user_id){
-        List<PostEntity> ListUserIdPostEntityList=postRepository.findAllByUser_id(user_id);
+        List<PostEntity> ListUserIdPostEntityList=postRepository.findAllByUserid(user_id);
         List<PostDTO> PostDTOList=new ArrayList<>();
         for(PostEntity postEntity:ListUserIdPostEntityList){
             PostDTOList.add(PostDTO.toPostDTO(postEntity));

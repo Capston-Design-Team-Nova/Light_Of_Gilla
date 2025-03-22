@@ -25,7 +25,7 @@ public class CommentService {
             PostEntity postEntity = optionalPostEntity.get();
             CommentEntity commentEntity;
             if (commentDTO.getParentComment_id() != null) {  // 대댓글인 경우
-                Optional<CommentEntity> optionalParentComment = commentRepository.findByComment_id(commentDTO.getParentComment_id());
+                Optional<CommentEntity> optionalParentComment = commentRepository.findById(commentDTO.getParentComment_id());
                 if (optionalParentComment.isPresent()) {
                     CommentEntity parentCommentEntity = optionalParentComment.get();
                     commentEntity = CommentEntity.toSaveEntity(commentDTO, postEntity, parentCommentEntity);
@@ -35,7 +35,7 @@ public class CommentService {
             } else {  // 일반 댓글인 경우
                 commentEntity = CommentEntity.toSaveEntity(commentDTO, postEntity, null);
             }
-            return commentRepository.save(commentEntity).getComment_id();
+            return commentRepository.save(commentEntity).getId();
         } else {
             return null;  // 게시글이 없는 경우 저장 실패
         }
@@ -74,7 +74,7 @@ public class CommentService {
     private List<CommentDTO> findChildComments(CommentDTO parent, List<CommentDTO> allComments) {
         List<CommentDTO> childList = new ArrayList<>();
         for (CommentDTO comment : allComments) {
-            if (parent.getComment_id().equals(comment.getParentComment_id())) {
+            if (parent.getId().equals(comment.getParentComment_id())) {
                 childList.add(comment);
                 childList.addAll(findChildComments(comment, allComments)); // 대댓글의 대댓글도 계속 탐색
             }

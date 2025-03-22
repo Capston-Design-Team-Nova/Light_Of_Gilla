@@ -14,8 +14,8 @@ public class CategoryDTO {
 
     public static  CategoryDTO toCategoryDTO (CategoryEntity categoryEntity) {
         CategoryDTO categoryDTO=new CategoryDTO();
-        categoryDTO.setCategory_id(categoryEntity.getCategoryId());
-        categoryDTO.setCategory_name(categoryEntity.getCategoryName());
+        categoryDTO.setCategory_id(categoryEntity.getCategory_id());
+        categoryDTO.setCategory_name(categoryEntity.getCategory_name());
         return categoryDTO;
     }
 
