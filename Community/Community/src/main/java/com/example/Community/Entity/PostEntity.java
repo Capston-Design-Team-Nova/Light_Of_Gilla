@@ -1,6 +1,7 @@
 package com.example.Community.Entity;
 
 import com.example.Community.CategoryId;
+import com.example.Community.Dto.CategoryDTO;
 import com.example.Community.Dto.PostDTO;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,8 +15,10 @@ import java.util.List;
 @Setter
 @Table(name="Posts")
 public class PostEntity extends BaseEntity{
-    @EmbeddedId
-    private CategoryId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long post_id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "category_id", insertable = false, updatable = false)
     private CategoryEntity category;  // 외래키 관계
@@ -32,14 +35,23 @@ public class PostEntity extends BaseEntity{
     @OneToMany(mappedBy="postEntity",cascade = CascadeType.REMOVE,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList=new ArrayList<>();
 
-    public static PostEntity toSaveEntity(PostDTO postDTO){
+    public static PostEntity toSaveEntity(PostDTO postDTO, CategoryEntity categoryEntity){
       PostEntity postEntity = new PostEntity();
-      CategoryId categoryId = new CategoryId(postDTO.getCategory_Id(), postDTO.getPost_Id());
-      postEntity.setId(categoryId);
       postEntity.setTitle(postDTO.getTitle());
+      postEntity.setCategory(categoryEntity);
       postEntity.setContent(postDTO.getContent());
       postEntity.setUser_id(postDTO.getUser_id());
+
       return postEntity;
+    }
+    public static PostEntity toUpdateEntity(PostDTO postDTO){
+        PostEntity postEntity = new PostEntity();
+        postEntity.setPost_id(postDTO.getPost_Id());
+        postEntity.setTitle(postDTO.getTitle());
+        postEntity.setContent(postDTO.getContent());
+        postEntity.setUser_id(postDTO.getUser_id());
+
+        return postEntity;
     }
 
 }

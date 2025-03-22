@@ -23,4 +23,3 @@ public class BaseEntity {
     private LocalDateTime updatedTime;
 }
 
-//Posts pk그냥 복합키말고 그냥 auto increment한다.

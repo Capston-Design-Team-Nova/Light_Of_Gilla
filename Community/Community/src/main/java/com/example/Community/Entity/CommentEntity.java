@@ -12,15 +12,14 @@ import lombok.Setter;
 public class CommentEntity extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int comment_id;
+    private Long comment_id;
 
     @Column
     private String comment;
 
     @Column
     private String user_id;
-    @Column
-    private String post_id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_comment_id", referencedColumnName = "comment_id")
     private CommentEntity commentEntity;  // 부모 댓글
@@ -29,13 +28,33 @@ public class CommentEntity extends BaseEntity{
     @JoinColumn(name = "post_id")
     private PostEntity postEntity;
 
-    @Column
-    private String category_id;
 
 
-    public static CommentEntity toSaveEntity(CommentDTO commentDTO) {
+
+    public static CommentEntity toSaveEntity(CommentDTO commentDTO,PostEntity postEntity,CommentEntity parentComment) {
         CommentEntity commentEntity=new CommentEntity();
         commentEntity.setComment(commentDTO.getComment());
+        commentEntity.setUser_id(commentDTO.getUser_id());
+        if (parentComment != null) {
+            commentEntity.setCommentEntity(parentComment);
+        } else {
+            commentEntity.setCommentEntity(null);  // 최상위 댓글
+        }
+        commentEntity.setPostEntity(postEntity);
+        return commentEntity;
+
+    }
+    public static CommentEntity toUpdateEntity(CommentDTO commentDTO,PostEntity postEntity,CommentEntity parentComment) {
+        CommentEntity commentEntity=new CommentEntity();
+        commentEntity.setComment_id(commentDTO.getComment_id());
+        commentEntity.setComment(commentDTO.getComment());
+        commentEntity.setUser_id(commentDTO.getUser_id());
+        if (parentComment != null) {
+            commentEntity.setCommentEntity(parentComment);
+        } else {
+            commentEntity.setCommentEntity(null);  // 최상위 댓글
+        }
+        commentEntity.setPostEntity(postEntity);
         return commentEntity;
 
     }
