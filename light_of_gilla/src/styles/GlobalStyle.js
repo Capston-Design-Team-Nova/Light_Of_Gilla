@@ -58,9 +58,17 @@ ${reset}
   body {
     font-family: Font1;
   }
-  
+  .body-MainScreen {
+    overflow-y: scroll; /* 세로 방향으로 스크롤 가능하도록 설정 */
+    ::-webkit-scrollbar {
+      display: none; /* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
+    }
+  }
+`;
 // export const DIV = styled.div`
 
 //   background-color: #ffffff;
 
-// `;
+//
+
+
