@@ -1,7 +1,5 @@
 package com.example.Community.Entity;
 
-import com.example.Community.CategoryId;
-import com.example.Community.Dto.CategoryDTO;
 import com.example.Community.Dto.PostDTO;
 import jakarta.persistence.*;
 import lombok.Getter;

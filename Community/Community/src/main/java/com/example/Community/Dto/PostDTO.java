@@ -1,8 +1,6 @@
 package com.example.Community.Dto;
 
-import com.example.Community.CategoryId;
 import com.example.Community.Entity.PostEntity;
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalDateTime;
