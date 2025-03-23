@@ -9,6 +9,7 @@ export const Main = styled.main`
   position: relative;
 `;
 
+/* 지도 컨테이너*/
 export const MapContainer = styled.div`
   position: absolute;
   top: 240px;
@@ -19,6 +20,7 @@ export const MapContainer = styled.div`
   border-radius: 8px;
 `;
 
+/* 사이드바 */
 export const Sidebar = styled.div`
   position: absolute; /* 절대 위치 설정 */
   top: 90px; /* 검색창과 같은 높이 */
@@ -45,15 +47,25 @@ export const Sidebar = styled.div`
     text-decoration: none;
     font-size: 14px;
   }
+
+  img {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+
+    &:hover {
+      background:rgb(226, 226, 226);
+    }
+  }
 `;
 
+/* 검색창과 카테고리 버튼을 감싸는 div */
 export const SearchContainer = styled.div`
   position: absolute; /* 고정 위치 설정 */
   top: 90px; /* 헤더 아래에 위치 */
   left: 60%;
   transform: translateX(-50%); /* 가운데 정렬 */
   width: 74%;
-  background: white;
   padding: 15px;
   border-radius: 8px;
   z-index: 10; /* 지도 위에 표시 */
@@ -62,27 +74,28 @@ export const SearchContainer = styled.div`
   align-items: center;
 `;
 
+/* 검색창을 감싸는 div */
 export const SearchBox = styled.div`
   display: flex;
   width: 100%;
   gap: 10px;
+  background: rgba(0, 0, 0, 0);
 
-  button {
-    padding: 8px 12px;
-    font-size: 16px;
+  img {
+    padding: 5px 1px;
+    width: 50px;
     border: none;
     border-radius: 5px;
-    background: #007bff;
     color: white;
     cursor: pointer;
 
     &:hover {
-      background: #0056b3;
+      background:rgb(226, 226, 226);
     }
   }
 `;
 
-/* ✅ SearchInput 추가 */
+/* 검색창 */
 export const SearchInput = styled.input`
   width: 100%;
   padding: 8px;
@@ -92,7 +105,7 @@ export const SearchInput = styled.input`
   margin-bottom: 10px;
 `;
 
-/* ✅ CategoryButtons 추가 */
+/* 카테고리 버튼*/
 export const CategoryButtons = styled.div`
   display: flex;
   flex-wrap: wrap;

@@ -42,7 +42,7 @@ function HospitalMap() {
           fetchHospitals(
             position.coords.latitude,
             position.coords.longitude,
-            "병원"
+            "HP8" // 기본 카테고리는 병원
           );
         },
         (err) => {
@@ -62,10 +62,11 @@ function HospitalMap() {
     }
   }, []);
 
-  const fetchHospitals = (lat, lng, keyword) => {
+  const fetchHospitals = (lat, lng, category = "HP8") => {
     const ps = new window.kakao.maps.services.Places();
-    ps.keywordSearch(
-      keyword,
+
+    ps.categorySearch(
+      category,  // 병원(HP8) 카테고리 검색
       (data, status) => {
         if (status === window.kakao.maps.services.Status.OK) {
           setHospitals(data);
@@ -75,12 +76,110 @@ function HospitalMap() {
     );
   };
 
-  const handleSearch = () => {
-    fetchHospitals(state.center.lat, state.center.lng, searchTerm);
+  const symptomToCategory = {
+    "두통": "신경과",
+    "치통": "치과",
+    "소화불량": "내과",
+    "피부 가려움": "피부과",
+    "눈 충혈": "안과",
+    "충혈": "안과",
+    "귀 통증": "이비인후과",
+    "골절": "정형외과",
+    "산전 검사": "산부인과",
+    "복통": "내과",
+    "기침": "호흡기내과",
+    "발열": "내과",
+    "피로": "내과",
+    "어지러움": "신경과",
+    "가슴 통증": "심장내과",
+    "배뇨 문제": "비뇨기과",
+    "관절 통증": "정형외과",
+    "호흡 곤란": "호흡기내과",
+    "어깨 통증": "정형외과",
+    "배변 문제": "소화기내과",
+    "피부 발진": "피부과",
+    "근육통": "정형외과, 류마티스내과",
+    "손발 저림": "신경과, 혈관외과, 내분비내과",
+    "불면증": "정신건강의학과, 신경과",
+    "갑상선 문제": "내분비내과",
+    "알레르기": "알레르기내과, 피부과, 이비인후과",
+    "요통": "정형외과, 신경외과",
+    "탈모": "피부과",
+    "우울감": "정신건강의학과",
+    "불안감": "정신건강의학과",
+    "수면장애": "정신건강의학과, 신경과",
+    "구토": "소화기내과",
+    "설사": "소화기내과",
+};
+  
+  const handleSearch = async () => {
+    if (!searchTerm.trim()) return;
+  
+    const ps = new window.kakao.maps.services.Places();
+    let searchKeyword = searchTerm;
+  
+    // 입력한 증상이 사전 정의된 리스트에 있으면 해당 병원명으로 검색
+    if (symptomToCategory[searchTerm]) {
+      searchKeyword = symptomToCategory[searchTerm]; // 예: "두통" → "신경과"
+    }
+  
+    ps.keywordSearch(
+      searchKeyword,
+      (data, status) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          setHospitals(data); // 결과 업데이트
+        } else {
+          setHospitals([]);
+        }
+      },
+      { location: new window.kakao.maps.LatLng(state.center.lat, state.center.lng) }
+    );
   };
+  
 
   const handleCategoryClick = (category) => {
-    fetchHospitals(state.center.lat, state.center.lng, category);
+    const categoryCodes = {
+      약국: "PM8",
+      내과: "HP8", 
+      피부과: "HP8",
+      치과: "HP8",
+      소아과: "HP8",
+      산부인과: "HP8",
+      정형외과: "HP8",
+      안과: "HP8",
+      성형외과: "HP8",
+      이비인후과: "HP8",
+    };
+  
+    const ps = new window.kakao.maps.services.Places();
+    const selectedCode = categoryCodes[category];
+  
+    if (!selectedCode) return;
+  
+    ps.keywordSearch(
+      `${category}`, // 선택한 카테고리 키워드 검색
+      (data, status) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          setHospitals(data);
+        } else {
+          setHospitals([]);
+        }
+      },
+      { location: new window.kakao.maps.LatLng(state.center.lat, state.center.lng) }
+    );
+  };
+  
+
+  // 검색창에서 Enter 키 입력 가능하도록 설정
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  // 뒤로가기 버튼 클릭 처리
+  const handleGoBack = () => {
+    setSelectedHospital(null); // 병원 정보 초기화
   };
 
   return (
@@ -92,13 +191,18 @@ function HospitalMap() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={handleKeyPress} // Enter 키로 검색 가능
             placeholder="병원 검색..."
           />
-          <button onClick={handleSearch}>검색</button>
+          <img
+            src={require("../assets/images/돋보기.png")}
+            alt=" "
+            onClick={handleSearch}
+          />
         </SearchBox>
 
         <CategoryButtons>
-          {["약국", "내과", "피부과", "치과", "소아과", "산부인과", "정형외과", "안과", "성형외과"].map((cat) => (
+          {["약국", "내과", "피부과", "치과", "소아과", "산부인과", "정형외과", "안과", "성형외과", "이비인후과"].map((cat) => (
             <button key={cat} onClick={() => handleCategoryClick(cat)}>
               #{cat}
             </button>
@@ -134,11 +238,14 @@ function HospitalMap() {
           level={3}
         >
           {!state.isLoading && (
-            <MapMarker position={state.center}>
-              <div style={{ padding: "5px", color: "#000" }}>
-                {state.errMsg ? state.errMsg : "여기에 계신가요?!"}
-              </div>
-            </MapMarker>
+            <MapMarker
+              position={state.center}
+              image={{
+                src: require("../assets/images/내 위치 마커.png"),
+                size: { width: 40, height: 45 },
+                options: { offset: { x: 27, y: 69 } }
+              }}
+            />
           )}
 
           {hospitals.map((h, idx) => (
@@ -146,6 +253,11 @@ function HospitalMap() {
               key={idx}
               position={{ lat: h.y, lng: h.x }}
               onClick={() => setSelectedHospital(h)}
+              image={{
+                src: require("../assets/images/병원마커.png"),
+                size: { width: 40, height: 45 },
+                options: { offset: { x: 27, y: 69 } }
+              }}
             />
           ))}
         </Map>
@@ -154,6 +266,10 @@ function HospitalMap() {
       {/* 선택한 병원 정보 패널 */}
       {selectedHospital && (
         <Sidebar>
+          <img
+            src={require("../assets/images/뒤로가기.png")} // 뒤로가기 버튼
+            onClick={handleGoBack}
+          />
           <h2>{selectedHospital.place_name}</h2>
           <p>
             {selectedHospital.road_address_name ||
