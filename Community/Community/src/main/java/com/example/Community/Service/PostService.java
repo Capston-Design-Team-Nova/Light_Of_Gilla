@@ -1,17 +1,13 @@
 package com.example.Community.Service;
 
-import com.example.Community.Dto.CategoryDTO;
 import com.example.Community.Dto.PostDTO;
-import com.example.Community.Entity.CategoryEntity;
 import com.example.Community.Entity.PostEntity;
-import com.example.Community.Repository.CategoryRepository;
 import com.example.Community.Repository.CommentRepository;
 import com.example.Community.Repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,17 +17,19 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-    private final CategoryRepository categoryRepository;
+
 
     public void save(PostDTO postDTO){
-       Optional<CategoryEntity>OptionalcategoryEntity=categoryRepository.findById(postDTO.getCategory_Id());
-       if(OptionalcategoryEntity.isPresent()){
-           CategoryEntity categoryEntity=OptionalcategoryEntity.get();
-           PostEntity postEntity=PostEntity.toSaveEntity(postDTO,categoryEntity);
-           postRepository.save(postEntity);
+//       Optional<CategoryEntity>OptionalcategoryEntity=categoryRepository.findById(postDTO.getCategory_Id());
+//       if(OptionalcategoryEntity.isPresent()){
+//           CategoryEntity categoryEntity=OptionalcategoryEntity.get();
+//           PostEntity postEntity=PostEntity.toSaveEntity(postDTO,categoryEntity);
+//           postRepository.save(postEntity);
+//
+//       }
 
-       }
-
+        PostEntity postEntity=PostEntity.toSaveEntity(postDTO);
+        postRepository.save(postEntity);
     }
     @Transactional//자식entity를 lazy loding할경우 필요
     public List<PostDTO> findAll(){

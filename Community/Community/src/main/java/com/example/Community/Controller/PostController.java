@@ -1,6 +1,5 @@
 package com.example.Community.Controller;
 
-import com.example.Community.Dto.CategoryDTO;
 import com.example.Community.Dto.CommentDTO;
 import com.example.Community.Dto.PostDTO;
 import com.example.Community.Service.CommentService;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,12 +20,12 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/post")
-
+@CrossOrigin(origins = "http://localhost:3000")
 public class PostController {
     private final PostService postService;
     private final CommentService commentService;
-    @PostMapping("save")//post형식으로 받음
-    public void save(@ModelAttribute PostDTO postDTO) throws IOException {
+    @PostMapping("/save")//post형식으로 받음
+    public void save(@RequestBody PostDTO postDTO) throws IOException {
         postService.save(postDTO);
 
     }

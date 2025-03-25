@@ -17,10 +17,6 @@ public class PostEntity extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long post_id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", referencedColumnName = "category_id", insertable = false, updatable = false)
-    private CategoryEntity category;  // 외래키 관계
-
     @Column
     private String title;
 
@@ -33,10 +29,9 @@ public class PostEntity extends BaseEntity{
     @OneToMany(mappedBy="postEntity",cascade = CascadeType.REMOVE,orphanRemoval = true,fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList=new ArrayList<>();
 
-    public static PostEntity toSaveEntity(PostDTO postDTO, CategoryEntity categoryEntity){
+    public static PostEntity toSaveEntity(PostDTO postDTO){
       PostEntity postEntity = new PostEntity();
       postEntity.setTitle(postDTO.getTitle());
-      postEntity.setCategory(categoryEntity);
       postEntity.setContent(postDTO.getContent());
       postEntity.setUserid(postDTO.getUser_id());
 
