@@ -1,12 +1,11 @@
-import React,{useState} from 'react';
+import React,{ useState} from 'react';
 import Header from '../../components/Header';
-import { Main, Center, Content, Button, TopRow } from '../../styles/CommunityStyles';
+import { Main, Center, Content, Button, TopRow, ToggleButton} from '../../styles/CommunityStyles';
 import { Link } from "react-router-dom";
-//import CommunitySidebar from './CommunitySidebar';
 import CustomSelect from './CustomSelect';
 import CommunityList from './CommunityList';
 import Sidebar from '../../components/Sidebar';
-//import Searchbar from '../../components/Searchbar';
+import SearchField from '../../components/SearchField';
 
 function Community() {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -16,15 +15,19 @@ function Community() {
         setSidebarOpen(!isSidebarOpen);
     };
 
+    
     return (
         <Main>
             <Header />
-            {/* Sidebar */}
             <Center>
                 <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />    
+                <ToggleButton onClick={toggleSidebar}><img src={require("../../assets/images/햄버거버튼.png")} alt=" " /></ToggleButton>
+                {/*<Button onClick={toggleSidebar}>Toggle Sidebar</Button>*/}
                 <TopRow>
-                    <Button onClick={toggleSidebar}>Toggle Sidebar</Button>
-                    
+                    {/* 검색 필드 */}
+                    <SearchField />
+                        
+                    <div style={{ flex: 1 }} /> {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}
                     <CustomSelect />
                     <Link to="/Write">
                     <Button>글쓰기</Button>

@@ -33,11 +33,9 @@ export const CenteredText = styled.div`
   text-align: center;
 `;
 
-export const Title = styled.div`
 
-`;
 
-export const 
+ 
 
 
 {/*

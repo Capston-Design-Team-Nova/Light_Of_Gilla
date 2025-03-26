@@ -12,10 +12,9 @@ import { posts } from "./data";
 import { useNavigate } from "react-router-dom";
 
 const PostList = styled.div`
-  width: 100%;
-  max-width: 900px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  width: 95%;
+  margin: 1px;
+  padding: 0 0px;
 `;
 
 const PostItem = styled.div`
@@ -23,9 +22,8 @@ const PostItem = styled.div`
   text-decoration: none;
   color: inherit;
   padding: 1rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  margin-bottom: 1px;
+  border-bottom: 1px solid #A09F9F;
   transition: 0.2s;
 
   &:hover {
@@ -35,26 +33,54 @@ const PostItem = styled.div`
 
 const PostRow = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly; /* 자식 요소 간 균등한 간격 설정 */
   align-items: center;
   flex-wrap: wrap; /* 반응형 대응 */
-  
+  width: 100%;
 `;
 
 const PostTitle = styled.h2`
   margin: 0;
-  font-size: 1.1rem;
-  flex: 1;
+  font-family: Ourfont5;
+  font-size: 16px;
+  color: #1D1B20;
+  flex: 2; /* 공간을 더 많이 차지하도록 설정 */
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 `;
 
-const PostMeta = styled.div`
-  font-size: 0.85rem;
-  color: #666;
-  margin-left: 1rem;
-  white-space: nowrap;  /* 줄 바꿈 방지 */
+const PostAuthor = styled.div`
+  font-family: Ourfont5;
+  font-size: 16px;
+  color: #000;
+  display: flex;
+  justify-content: center; /* 가운데 정렬 */
+  align-items: center;
+  white-space: nowrap;
+  flex: 1; /* 균등한 간격을 위한 flex 설정 */
+`;
+
+const PostTime = styled.div`
+  font-family: Ourfont5;
+  font-size: 16px;
+  color: #000;
+  display: flex;
+  justify-content: center; /* 가운데 정렬 */
+  align-items: center;
+  white-space: nowrap;
+  flex: 1; /* 균등한 간격을 위한 flex 설정 */
+`;
+
+const PostLikes = styled.div`
+  font-family: Ourfont5;
+  font-size: 16px;
+  color: #000;
+  display: flex;
+  justify-content: center; /* 가운데 정렬 */
+  align-items: center;
+  white-space: nowrap;
+
 `;
 
 function CommunityList(){
@@ -64,10 +90,11 @@ function CommunityList(){
       {posts.map((post) => (
         <PostItem key={post.id} onClick={() => navigate(`/post/${post.id}`)}>
           <PostRow>
-            <PostTitle>{post.title}</PostTitle>
-            <PostMeta>
-            ({post.comments.length}) | {post.author} | {post.createdAt} | ♡{post.likes}
-            </PostMeta>
+            <PostTitle>{post.title}({post.comments.length})</PostTitle>
+            {/*<PostComments>({post.comments.length})</PostComments>*/}
+            <PostAuthor>{post.author}</PostAuthor>
+            <PostTime>{post.createdAt}</PostTime>
+            <PostLikes>♡{post.likes}</PostLikes>
           </PostRow>
           
         </PostItem>
