@@ -1,4 +1,6 @@
 import React,{useState} from 'react';
+import axios from 'axios';
+import { useEffect } from 'react';
 import Header from '../../components/Header';
 import { Main, Center, Content, Button, TopRow } from '../../styles/CommunityStyles';
 import { Link } from "react-router-dom";
@@ -10,11 +12,23 @@ import Sidebar from '../../components/Sidebar';
 
 function Community() {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
-
+    const [posts, setPosts] = useState([]);
     // Toggle sidebar visibility
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
     };
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await axios.get('http://localhost:8082/post/');
+                console.log('게시글 데이터를 불러오는 중');
+                setPosts(response.data); 
+            } catch (error) {
+                console.error('게시글 데이터를 불러오는 중 오류 발생:', error);
+            }
+        };
+        fetchPosts();
+    }, []);
 
     return (
         <Main>
@@ -31,7 +45,7 @@ function Community() {
                     </Link>
                 </TopRow>
                 <Content>
-                    <CommunityList />
+                <CommunityList posts={posts} />
                 </Content>              
                 
             </Center>

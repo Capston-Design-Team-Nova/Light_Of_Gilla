@@ -30,7 +30,7 @@ public class PostController {
 
     }
     @GetMapping("/")
-    public ResponseEntity<List<PostDTO>> findAll(Model model){
+    public ResponseEntity<List<PostDTO>> findAll(){
         List<PostDTO> postDTOList = postService.findAll();
         return ResponseEntity.ok(postDTOList);
     }
@@ -41,7 +41,7 @@ public class PostController {
         return ResponseEntity.ok(postDTOUserIdList);
     }
     @GetMapping("/{post_id}")
-    public ResponseEntity findById(@PathVariable Long post_id,@PageableDefault(page=1) Pageable pageable) {//@PathVariable는 {id}값을 매개변수로 바인딩 해준다.
+    public ResponseEntity findById(@PathVariable Long post_id) {//@PathVariable는 {id}값을 매개변수로 바인딩 해준다.
         PostDTO postDTO= postService.findByPostId(post_id);
         List<CommentDTO> commentDTOList=commentService.findAll(post_id);
         Map<String, Object> response = new HashMap<>();

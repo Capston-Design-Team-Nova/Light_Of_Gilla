@@ -7,19 +7,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("comment")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
     private final CommentService commentService;
     @PostMapping("/save")
-    public ResponseEntity save(@ModelAttribute CommentDTO commentDTO)//자동으로 CommentDTO로 매핑
+    public ResponseEntity save(@RequestBody CommentDTO commentDTO)//자동으로 CommentDTO로 매핑
     {
         //ResponseBody를 붙혀서 문자열을 그대로 반환하게 함
         Long saveResult=commentService.save(commentDTO);

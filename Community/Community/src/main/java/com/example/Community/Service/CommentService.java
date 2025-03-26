@@ -62,11 +62,12 @@ public class CommentService {
         List<CommentDTO> result = new ArrayList<>();
         for (CommentDTO comment : commentDTOList) {
             if (comment.getParentComment_id() == null) { // 일반 댓글
-                result.add(comment);
+                result.add(0,comment);
                 // 대댓글 찾아서 추가
                 result.addAll(findChildComments(comment, commentDTOList));
             }
         }
+
         return result;
     }
 

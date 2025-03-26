@@ -8,7 +8,6 @@ import React from 'react';
 //import axios from 'axios';
 //import { ListContainer, ListTitle, ListItem, CenteredText } from '../../styles/CommunityListStyles';
 import styled from "styled-components";
-import { posts } from "./data";
 import { useNavigate } from "react-router-dom";
 
 const PostList = styled.div`
@@ -57,16 +56,16 @@ const PostMeta = styled.div`
   white-space: nowrap;  /* 줄 바꿈 방지 */
 `;
 
-function CommunityList(){
+function CommunityList({posts}){
   const navigate = useNavigate();
   return(
     <PostList>
       {posts.map((post) => (
-        <PostItem key={post.id} onClick={() => navigate(`/post/${post.id}`)}>
+        <PostItem key={post.post_Id} onClick={() => navigate(`/post/${post.post_Id}`)}>
           <PostRow>
             <PostTitle>{post.title}</PostTitle>
             <PostMeta>
-            ({post.comments.length}) | {post.author} | {post.createdAt} | ♡{post.likes}
+             |   | {post.created_time} | ♡
             </PostMeta>
           </PostRow>
           
