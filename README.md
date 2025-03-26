@@ -58,7 +58,7 @@ Authorization: Bearer {리프레시 토큰값}
 
 ```json
 {
-  "token": "새로운 JWT 토큰"
+  "새로운 JWT 토큰"
 }
 ```
 
