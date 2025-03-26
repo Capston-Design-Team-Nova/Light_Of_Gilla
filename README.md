@@ -25,6 +25,7 @@ Spring Boot 기반의 User 서비스 API 문서입니다.
 
 ## 2. 로그인 (JWT 발급)
 - **POST** `/api/users/login`
+
 요청 예시:
 ```json
 {
@@ -40,6 +41,7 @@ Spring Boot 기반의 User 서비스 API 문서입니다.
 ```
 ## 3. 로그아웃
 - **POST** `/api/users/logout`
+
 요청 헤더:
 ```
 Authorization: Bearer {토큰값}
