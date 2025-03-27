@@ -65,7 +65,7 @@ function CommunityList({posts}){
           <PostRow>
             <PostTitle>{post.title}</PostTitle>
             <PostMeta>
-             |   | {post.created_time} | ♡
+            ({post.commentCounts}) | | {post.postCreated_date} |
             </PostMeta>
           </PostRow>
           

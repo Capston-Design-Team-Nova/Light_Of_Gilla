@@ -42,6 +42,7 @@ public class PostController {
     }
     @GetMapping("/{post_id}")
     public ResponseEntity findById(@PathVariable Long post_id) {//@PathVariable는 {id}값을 매개변수로 바인딩 해준다.
+        postService.updateHits(post_id);
         PostDTO postDTO= postService.findByPostId(post_id);
         List<CommentDTO> commentDTOList=commentService.findAll(post_id);
         Map<String, Object> response = new HashMap<>();

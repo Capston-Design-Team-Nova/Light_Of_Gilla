@@ -21,7 +21,13 @@ public class PostEntity extends BaseEntity{
     private String title;
 
     @Column
+    private int commentCounts;
+
+    @Column
     private String content;
+
+    @Column
+    private int postHits;
 
     @Column
     private String userid;
@@ -34,7 +40,8 @@ public class PostEntity extends BaseEntity{
       postEntity.setTitle(postDTO.getTitle());
       postEntity.setContent(postDTO.getContent());
       postEntity.setUserid(postDTO.getUser_id());
-
+      postEntity.setPostHits(0);
+      postEntity.setCommentCounts(0);
       return postEntity;
     }
     public static PostEntity toUpdateEntity(PostDTO postDTO){
@@ -43,7 +50,8 @@ public class PostEntity extends BaseEntity{
         postEntity.setTitle(postDTO.getTitle());
         postEntity.setContent(postDTO.getContent());
         postEntity.setUserid(postDTO.getUser_id());
-
+        postEntity.setPostHits(postDTO.getPostHits());
+        postEntity.setCommentCounts(postDTO.getCommentCounts());
         return postEntity;
     }
 

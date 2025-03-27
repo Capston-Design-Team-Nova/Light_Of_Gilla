@@ -2,6 +2,7 @@ package com.example.Community.Controller;
 
 import com.example.Community.Dto.CommentDTO;
 import com.example.Community.Service.CommentService;
+import com.example.Community.Service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,12 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 public class CommentController {
     private final CommentService commentService;
+    private final PostService postService;
     @PostMapping("/save")
     public ResponseEntity save(@RequestBody CommentDTO commentDTO)//자동으로 CommentDTO로 매핑
     {
         //ResponseBody를 붙혀서 문자열을 그대로 반환하게 함
+        postService.updateCommentCounts(commentDTO.getPost_id());
         Long saveResult=commentService.save(commentDTO);
         if(saveResult !=null)
         {

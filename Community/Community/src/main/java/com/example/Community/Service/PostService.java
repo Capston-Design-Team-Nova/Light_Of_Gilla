@@ -49,6 +49,14 @@ public class PostService {
         }
         return PostDTOList;
     }
+    @Transactional
+    public void updateHits(Long id){
+        postRepository.updateHits(id);
+    }
+    @Transactional
+    public void updateCommentCounts(Long id){
+        postRepository.updateComments(id);
+    }
     public PostDTO findByPostId(Long post_id){
         Optional<PostEntity> optionalPostEntity=postRepository.findById(post_id);
         if(optionalPostEntity.isPresent()){

@@ -2,6 +2,7 @@ package com.example.Community.Dto;
 
 
 import com.example.Community.Entity.CommentEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,9 @@ public class CommentDTO {
     private String comment;
     private String user_id;
     private Long post_id;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime postCreated_date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime postUpdated_date;
     private Long parentComment_id;
 
