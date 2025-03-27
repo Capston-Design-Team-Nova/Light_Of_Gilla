@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import { useEffect } from 'react';
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Await } from "react-router-dom";
 import styled from "styled-components";
 import { Main,Center,TopRow,Content } from "../../styles/CommunityStyles";
 import Header from "../../components/Header";
@@ -139,8 +139,19 @@ const CommunityView = () => {
   const [likes, setLikes] = useState(0);
   if (!postData) return <div>글을 찾을 수 없습니다.</div>;
 
-  const handleLike = () => {
-    setLikes(likes + 1);
+  const handleLike = async () => {
+    const updatedLikes = likes + 1; // UI 업데이트를 위해 좋아요 수 증가
+    setLikes(updatedLikes); // UI 먼저 업데이트
+
+  
+
+    try {
+        await axios.post(`http://localhost:8082/post/like?post_id=${id}`);
+      
+    } catch (error) {
+        console.error('좋아요 업데이트 중 오류 발생:', error);
+    }
+  
   };
 
   const handleCommentSubmit = (e) => {

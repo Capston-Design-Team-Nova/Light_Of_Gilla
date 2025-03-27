@@ -57,6 +57,10 @@ public class PostService {
     public void updateCommentCounts(Long id){
         postRepository.updateComments(id);
     }
+    @Transactional
+    public void updatelikes(Long id){
+        postRepository.updateLikes(id);
+    }
     public PostDTO findByPostId(Long post_id){
         Optional<PostEntity> optionalPostEntity=postRepository.findById(post_id);
         if(optionalPostEntity.isPresent()){

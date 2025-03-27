@@ -34,6 +34,10 @@ public class PostController {
         List<PostDTO> postDTOList = postService.findAll();
         return ResponseEntity.ok(postDTOList);
     }
+    @PostMapping("/like")
+    public void like(@RequestParam Long post_id) {
+        postService.updatelikes(post_id);
+    }
 
     @GetMapping("/search/{user_id}")
     public ResponseEntity findBySearchUserId(@PathVariable String user_id) {//@PathVariable는 {id}값을 매개변수로 바인딩 해준다.
@@ -54,7 +58,7 @@ public class PostController {
     @GetMapping("/update/{post_id}")
     public ResponseEntity UpdateForm(@PathVariable Long post_id) {
         PostDTO postDTO= postService.findByPostId(post_id);
-        /*댓글 목록 가져오기*/
+        /*댓글 목록 가져오기*/a
         return ResponseEntity.ok(postDTO);
     }
     @Transactional
