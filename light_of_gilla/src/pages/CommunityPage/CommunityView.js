@@ -124,6 +124,7 @@ const CommunityView = () => {
             const { post, comments } = response.data;
             setPostData(post);
             setComments(comments);
+            setLikes(post.likes); 
         })
         .catch((error) => {
             console.error("Error fetching post data:", error);
@@ -135,12 +136,12 @@ const CommunityView = () => {
 
   // const [likes, setLikes] = useState(postData.likes);
   const [newComment, setNewComment] = useState({ writer: "", text: "" });
-
+  const [likes, setLikes] = useState(0);
   if (!postData) return <div>글을 찾을 수 없습니다.</div>;
 
-  // const handleLike = () => {
-  //   setLikes(likes + 1);
-  // };
+  const handleLike = () => {
+    setLikes(likes + 1);
+  };
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
@@ -184,7 +185,7 @@ const CommunityView = () => {
                     <Content1>{postData.content}</Content1>
                      {/* {<Category>#{postData.categoryname}</Category>} */}
                     <MiddleRow>
-                        {/* <LikeButton onClick={handleLike}>♡좋아요 {likes}개</LikeButton> */}
+                        <LikeButton onClick={handleLike}>♡좋아요 {likes}개</LikeButton>
                         <H3>💬 댓글 ({postData.commentCounts})</H3>
                     </MiddleRow>
 
