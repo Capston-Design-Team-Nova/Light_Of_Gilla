@@ -21,19 +21,23 @@ function Community() {
             <Header />
             <Center>
                 <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />    
-                <ToggleButton onClick={toggleSidebar}><img src={require("../../assets/images/햄버거버튼.png")} alt=" " /></ToggleButton>
-                {/*<Button onClick={toggleSidebar}>Toggle Sidebar</Button>*/}
-                <TopRow>
+                {/* ✅ 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
+                {!isSidebarOpen && (
+                <ToggleButton onClick={toggleSidebar}>
+                    <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
+                </ToggleButton>
+                )}
+                
+                <TopRow isSidebarOpen={isSidebarOpen}>
                     {/* 검색 필드 */}
                     <SearchField />
-                        
                     <div style={{ flex: 1 }} /> {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}
                     <CustomSelect />
                     <Link to="/Write">
                     <Button>글쓰기</Button>
                     </Link>
                 </TopRow>
-                <Content>
+                <Content isSidebarOpen={isSidebarOpen}>
                     <CommunityList />
                 </Content>              
                 

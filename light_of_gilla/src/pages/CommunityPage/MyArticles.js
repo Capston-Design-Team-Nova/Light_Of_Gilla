@@ -21,7 +21,7 @@ function MyArticles() {
             <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
             <ToggleButton onClick={toggleSidebar}><img src={require("../../assets/images/햄버거버튼.png")} alt=" " /></ToggleButton>
             <Center>
-                <TopRow>
+                <TopRow isSidebarOpen={isSidebarOpen}>
                     <SearchField />
                     <div style={{ flex: 1 }} /> {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}
                     
@@ -30,7 +30,7 @@ function MyArticles() {
                     </Link>
                 </TopRow>
                 
-                <Content>
+                <Content isSidebarOpen={isSidebarOpen}>
                     <CommunityList />
                 </Content>              
                 

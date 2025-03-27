@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { posts } from "./data";
-import { Main,Center,TopRow,Content } from "../../styles/CommunityStyles";
+import { Main,Center,ToggleButton,Content } from "../../styles/CommunityStyles";
 import Header from "../../components/Header";
 import Sidebar from '../../components/Sidebar';
 
 const Wrapper = styled.div`
-  max-width: 600px;
+  width: 90%;
   margin: 0.5rem auto;
 `;
 
@@ -38,6 +38,8 @@ const Category = styled.p`
 
 const Button = styled.button`
   margin-top: 5px;
+  width:60px;
+  height:32px;
   padding: 0.5rem 1rem;
   border: none;
   background: #F8C743;
@@ -47,7 +49,7 @@ const Button = styled.button`
 `;
 
 const LikeButton = styled.button`
-  margin-top: 5px;
+  margin-top: 3px;
   padding: 0.5rem 1rem;
   border: none;
   background: white;
@@ -77,32 +79,40 @@ const CommentForm = styled.form`
     font-size: 14px;
     resize: none;
 
-    background-color: #D9D9D9;  /*배경색*/
+    background-color: #DDDDDD;  /*배경색*/
     color: #000000;             /* ✅ 글자색: 검정 */
-    border: 1px solid #D9D9D9;     /* ✅ 테두리: 같은색 */
-    border-radius: 8px;         /* ✅ 테두리 둥글게 */
+    border: 1px solid #DDDDDD;     /* ✅ 테두리: 같은색 */
+    border-radius: 28px;         /* ✅ 테두리 둥글게 */
   }
 
   button {
-    padding: 0.5rem 1rem;
+    padding: 0.1rem 1rem;
     white-space: nowrap;
-    font-size: 17px;
+    font-size: 20px;
   }
 `;
 
 const MiddleRow = styled.div`
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    gap:550px;
     flex-wrap: wrap; /* 반응형 대응 */
     border-top: 0.5px solid #00000073;
     border-bottom: 0.5px solid  #00000073;
     height: 57px;
 `;
 const H3 = styled.h3`
-    margin-top: 5px;
+    margin-top: 13px;
     font-family: Ourfont5;
     font-size: 14px;
+`;
+const ProfileImg = styled.img`
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 8px;
 `;
 
 const CommunityView = () => {
@@ -119,7 +129,7 @@ const CommunityView = () => {
   const [likes, setLikes] = useState(postData.likes);
   const [comments, setComments] = useState(postData.comments);
   const [newComment, setNewComment] = useState({ writer: "", text: "" });
-
+    const commentRef=useRef(null);
   if (!postData) return <div>글을 찾을 수 없습니다.</div>;
 
   const handleLike = () => {
@@ -138,34 +148,42 @@ const CommunityView = () => {
     setComments([...comments, newCommentObj]);
     setNewComment({ writer: "", text: "" });
   };
-
+  const scrollToComments = () => {
+    commentRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+  
   return (
     <Main>
         <Header />
             {/* Sidebar */}
             <Center>
                 <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />    
-                <TopRow>
-                    <Button onClick={toggleSidebar}>Toggle Sidebar</Button>
-                </TopRow>
-                <Content>
+                <ToggleButton onClick={toggleSidebar}><img src={require("../../assets/images/햄버거버튼.png")} alt=" " /></ToggleButton>
+
+                <Content isSidebarOpen={isSidebarOpen}>
                 <Wrapper>
                     <Title>{postData.title}</Title>
                     <Meta>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <ProfileImg src={postData.authorImg} alt="작성자 이미지" />
                         {postData.author} | {postData.createdAt}
+                      </div>
                     </Meta>
                     <Content1>{postData.content}</Content1>
                     <Category>#{postData.category}</Category>
                     <MiddleRow>
                         <LikeButton onClick={handleLike}>♡좋아요 {likes}개</LikeButton>
-                        <H3>💬 댓글 ({comments.length})</H3>
+                        <H3 onClick={scrollToComments} style={{ cursor: "pointer" }}>💬 댓글 ({comments.length})</H3>
                     </MiddleRow>
 
-                    <CommentSection>        
+                    <CommentSection ref={commentRef}>        
                         {comments.map((c) => (
-                        <CommentItem key={c.id}>
-                            <strong>{c.writer}</strong>: {c.text}
-                        </CommentItem>
+                        <CommentItem key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <ProfileImg src={c.profileImg} alt="댓글 작성자 이미지" />
+                        <div>
+                          <strong>{c.writer}</strong>: {c.text}
+                        </div>
+                      </CommentItem>
                         ))}
 
                         <CommentForm onSubmit={handleCommentSubmit}>
