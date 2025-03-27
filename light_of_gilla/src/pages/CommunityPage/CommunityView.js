@@ -125,6 +125,7 @@ const CommunityView = () => {
             setPostData(post);
             setComments(comments);
             setLikes(post.likes); 
+            setCommentCount(post.commentCounts);
         })
         .catch((error) => {
             console.error("Error fetching post data:", error);
@@ -136,6 +137,7 @@ const CommunityView = () => {
 
   // const [likes, setLikes] = useState(postData.likes);
   const [newComment, setNewComment] = useState({ writer: "", text: "" });
+  const [commentCount, setCommentCount] = useState(0);
   const [likes, setLikes] = useState(0);
   if (!postData) return <div>글을 찾을 수 없습니다.</div>;
 
@@ -157,6 +159,8 @@ const CommunityView = () => {
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     console.log("댓글 제출 클릭됨");
+    const count = commentCount + 1; // UI 업데이트를 위해 좋아요 수 증가
+    setCommentCount(count); // UI 먼저 업데이트
   if (!newComment.text) return;
 
   const newCommentObj = {
@@ -197,7 +201,7 @@ const CommunityView = () => {
                      {/* {<Category>#{postData.categoryname}</Category>} */}
                     <MiddleRow>
                         <LikeButton onClick={handleLike}>♡좋아요 {likes}개</LikeButton>
-                        <H3>💬 댓글 ({postData.commentCounts})</H3>
+                        <H3>💬 댓글 ({commentCount})</H3>
                     </MiddleRow>
 
                     <CommentSection>        
