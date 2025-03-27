@@ -132,7 +132,7 @@ export const ContentTextArea = styled.textarea`
 export const LowRow = styled.div`
     display: flex;  // This makes it a flex container
     align-items: center;  // Align vertically in the center
-    gap: 600px;  // Space between the SelectBox and Button
+    gap: 510px;  // Space between the SelectBox and Button
     margin-bottom: 10px;  // Optional: Add space below the row
 `;
 // CommunityStyles.js 등에 추가

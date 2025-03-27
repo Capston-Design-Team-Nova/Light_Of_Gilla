@@ -57,6 +57,13 @@ const LikeButton = styled.button`
   cursor: pointer;
 `;
 
+const CommentTextWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-family: Ourfont5;
+  gap: 8px;
+`;
+
 const CommentSection = styled.div`
   margin-top: 2rem;
 `;
@@ -180,9 +187,13 @@ const CommunityView = () => {
                         {comments.map((c) => (
                         <CommentItem key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <ProfileImg src={c.profileImg} alt="댓글 작성자 이미지" />
-                        <div>
-                          <strong>{c.writer}</strong>: {c.text}
-                        </div>
+                        <CommentTextWrapper>
+                          
+                            <div>{c.writer}</div>
+                            <div>{c.text}</div>
+                          
+                        </CommentTextWrapper>
+                        
                       </CommentItem>
                         ))}
 
