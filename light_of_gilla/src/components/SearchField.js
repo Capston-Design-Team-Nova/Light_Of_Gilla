@@ -7,6 +7,7 @@ function SearchField() {
     const handleSearch = async () => {
 
     };
+    
     return(
         <SearchBar>
             <SearchInput

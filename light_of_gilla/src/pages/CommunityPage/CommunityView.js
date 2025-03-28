@@ -114,14 +114,22 @@ const H3 = styled.h3`
     font-family: Ourfont5;
     font-size: 14px;
 `;
-const ProfileImg = styled.img`
+
+const AuthorImg = styled.img`
   width: 14px;
   height: 14px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 8px;
+  margin-right: 4px;
 `;
 
+const ProfileImg = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 7px;
+`;
 const CommunityView = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
 
@@ -172,7 +180,7 @@ const CommunityView = () => {
                     <Title>{postData.title}</Title>
                     <Meta>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <ProfileImg src={postData.authorImg} alt="작성자 이미지" />
+                        <AuthorImg src={postData.authorImg} alt="작성자 이미지" />
                         {postData.author} | {postData.createdAt}
                       </div>
                     </Meta>
