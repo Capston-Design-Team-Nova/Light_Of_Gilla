@@ -9,6 +9,7 @@ export const PageHeader = styled.header`
   position: fixed; /* 상단에 고정 */
   top: 0; /* 화면 상단에 위치 */
   left: 0; /* 화면 왼쪽에 위치 */
+  z-index: 1000;
 `;
 
 export const Nav = styled.nav`

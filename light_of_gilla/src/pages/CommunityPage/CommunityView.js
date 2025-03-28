@@ -148,7 +148,7 @@ const CommunityView = () => {
   
 
     try {
-        await axios.post(`http://localhost:8082/post/like?post_id=${id}`);
+        await axios.post(`http://localhost:8082/post/like?post_id=${id}`);//백틱으로 선언해야함함
       
     } catch (error) {
         console.error('좋아요 업데이트 중 오류 발생:', error);
