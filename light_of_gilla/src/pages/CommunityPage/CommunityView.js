@@ -198,7 +198,7 @@ const CommunityView = () => {
                         {postData.userid} | {postData.created_time}
                     </Meta>
                     <Content1>{postData.content}</Content1>
-                     {/* {<Category>#{postData.categoryname}</Category>} */}
+                     <Category>#{postData.category_name}</Category>
                     <MiddleRow>
                         <LikeButton onClick={handleLike}>♡좋아요 {likes}개</LikeButton>
                         <H3>💬 댓글 ({commentCount})</H3>
