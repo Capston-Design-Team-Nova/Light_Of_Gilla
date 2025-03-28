@@ -151,6 +151,36 @@ export const Label = styled.label`
   margin-right: 1px;
   padding-top: 9px; 
 `;
+
+export const PaginationWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+  gap: 6px;
+`;
+
+export const PageButton = styled.button`
+  padding: 6px 12px;
+  font-size: 14px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: Ourfont5;
+
+  &:hover {
+    background-color: #FFE2B1;
+  }
+`;
+
+export const ActivePageButton = styled(PageButton)`
+  background-color: #FFC86A;
+  color: white;
+  border-color: #FFC86A;
+`;
+
+
+
 /*
 export const SelectBox = styled.div`
 position: relative;

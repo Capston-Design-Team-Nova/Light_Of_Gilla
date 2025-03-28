@@ -1,6 +1,6 @@
 import React,{ useState} from 'react';
 import Header from '../../components/Header';
-import { Main, Center, Content, Button, TopRow, ToggleButton} from '../../styles/CommunityStyles';
+import { Main, Center, Content, Button, TopRow, ToggleButton,ActivePageButton, PageButton,PaginationWrapper} from '../../styles/CommunityStyles';
 import { Link } from "react-router-dom";
 import CustomSelect from './CustomSelect';
 import CommunityList from './CommunityList';
@@ -39,6 +39,17 @@ function Community() {
                 </TopRow>
                 <Content isSidebarOpen={isSidebarOpen}>
                     <CommunityList />
+                    <PaginationWrapper>
+                        <PageButton>{'«'}</PageButton>
+                        <PageButton>{'<'}</PageButton>
+                        <ActivePageButton>1</ActivePageButton>{/*현재 위치한 페이지를 효과로 나타냄 */}
+                        <PageButton>2</PageButton>
+                        <PageButton>3</PageButton>
+                        <PageButton>4</PageButton>
+                        <PageButton>5</PageButton>
+                        <PageButton>{'>'}</PageButton>
+                        <PageButton>{'»'}</PageButton>
+                    </PaginationWrapper>
                 </Content>              
                 
             </Center>
