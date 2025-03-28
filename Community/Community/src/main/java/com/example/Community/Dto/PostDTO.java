@@ -17,6 +17,7 @@ public class PostDTO {
     private String title;
     private int postHits;
     private int likes;
+    private String category_name;
     private int commentCounts;
     private String content;
     private String user_id;
@@ -29,6 +30,7 @@ public class PostDTO {
         PostDTO postDTO=new PostDTO();
         postDTO.setPostHits(postEntity.getPostHits());
         postDTO.setPost_Id(postEntity.getPost_id());
+        postDTO.setCategory_name(postEntity.getCategory_name());
         postDTO.setTitle(postEntity.getTitle());
         postDTO.setLikes(postEntity.getLikes());
         postDTO.setCommentCounts(postEntity.getCommentCounts());

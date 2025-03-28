@@ -90,7 +90,6 @@ function CommunityList({posts}){
         <PostItem key={post.post_Id} onClick={() => navigate(`/post/${post.post_Id}`)}>
           <PostRow>
             <PostTitle>{post.title}({post.commentCounts})</PostTitle>
-            {/*<PostComments>({post.comments.length})</PostComments>*/}
             <PostAuthor>{post.author}</PostAuthor>
             <PostTime>{post.postCreated_date}</PostTime>
             <PostLikes>♡{post.likes}</PostLikes>

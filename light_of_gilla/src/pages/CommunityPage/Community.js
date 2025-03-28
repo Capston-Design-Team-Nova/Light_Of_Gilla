@@ -52,7 +52,7 @@ function Community() {
                     </Link>
                 </TopRow>
                 <Content isSidebarOpen={isSidebarOpen}>
-                    <CommunityList />
+                    <CommunityList posts={posts}/>
                     <PaginationWrapper>
                         <PageButton>{'«'}</PageButton>
                         <PageButton>{'<'}</PageButton>

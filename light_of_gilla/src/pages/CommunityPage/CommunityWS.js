@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React,{useState} from 'react';
 import Header from '../../components/Header';
-import { Main, Center, Content, Button, TitleInput, ContentTextArea, LowRow } from '../../styles/CommunityStyles';
+import { Main, Center, Content, Button, TitleInput, ContentTextArea, LowRow,ToggleButton,FormRow,Label } from '../../styles/CommunityStyles';
 import { useNavigate } from "react-router-dom";
 import CustomSelect from './CustomSelect';
 import Sidebar from '../../components/Sidebar';
@@ -10,25 +10,29 @@ function CommunityWS() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
     const navigate=useNavigate();
     const handleSubmit = async () => {
         const postData = {
             title: title,
             content: content,
-            // : selectedOption
+            category_name: selectedOption
         };
-    
+        console.log(selectedOption)
         try {
             await axios.post('http://localhost:8082/post/save', postData);
             alert('글을 정상적으로 올렸습니다!');
-            setTitle('');
-            setContent('');
-            setSelectedOption('');
+            // setTitle('');
+            // setContent('');
+            // setSelectedOption('');
             navigate('/Community')
             
         } catch (error) {
             console.error('Error posting data:', error);
         }
+    };
+    const toggleSidebar = () => {
+        setSidebarOpen(!isSidebarOpen);
     };
 
     const handleSelectChange = (value) => {

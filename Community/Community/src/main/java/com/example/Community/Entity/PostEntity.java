@@ -24,6 +24,9 @@ public class PostEntity extends BaseEntity{
     private int commentCounts;
 
     @Column
+    private String category_name;
+
+    @Column
     private String content;
 
     @Column
@@ -43,6 +46,7 @@ public class PostEntity extends BaseEntity{
       postEntity.setTitle(postDTO.getTitle());
       postEntity.setContent(postDTO.getContent());
       postEntity.setUserid(postDTO.getUser_id());
+      postEntity.setCategory_name(postDTO.getCategory_name());
       postEntity.setPostHits(0);
       postEntity.setLikes(0);
       postEntity.setCommentCounts(0);
@@ -55,6 +59,7 @@ public class PostEntity extends BaseEntity{
         postEntity.setContent(postDTO.getContent());
         postEntity.setUserid(postDTO.getUser_id());
         postEntity.setLikes(postEntity.getLikes());
+        postEntity.setCategory_name(postEntity.getCategory_name());
         postEntity.setPostHits(postDTO.getPostHits());
         postEntity.setCommentCounts(postDTO.getCommentCounts());
         return postEntity;

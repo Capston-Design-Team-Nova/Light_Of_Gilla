@@ -27,6 +27,9 @@ public class PostController {
     @PostMapping("/save")//post형식으로 받음
     public void save(@RequestBody PostDTO postDTO) throws IOException {
         postService.save(postDTO);
+        System.out.println(postDTO.getCategory_name());
+
+
 
     }
     @GetMapping("/")
@@ -35,7 +38,7 @@ public class PostController {
         return ResponseEntity.ok(postDTOList);
     }
     @PostMapping("/like")
-    public void like(@RequestParam Long post_id) {
+    public void like(@RequestParam("post_id") Long post_id) {
         postService.updatelikes(post_id);
     }
 
@@ -45,7 +48,7 @@ public class PostController {
         return ResponseEntity.ok(postDTOUserIdList);
     }
     @GetMapping("/{post_id}")
-    public ResponseEntity findById(@PathVariable Long post_id) {//@PathVariable는 {id}값을 매개변수로 바인딩 해준다.
+    public ResponseEntity findById(@PathVariable("post_id") Long post_id) {//@PathVariable는 {id}값을 매개변수로 바인딩 해준다.
         postService.updateHits(post_id);
         PostDTO postDTO= postService.findByPostId(post_id);
         List<CommentDTO> commentDTOList=commentService.findAll(post_id);
@@ -56,9 +59,9 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
     @GetMapping("/update/{post_id}")
-    public ResponseEntity UpdateForm(@PathVariable Long post_id) {
+    public ResponseEntity UpdateForm(@PathVariable("post_id") Long post_id) {
         PostDTO postDTO= postService.findByPostId(post_id);
-        /*댓글 목록 가져오기*/a
+        /*댓글 목록 가져오기*/
         return ResponseEntity.ok(postDTO);
     }
     @Transactional
