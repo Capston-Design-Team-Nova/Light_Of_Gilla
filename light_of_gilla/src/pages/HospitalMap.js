@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
+import Papa from "papaparse";
+import hospitalData from "../assets/data/강서구/hospital_list_가양동_병원.csv";
+import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
 import {
   Main,
   MapContainer,
@@ -9,7 +12,7 @@ import {
   SearchInput,
   CategoryButtons,
 } from "../styles/HospitalMapStyles";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 
 function HospitalMap() {
   const [state, setState] = useState({
@@ -18,32 +21,40 @@ function HospitalMap() {
     isLoading: true,
   });
 
-  const [hospitals, setHospitals] = useState([]); // 병원 리스트
-  const [selectedHospital, setSelectedHospital] = useState(null); // 선택한 병원 정보
-  const [searchTerm, setSearchTerm] = useState(""); // 검색어
+  const [hospitals, setHospitals] = useState([]);
+  const [selectedHospital, setSelectedHospital] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [csvData, setCsvData] = useState([]);
+  const [sortOption, setSortOption] = useState(() => {
+    return localStorage.getItem("sortOption") || "distance";
+  });
+  const [selectedPosition, setSelectedPosition] = useState(null); // 병원 위치 좌표
 
   useEffect(() => {
-    if (!window.kakao || !window.kakao.maps) {
-      console.error("카카오맵 API가 로드되지 않았습니다.");
-      return;
-    }
+    fetch(hospitalData)
+      .then((res) => res.text())
+      .then((text) => {
+        Papa.parse(text, {
+          header: true,
+          skipEmptyLines: true,
+          complete: (result) => setCsvData(result.data),
+        });
+      });
+  }, []);
 
+  useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        (pos) => {
           setState({
             center: {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude,
             },
             isLoading: false,
             errMsg: null,
           });
-          fetchHospitals(
-            position.coords.latitude,
-            position.coords.longitude,
-            "HP8" // 기본 카테고리는 병원
-          );
+          fetchHospitals(pos.coords.latitude, pos.coords.longitude);
         },
         (err) => {
           setState((prev) => ({
@@ -64,9 +75,8 @@ function HospitalMap() {
 
   const fetchHospitals = (lat, lng, category = "HP8") => {
     const ps = new window.kakao.maps.services.Places();
-
     ps.categorySearch(
-      category,  // 병원(HP8) 카테고리 검색
+      category,
       (data, status) => {
         if (status === window.kakao.maps.services.Status.OK) {
           setHospitals(data);
@@ -76,111 +86,188 @@ function HospitalMap() {
     );
   };
 
-  const symptomToCategory = {
-    "두통": "신경과",
-    "치통": "치과",
-    "소화불량": "내과",
-    "피부 가려움": "피부과",
-    "눈 충혈": "안과",
-    "충혈": "안과",
-    "귀 통증": "이비인후과",
-    "골절": "정형외과",
-    "산전 검사": "산부인과",
-    "복통": "내과",
-    "기침": "호흡기내과",
-    "발열": "내과",
-    "피로": "내과",
-    "어지러움": "신경과",
-    "가슴 통증": "심장내과",
-    "배뇨 문제": "비뇨기과",
-    "관절 통증": "정형외과",
-    "호흡 곤란": "호흡기내과",
-    "어깨 통증": "정형외과",
-    "배변 문제": "소화기내과",
-    "피부 발진": "피부과",
-    "근육통": "정형외과, 류마티스내과",
-    "손발 저림": "신경과, 혈관외과, 내분비내과",
-    "불면증": "정신건강의학과, 신경과",
-    "갑상선 문제": "내분비내과",
-    "알레르기": "알레르기내과, 피부과, 이비인후과",
-    "요통": "정형외과, 신경외과",
-    "탈모": "피부과",
-    "우울감": "정신건강의학과",
-    "불안감": "정신건강의학과",
-    "수면장애": "정신건강의학과, 신경과",
-    "구토": "소화기내과",
-    "설사": "소화기내과",
-};
-  
-  const handleSearch = async () => {
-    if (!searchTerm.trim()) return;
-  
-    const ps = new window.kakao.maps.services.Places();
-    let searchKeyword = searchTerm;
-  
-    // 입력한 증상이 사전 정의된 리스트에 있으면 해당 병원명으로 검색
-    if (symptomToCategory[searchTerm]) {
-      searchKeyword = symptomToCategory[searchTerm]; // 예: "두통" → "신경과"
+  const getHospitalDetails = (name) => {
+    return csvData.find((h) => h.name === name);
+  };
+
+  // 거리 구하기
+  const getDistance = (lat1, lng1, lat2, lng2) => {
+    const R = 6371e3;
+    const toRad = (deg) => (deg * Math.PI) / 180;
+    const φ1 = toRad(lat1);
+    const φ2 = toRad(lat2);
+    const Δφ = toRad(lat2 - lat1);
+    const Δλ = toRad(lng2 - lng1);
+    const a =
+      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  const getSortedHospitals = () => {
+    let sorted = [...hospitals];
+
+    if (sortOption === "rating") {
+      sorted.sort((a, b) => {
+        const aData = csvData.find((x) => x.name === a.place_name);
+        const bData = csvData.find((x) => x.name === b.place_name);
+        const aScore = aData?.score ? parseFloat(aData.score) : -1;
+        const bScore = bData?.score ? parseFloat(bData.score) : -1;
+
+        if (bScore !== aScore) return bScore - aScore;
+
+        const aDist = getDistance(
+          state.center.lat,
+          state.center.lng,
+          parseFloat(a.y),
+          parseFloat(a.x)
+        );
+        const bDist = getDistance(
+          state.center.lat,
+          state.center.lng,
+          parseFloat(b.y),
+          parseFloat(b.x)
+        );
+        return aDist - bDist;
+      });
+    } else if (sortOption === "distance") {
+      sorted.sort((a, b) => {
+        const aDist = getDistance(
+          state.center.lat,
+          state.center.lng,
+          parseFloat(a.y),
+          parseFloat(a.x)
+        );
+        const bDist = getDistance(
+          state.center.lat,
+          state.center.lng,
+          parseFloat(b.y),
+          parseFloat(b.x)
+        );
+        return aDist - bDist;
+      });
     }
-  
-    ps.keywordSearch(
-      searchKeyword,
-      (data, status) => {
-        if (status === window.kakao.maps.services.Status.OK) {
-          setHospitals(data); // 결과 업데이트
-        } else {
-          setHospitals([]);
-        }
-      },
-      { location: new window.kakao.maps.LatLng(state.center.lat, state.center.lng) }
+
+    return sorted;
+  };
+
+  const handleSortChange = (e) => {
+    const value = e.target.value;
+    setSortOption(value);
+    localStorage.setItem("sortOption", value);
+  };
+
+  const formatOpenHours = (openHours) => {
+    if (!openHours) return <p>정보가 등록되지 않았어요.</p>;
+    try {
+      const hours = JSON.parse(openHours.replace(/'/g, '"'));
+      return Object.entries(hours).map(([day, time]) => (
+        <p key={day}>{day === "휴무일" ? "휴무일" : `${day}: ${time}`}</p>
+      ));
+    } catch {
+      return <p>진료 시간 정보를 불러올 수 없습니다.</p>;
+    }
+  };
+
+  const renderReviews = (reviews) => {
+    if (!reviews) return null;
+    try {
+      const list = JSON.parse(reviews.replace(/'/g, '"'));
+      return list.map((r, i) => (
+        <div
+          key={i}
+          style={{ padding: "10px", borderBottom: "1px solid #ccc" }}
+        >
+          <h4>{r.작성자}</h4>
+          <div>{renderRating(parseFloat(r.별점))}</div>
+          <p>{r.내용}</p>
+          <p>{r.날짜}</p>
+        </div>
+      ));
+    } catch {
+      return <p>리뷰 정보를 불러올 수 없습니다.</p>;
+    }
+  };
+
+  const renderRating = (score) => {
+    score = isNaN(score) ? 0 : score;
+    const full = Math.floor(score);
+    const half = score % 1 >= 0.5;
+    const empty = 5 - full - (half ? 1 : 0);
+
+    return (
+      <div style={{ display: "flex", alignItems: "center" }}>
+        {[...Array(full)].map((_, i) => (
+          <BsStarFill key={i} style={{ color: "red", fontSize: "20px" }} />
+        ))}
+        {half && <BsStarHalf style={{ color: "red", fontSize: "20px" }} />}
+        {[...Array(empty)].map((_, i) => (
+          <BsStar key={i} style={{ color: "gray", fontSize: "20px" }} />
+        ))}
+        <span style={{ marginLeft: "5px", fontSize: "14px", color: "#333" }}>
+          {score.toFixed(1)}
+        </span>
+      </div>
     );
   };
-  
+
+  const handleHospitalClick = (h) => {
+    const details = getHospitalDetails(h.place_name);
+    setSelectedHospital(
+      details || {
+        name: h.place_name,
+        address: h.road_address_name || h.address_name,
+        score: 0,
+        open_hour: "",
+        reviews: [],
+      }
+    );
+    setSelectedPosition({ lat: parseFloat(h.y), lng: parseFloat(h.x) });
+  };
+
+  const handleSearch = () => {
+    if (!searchTerm.trim()) return;
+    const ps = new window.kakao.maps.services.Places();
+    ps.keywordSearch(
+      searchTerm,
+      (data, status) => {
+        setHospitals(
+          status === window.kakao.maps.services.Status.OK ? data : []
+        );
+      },
+      {
+        location: new window.kakao.maps.LatLng(
+          state.center.lat,
+          state.center.lng
+        ),
+      }
+    );
+  };
 
   const handleCategoryClick = (category) => {
-    const categoryCodes = {
-      약국: "PM8",
-      내과: "HP8", 
-      피부과: "HP8",
-      치과: "HP8",
-      소아과: "HP8",
-      산부인과: "HP8",
-      정형외과: "HP8",
-      안과: "HP8",
-      성형외과: "HP8",
-      이비인후과: "HP8",
-    };
-  
     const ps = new window.kakao.maps.services.Places();
-    const selectedCode = categoryCodes[category];
-  
-    if (!selectedCode) return;
-  
     ps.keywordSearch(
-      `${category}`, // 선택한 카테고리 키워드 검색
+      category,
       (data, status) => {
-        if (status === window.kakao.maps.services.Status.OK) {
-          setHospitals(data);
-        } else {
-          setHospitals([]);
-        }
+        setHospitals(
+          status === window.kakao.maps.services.Status.OK ? data : []
+        );
       },
-      { location: new window.kakao.maps.LatLng(state.center.lat, state.center.lng) }
+      {
+        location: new window.kakao.maps.LatLng(
+          state.center.lat,
+          state.center.lng
+        ),
+      }
     );
   };
-  
 
-  // 검색창에서 Enter 키 입력 가능하도록 설정
   const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
+    if (e.key === "Enter") handleSearch();
   };
 
-  // 뒤로가기 버튼 클릭 처리
-  const handleGoBack = () => {
-    setSelectedHospital(null); // 병원 정보 초기화
-  };
+  const handleGoBack = () => setSelectedHospital(null);
 
   return (
     <Main>
@@ -191,18 +278,28 @@ function HospitalMap() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyPress={handleKeyPress} // Enter 키로 검색 가능
+            onKeyPress={handleKeyPress}
             placeholder="병원 검색..."
           />
           <img
             src={require("../assets/images/돋보기.png")}
-            alt=" "
+            alt="검색"
             onClick={handleSearch}
           />
         </SearchBox>
-
         <CategoryButtons>
-          {["약국", "내과", "피부과", "치과", "소아과", "산부인과", "정형외과", "안과", "성형외과", "이비인후과"].map((cat) => (
+          {[
+            "약국",
+            "내과",
+            "피부과",
+            "치과",
+            "소아과",
+            "산부인과",
+            "정형외과",
+            "안과",
+            "성형외과",
+            "이비인후과",
+          ].map((cat) => (
             <button key={cat} onClick={() => handleCategoryClick(cat)}>
               #{cat}
             </button>
@@ -210,13 +307,19 @@ function HospitalMap() {
         </CategoryButtons>
       </SearchContainer>
 
-      {/* 왼쪽 사이드바 병원 리스트 */}
       <Sidebar>
+        <div style={{ padding: "10px" }}>
+          <label>정렬 기준: </label>
+          <select value={sortOption} onChange={handleSortChange}>
+            <option value="distance">거리순</option>
+            <option value="rating">평점순</option>
+          </select>
+        </div>
         <div>
-          {hospitals.map((h, idx) => (
+          {getSortedHospitals().map((h, i) => (
             <div
-              key={idx}
-              onClick={() => setSelectedHospital(h)}
+              key={i}
+              onClick={() => handleHospitalClick(h)}
               style={{
                 cursor: "pointer",
                 padding: "5px",
@@ -230,7 +333,6 @@ function HospitalMap() {
         </div>
       </Sidebar>
 
-      {/* 지도 영역 */}
       <MapContainer>
         <Map
           center={state.center}
@@ -243,46 +345,108 @@ function HospitalMap() {
               image={{
                 src: require("../assets/images/내 위치 마커.png"),
                 size: { width: 40, height: 45 },
-                options: { offset: { x: 27, y: 69 } }
+                options: { offset: { x: 27, y: 69 } },
               }}
             />
           )}
+          {getSortedHospitals().map((h, i) => {
+            const markerImage =
+              i < 5
+                ? require("../assets/images/상위 5개 병원 마커.png")
+                : require("../assets/images/병원마커.png");
 
-          {hospitals.map((h, idx) => (
-            <MapMarker
-              key={idx}
-              position={{ lat: h.y, lng: h.x }}
-              onClick={() => setSelectedHospital(h)}
-              image={{
-                src: require("../assets/images/병원마커.png"),
-                size: { width: 40, height: 45 },
-                options: { offset: { x: 27, y: 69 } }
-              }}
-            />
-          ))}
+            return (
+              <MapMarker
+                key={i}
+                position={{ lat: h.y, lng: h.x }}
+                onClick={() => handleHospitalClick(h)}
+                image={{
+                  src: markerImage,
+                  size: { width: 40, height: 45 },
+                  options: { offset: { x: 27, y: 69 } },
+                }}
+              />
+            );
+          })}
+          {selectedHospital && selectedPosition && (
+            <CustomOverlayMap position={selectedPosition}>
+              <div
+                style={{
+                  background: "#fff",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  padding: "10px",
+                  width: "250px",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                  fontSize: "14px",
+                  position: "relative",
+                }}
+              >
+                <div style={{ fontWeight: "bold", marginBottom: "5px" }}>
+                  {selectedHospital.name}
+                </div>
+                <div style={{ color: "#666", marginBottom: "5px" }}>
+                  {selectedHospital.address}
+                </div>
+                {selectedHospital.img_url && (
+                  <img
+                    src={selectedHospital.img_url}
+                    alt="병원 이미지"
+                    style={{
+                      width: "100%",
+                      height: "120px",
+                      objectFit: "cover",
+                      borderRadius: "4px",
+                      marginBottom: "8px",
+                    }}
+                  />
+                )}
+                <button
+                  onClick={() => {
+                    setSelectedHospital(null);
+                    setSelectedPosition(null);
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: "5px",
+                    right: "8px",
+                    background: "transparent",
+                    border: "none",
+                    fontSize: "16px",
+                    cursor: "pointer",
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+            </CustomOverlayMap>
+          )}
         </Map>
       </MapContainer>
 
-      {/* 선택한 병원 정보 패널 */}
       {selectedHospital && (
         <Sidebar>
-          <img
-            src={require("../assets/images/뒤로가기.png")} // 뒤로가기 버튼
-            onClick={handleGoBack}
-          />
-          <h2>{selectedHospital.place_name}</h2>
-          <p>
-            {selectedHospital.road_address_name ||
-              selectedHospital.address_name}
-          </p>
-          <p>{selectedHospital.phone}</p>
-          <a
-            href={selectedHospital.place_url}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            상세 보기
-          </a>
+          <div>
+            <img
+              src={require("../assets/images/뒤로가기.png")}
+              onClick={handleGoBack}
+              alt="뒤로가기"
+            />
+            <h2>{selectedHospital.name}</h2>
+            <p>{selectedHospital.address}</p>
+            <p>{renderRating(parseFloat(selectedHospital.score))}</p>
+            {selectedHospital.img_url && (
+              <img
+                src={selectedHospital.img_url}
+                alt="병원 이미지"
+                style={{ width: "100%", height: "auto" }}
+              />
+            )}
+            <h3>진료 시간</h3>
+            {formatOpenHours(selectedHospital.open_hour)}
+            <h3>리뷰</h3>
+            {renderReviews(selectedHospital.reviews)}
+          </div>
         </Sidebar>
       )}
     </Main>
