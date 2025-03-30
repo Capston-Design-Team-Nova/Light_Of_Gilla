@@ -13,6 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,11 +30,21 @@ public class PostController {
     @PostMapping("/save")//post형식으로 받음
     public void save(@RequestBody PostDTO postDTO) throws IOException {
         postService.save(postDTO);
-        System.out.println(postDTO.getCategory_name());
-
 
 
     }
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<PostDTO>> findCategory(@PathVariable("category") String category) {
+        // URL 디코딩
+        String decodedCategory = URLDecoder.decode(category, StandardCharsets.UTF_8);
+
+        // 디코딩된 카테고리로 데이터 조회
+        List<PostDTO> posts = postService.findByCategory(decodedCategory);
+
+        // 결과 반환
+        return ResponseEntity.ok(posts);
+    }
+
     @GetMapping("/")
     public ResponseEntity<List<PostDTO>> findAll(){
         List<PostDTO> postDTOList = postService.findAll();

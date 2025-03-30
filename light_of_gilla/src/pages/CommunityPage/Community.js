@@ -12,6 +12,7 @@ import SearchField from '../../components/SearchField';
 function Community() {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [posts, setPosts] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(""); 
     // Toggle sidebar visibility
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
@@ -28,7 +29,16 @@ function Community() {
         };
         fetchPosts();
     }, []);
-
+    const handleSelectChange = async (value) => {
+        console.log("선택한 카테고리:", value);
+        const category = encodeURIComponent(value);
+        try {
+            const response = await axios.get(`http://localhost:8082/post/category/${category}`);
+            setPosts(response.data); 
+        } catch (error) {
+            console.error("카테고리별 게시글 불러오기 오류:", error);
+        }
+    };
     
     return (
         <Main>
@@ -46,7 +56,7 @@ function Community() {
                     {/* 검색 필드 */}
                     <SearchField />
                     <div style={{ flex: 1 }} /> {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}
-                    <CustomSelect />
+                    <CustomSelect onChange={handleSelectChange}/>
                     <Link to="/Write">
                     <Button>글쓰기</Button>
                     </Link>
