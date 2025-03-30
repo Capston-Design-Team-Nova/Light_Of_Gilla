@@ -7,7 +7,7 @@ spring:
     name: board2024_boot_jpa
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://community.c41i824a6nta.us-east-1.rds.amazonaws.com:3306/community?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://post.c76244q4m4d9.ap-northeast-2.rds.amazonaws.com:3306/Post?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: admin
     password: 1021501d
   thymeleaf:
