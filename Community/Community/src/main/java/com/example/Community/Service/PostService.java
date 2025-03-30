@@ -84,4 +84,13 @@ public class PostService {
         }
         return PostDTOList;
     }
+
+    public List<PostDTO> findTitleOrContent(String decodedSearch) {
+        List<PostEntity> PostEntityList = postRepository.findByTitleOrContentContaining(decodedSearch);
+        List<PostDTO> PostDTOList=new ArrayList<>();
+        for(PostEntity postEntity:PostEntityList){
+            PostDTOList.add(PostDTO.toPostDTO(postEntity));
+        }
+        return PostDTOList;
+    }
 }

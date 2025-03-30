@@ -10,7 +10,14 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<PostEntity,Long> {
     List<PostEntity> findAllByUserid(String userId);
+
     List<PostEntity> findAllByCategory(String category);
+
+    List<PostEntity> findByTitleContaining(String title);
+    // 제목과 내용에 '사과'가 포함된 글을 모두 검색
+
+    @Query("SELECT p FROM PostEntity p WHERE p.title LIKE %:keyword% OR p.content LIKE %:keyword%")
+    List<PostEntity> findByTitleOrContentContaining(@Param("keyword") String keyword);
 
     @Modifying//@Query는 기본적으로 **조회용(SELECT)**으로 인식되므로, 수정 작업임을 알려주기 위해 필요합니다.
     @Query(value= "update PostEntity b set b.postHits=b.postHits+1 where b.post_id= :id")//updateHits의 쿼리문
