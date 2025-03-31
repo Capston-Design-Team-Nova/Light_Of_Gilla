@@ -11,18 +11,20 @@ const symptoms = [
 ];
 
 // CustomSelect 컴포넌트
-const CustomSelect = () => {
-  // 선택된 증상을 상태로 관리
+const CustomSelect = ({ onChange }) => {
   const [selectedSymptom, setSelectedSymptom] = useState("");
 
   // 증상 선택 시 처리 함수
   const handleSelectChange = (e) => {
-    setSelectedSymptom(e.target.value);
+    const value = e.target.value;
+    console.log("선택한 증상:", value); 
+    setSelectedSymptom(value);
+    onChange(value); 
   };
 
   return (
     <Container>
-      <Label htmlFor="symptom-select"></Label>
+      <Label htmlFor="symptom-select">증상 선택</Label>
       <Select
         id="symptom-select"
         value={selectedSymptom}
@@ -35,14 +37,6 @@ const CustomSelect = () => {
           </option>
         ))}
       </Select>
-
-      {/*<Message>
-        {selectedSymptom ? (
-          <p>선택한 증상: <strong>{//selectedSymptom}</strong></p>
-        ) : (
-          <p>증상을 선택하세요.</p>
-        )}
-      //</Message>*/}
     </Container>
   );
 };

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { useEffect } from 'react';
+import { useParams, useNavigate, Await } from "react-router-dom";
 import styled from "styled-components";
-import { posts } from "./data";
 import { Main,Center,TopRow,Content } from "../../styles/CommunityStyles";
 import Header from "../../components/Header";
 import Sidebar from '../../components/Sidebar';
@@ -107,36 +108,78 @@ const H3 = styled.h3`
 
 const CommunityView = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [postData, setPostData] = useState(null); 
+    const [comments, setComments] = useState([]);
 
-    // Toggle sidebar visibility
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
     };
   const { id } = useParams();
   const navigate = useNavigate();
-  const postData = posts.find((p) => p.id === Number(id));
+  useEffect(() => {
+    // API 호출
+    axios
+        .get(`/post/${id}`)  
+        .then((response) => {
+            const { post, comments } = response.data;
+            setPostData(post);
+            setComments(comments);
+            setLikes(post.likes); 
+            setCommentCount(post.commentCounts);
+        })
+        .catch((error) => {
+            console.error("Error fetching post data:", error);
+        });
+}, [id]);
 
-  const [likes, setLikes] = useState(postData.likes);
-  const [comments, setComments] = useState(postData.comments);
+  
+  
+
+  // const [likes, setLikes] = useState(postData.likes);
   const [newComment, setNewComment] = useState({ writer: "", text: "" });
-
+  const [commentCount, setCommentCount] = useState(0);
+  const [likes, setLikes] = useState(0);
   if (!postData) return <div>글을 찾을 수 없습니다.</div>;
 
-  const handleLike = () => {
-    setLikes(likes + 1);
+  const handleLike = async () => {
+    const updatedLikes = likes + 1; // UI 업데이트를 위해 좋아요 수 증가
+    setLikes(updatedLikes); // UI 먼저 업데이트
+
+  
+
+    try {
+        await axios.post(`http://localhost:8082/post/like?post_id=${id}`);//백틱으로 선언해야함함
+      
+    } catch (error) {
+        console.error('좋아요 업데이트 중 오류 발생:', error);
+    }
+  
   };
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
-    if (!newComment.writer || !newComment.text) return;
+    console.log("댓글 제출 클릭됨");
+    const count = commentCount + 1; // UI 업데이트를 위해 좋아요 수 증가
+    setCommentCount(count); // UI 먼저 업데이트
+  if (!newComment.text) return;
 
-    const newCommentObj = {
-      id: comments.length + 1,
-      ...newComment,
-    };
-
-    setComments([...comments, newCommentObj]);
-    setNewComment({ writer: "", text: "" });
+  const newCommentObj = {
+    user_id: newComment.writer,
+    comment: newComment.text,
+    post_id: id
+  };
+  console.log("Post ID:", newCommentObj.post_id);
+  // 1. 백엔드로 댓글 전송 (POST 요청 예시)
+  axios.post('/comment/save', newCommentObj)
+    .then((response) => {
+      // 2. 댓글 추가 후 댓글 목록만 업데이트
+      setComments([...comments, newCommentObj]); // 새 댓글 추가
+      setNewComment({ writer: "", text: "" }); // 입력 폼 초기화
+  
+    })
+    .catch((error) => {
+      console.error("댓글 추가 오류:", error);
+    });
   };
 
   return (
@@ -152,19 +195,19 @@ const CommunityView = () => {
                 <Wrapper>
                     <Title>{postData.title}</Title>
                     <Meta>
-                        {postData.author} | {postData.createdAt}
+                        {postData.userid} | {postData.created_time}
                     </Meta>
                     <Content1>{postData.content}</Content1>
-                    <Category>#{postData.category}</Category>
+                     <Category>#{postData.category_name}</Category>
                     <MiddleRow>
                         <LikeButton onClick={handleLike}>♡좋아요 {likes}개</LikeButton>
-                        <H3>💬 댓글 ({comments.length})</H3>
+                        <H3>💬 댓글 ({commentCount})</H3>
                     </MiddleRow>
 
                     <CommentSection>        
                         {comments.map((c) => (
                         <CommentItem key={c.id}>
-                            <strong>{c.writer}</strong>: {c.text}
+                            <strong>{c.user_id}</strong>: {c.comment}
                         </CommentItem>
                         ))}
 
@@ -180,8 +223,7 @@ const CommunityView = () => {
                             <Button type="submit">⬆</Button>
                         </CommentForm>
                     </CommentSection>
-
-                    {/*<Button onClick={() => navigate(-1)}>← 돌아가기</Button>*/}
+                    
                 </Wrapper>
                 </Content>
                 
@@ -196,32 +238,3 @@ const CommunityView = () => {
 export default CommunityView;
 
 
-{/*import React from "react";
-import Header from "../../components/Header";
-import { Main, Center, Content, Button } from '../../styles/CommunityStyles';
-import { Link } from "react-router-dom";
-import CommunitySidebar from './CommunitySidebar';
-
-function CommunityView() {
-
-    return (
-        <Main>
-            <Header />
-            <CommunitySidebar width={450} />
-            <Center>
-                
-                <Link to="/Write">
-                <Button>수정</Button>
-                </Link>
-                <Button>삭제</Button>
-                <Content>
-                    {/*제목, 내용, 작성시간, 닉네임 불러오기*/}
-                    {/*<Button1>좋아요</Button1>
-                    <Button1>댓글</Button1>
-                    {/*댓글 단 사용자 프로필사진, 닉네임, 댓글 내용 불러오기*/ }
-                {/*</Content>              
-                
-            </Center>
-        </Main>
-    );
-}*/}
