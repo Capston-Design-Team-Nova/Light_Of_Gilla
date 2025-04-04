@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled,{ keyframes } from 'styled-components';
 import backgroundImage from '../assets/images/image1.png';
 
 
@@ -38,32 +38,69 @@ display: flex;
 flex-flow: column;
 justify-content: center;
 align-items:center;
-min-height: 800px;
+
 `;
 
 export const FeaturesContainer = styled.div`
 display: flex;
 justify-content: center;
 gap: 20px;
-margin-top: 20px;
+
 flex-flow: column;
 text-align: center;
-min-height: 800px;
+
 `;
+const slideInFromTop = keyframes`
+  0% {
+  opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+  opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
 export const FeatureBox = styled.div`
+
+ opacity: 0; /* 처음에 숨겨놓고 */
+  animation: ${slideInFromTop} 5s ease-out forwards;
+
+
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   background: white;
-  padding: 20px;
+  padding: 5px;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 630px;
-    margin-top: 30px; /* 컨테이너 상단 여백 */
+  width: 510px;
+ 
+  max-height: 100vh; 
+`;
+
+export const FeatureBox2 = styled.div`
+  opacity: 0; /* 처음에 숨겨놓고 */
+  animation: ${slideInFromTop} 5s ease-out forwards;
+
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  padding: 5px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 510px;
+  margin-top: 20px; /* 컨테이너 상단 여백 */
+  max-height: 100vh; 
 `;
 
 export const FeatureImage = styled.img`
-  width: 100%;
+
+  width: 80%;
   height: auto;
   border-radius: 10px;
 `;
@@ -84,13 +121,14 @@ display: flex;
 flex-flow: column;
 text-align: center;
 justify-content: center;
+
 `;
 
 export const P2 = styled.h1`
   
   text-align: center;
-  font-size: 35px;
-  color: #000000E3;
+  font-size: 33px;
+  color:rgba(48, 47, 47, 0.9);
   font-family: 'OurFont4';
   margin-top: 30px; /* 컨테이너 상단 여백 */
 `;
@@ -98,7 +136,7 @@ export const P2 = styled.h1`
 export const P3 = styled.h1`
   
   text-align: center;
-  font-size: 35px;
+  font-size: 33px;
   color: #E69100;
   font-family: 'OurFont4';
   margin-top: 30px; /* 컨테이너 상단 여백 */

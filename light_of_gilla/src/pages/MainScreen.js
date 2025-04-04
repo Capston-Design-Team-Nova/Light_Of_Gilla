@@ -1,8 +1,10 @@
 import React,{useEffect} from 'react';
-import { Main, Center, P, P3,P4, FeaturesSection, FeatureImage,FeatureBox, FeaturesContainer, Footer,LastSection, P2 } from '../styles/MainScreenStyles';
+import { Main, Center, P, P3,P4, FeaturesSection, FeatureImage, FeatureBox, FeatureBox2, FeaturesContainer, Footer,LastSection, P2 } from '../styles/MainScreenStyles';
 import Header from '../components/Header';
 import featureImage1 from '../assets/images/featureImage1.png';
 import featureImage2 from '../assets/images/featureImage2.png';
+//import AnimatedFeatureBox from '../components/AnimatedFeatureBox';
+
 
 function MainScreen() {
     useEffect(() => {
