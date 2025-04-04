@@ -1,8 +1,15 @@
 import styled from 'styled-components';
-// 스타일링된 컴포넌트들
+
+// 모바일 기준 (갤럭시 S24)
+const mobile = '@media screen and (max-width: 480px)';
+// 태블릿 ~ 작은 데스크탑
+const tablet = '@media screen and (max-width: 1024px)';
+
 export const Container = styled.div`
   margin: 20px;
   font-family: Arial, sans-serif;
+
+
 `;
 
 export const Label = styled.label`
