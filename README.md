@@ -181,3 +181,25 @@ Authorization: Bearer {토큰값}
 
 ## 15. 전체 유저 수 조회
 - **GET** `/api/users/count`
+
+---
+
+# 🧩 병원 및 약국 정보 API
+
+API Gateway 엔드포인트
+  https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com
+
+---
+
+## 1. 병원 정보 전체 불러오기 (최대 500개)
+- **GET** `/api/hospitals`
+
+요청 예시:
+- `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/hospitals`
+
+## 2. 병원 이름으로 검색하기 (최대 500개)
+- **GET** `api/hospitals/search`
+- 파라미터 형식이므로 주의
+
+요청 예시:
+- `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/hospitals/search?name=강남`
