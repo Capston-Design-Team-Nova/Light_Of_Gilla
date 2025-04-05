@@ -188,7 +188,7 @@ Authorization: Bearer {토큰값}
 
 API Gateway 엔드포인트
 
-: https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com
+`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com`
 
 ---
 
