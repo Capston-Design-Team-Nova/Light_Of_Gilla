@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 
+// 모바일 기준 (갤럭시 S24)
+const mobile = '@media screen and (max-width: 480px)';
+// 태블릿 ~ 작은 데스크탑
+const tablet = '@media screen and (max-width: 1024px)';
+
 export const Center = styled.div`
   width: 100%;
   height: 100%; /* 높이를 명시적으로 설정 */
@@ -10,6 +15,10 @@ export const Center = styled.div`
   background-position: center; /* 중앙에 위치 */
   padding-top: 90px; /* PageHeader의 높이에 맞는 여백 추가 */
   background-color: #FEF7FF;/*#ffece3;*/
+
+  ${mobile} {
+    padding-bottom: 50px;
+  }
 `;
 //width: 100%;
 
@@ -30,6 +39,14 @@ export const TopRow = styled.div`
   justify-content: flex-start;
   gap: 10px;
   margin-bottom: 10px;
+
+    ${mobile} {
+    width: 90%;
+    flex-direction: column;
+    margin-left: 0;
+    align-items: stretch;
+     gap: 1px; /* ✅ 모바일에서 간격만 좁게 조절 */
+  }
 `;
 
 export const Content = styled.div`
@@ -45,6 +62,13 @@ export const Content = styled.div`
   padding-top: 10px;
   border-radius: 15px;
   background-color: white;
+
+  ${mobile} {
+    width: 95%;
+    height: 65%;
+    margin-top: 5px;
+    margin-left: 0;
+  }
 `;
 
 
@@ -60,6 +84,11 @@ export const Button = styled.button`
   cursor: pointer;
   border: none;
   border-radius: 8px;
+
+    ${mobile} {
+    
+    width: 95%;
+  }
 `;
 
 export const ToggleButton =styled.button`
@@ -77,6 +106,10 @@ export const ToggleButton =styled.button`
     height: 55px; /* 비율에 맞게 높이 자동 조정 */
     
   }
+
+  ${mobile} {
+    top: 16px;
+  }
 `;
 
 export const SearchBar = styled.div`
@@ -86,6 +119,14 @@ export const SearchBar = styled.div`
   background: #D9D9D9;
   border-radius: 20px;
   border: 1px solid #ccc;
+
+  ${mobile} {
+    display:flex;
+    align-item:center;
+    width: 90%;
+    margin-top: 1px;
+    margin-left: 20px;
+  }
 
   img {
     padding: 5px 5px;
@@ -105,6 +146,12 @@ export const SearchInput = styled.input`
   border:none;
   border-radius:20px;
   background: #D9D9D9;
+
+  ${mobile} {
+    width: 90%;
+    font-size: 14px;
+    
+  }
 `;
 
 export const TitleInput = styled.input`
@@ -116,6 +163,10 @@ export const TitleInput = styled.input`
   border-bottom: 1px solid #00000059;  /* ✅ 아래쪽 선만 표시 */
   background-color: transparent;   /* ✅ 원하면 배경 투명 */
   outline: none;                   /* ✅ 클릭했을 때 파란 테두리 제거 (선택사항) */
+
+  ${mobile} {
+    width: 90%;
+  }
 `;
 
 export const ContentTextArea = styled.textarea`
@@ -127,6 +178,10 @@ export const ContentTextArea = styled.textarea`
   border: 1px solid #00000059;
   border-radius: 2px;
   resize: none;
+
+  ${mobile} {
+    width: 90%;
+  }
 `;
 
 export const LowRow = styled.div`
@@ -134,6 +189,14 @@ export const LowRow = styled.div`
     align-items: center;  // Align vertically in the center
     gap: 510px;  // Space between the SelectBox and Button
     margin-bottom: 10px;  // Optional: Add space below the row
+
+    ${mobile} {
+      flex-direction: row;
+      gap: 3px;              // ✅ 버튼과 셀렉트 사이 약간의 간격
+      width: 100%;
+      justify-content: space-between;
+      padding: 0 10px;
+    }
 `;
 // CommunityStyles.js 등에 추가
 export const FormRow = styled.div`
@@ -141,6 +204,16 @@ export const FormRow = styled.div`
   align-items: flex-start; 
   width: 90%;
   margin-bottom: 13px;
+
+  
+  ${mobile} {
+    flex-direction: row;     // ✅ 모바일에서도 가로 정렬 유지
+    align-items: center;     // ✅ 세로 정렬 중앙
+    justify-content: flex-start;
+    width: 100%;
+    padding: 0 10px;
+  }
+  }
 `;
 
 export const Label = styled.label`
@@ -150,6 +223,11 @@ export const Label = styled.label`
   color: black;
   margin-right: 1px;
   padding-top: 9px; 
+
+     ${mobile} {
+    padding-top: 3px;         // ✅ 모바일에서 좀 더 위로 올림
+    align-self: flex-start;   // ✅ 입력창보다 위 정렬
+  }
 `;
 
 export const PaginationWrapper = styled.div`
@@ -157,6 +235,12 @@ export const PaginationWrapper = styled.div`
   justify-content: center;
   margin: 2rem 0;
   gap: 6px;
+
+    ${mobile} {
+    flex-wrap: wrap;
+    gap: 4px;
+    
+  }
 `;
 
 export const PageButton = styled.button`
@@ -171,6 +255,12 @@ export const PageButton = styled.button`
   &:hover {
     background-color: #FFE2B1;
   }
+
+ ${mobile} {
+    
+    font-size: 10px;
+  }
+
 `;
 
 export const ActivePageButton = styled(PageButton)`
@@ -180,53 +270,5 @@ export const ActivePageButton = styled(PageButton)`
 `;
 
 
-
-/*
-export const SelectBox = styled.div`
-position: relative;
-width: 200px;
-padding: 8px;
-border-radius: 12px;
-background-color: #ffffff;
-align-self: center;
-box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-cursor: pointer;
-&::before {
-  content: "⌵";
-  position: absolute;
-  top: 1px;
-  right: 8px;
-  color: #49c181;
-  font-size: 20px;
-}
-`;
-export const Label = styled.label`
-font-size: 14px;
-margin-left: 4px;
-text-align: center;
-`;
-export const SelectOptions = styled.ul`
-position: absolute;
-list-style: none;
-top: 18px;
-left: 0;
-width: 100%;
-overflow: hidden;
-height: 90px;
-max-height: ${(props) => (props.show ? "none" : "0")};
-padding: 0;
-border-radius: 8px;
-background-color: #222222;
-color: #fefefe;
-`;
-export const Option = styled.li`
-font-size: 14px;
-padding: 6px 8px;
-transition: background-color 0.2s ease-in;
-&:hover {
-  background-color: #595959;
-}
-`;
-*/
 
 

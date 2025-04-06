@@ -76,4 +76,21 @@ public class PostService {
         return findByPostId(postDTO.getPost_Id());
     }
 
+    public List<PostDTO> findByCategory(String category) {
+        List<PostEntity> PostEntityList = postRepository.findAllByCategory(category);
+        List<PostDTO> PostDTOList=new ArrayList<>();
+        for(PostEntity postEntity:PostEntityList){
+            PostDTOList.add(PostDTO.toPostDTO(postEntity));
+        }
+        return PostDTOList;
+    }
+
+    public List<PostDTO> findTitleOrContent(String decodedSearch) {
+        List<PostEntity> PostEntityList = postRepository.findByTitleOrContentContaining(decodedSearch);
+        List<PostDTO> PostDTOList=new ArrayList<>();
+        for(PostEntity postEntity:PostEntityList){
+            PostDTOList.add(PostDTO.toPostDTO(postEntity));
+        }
+        return PostDTOList;
+    }
 }

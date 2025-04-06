@@ -11,6 +11,16 @@ export const SidebarContainer = styled.div`
     padding-top: 60px;
     z-index:999; /*추가: 햄버거 버튼 위로 올라오게*/
     
+        // ✅ 모바일 반응형 
+    @media screen and (max-width: 480px) {
+        position: fixed;
+        top: 0;
+        left: ${({ isOpen }) => (isOpen ? '0' : '-100%')};
+        width: 80%;
+        height: 100%;
+        padding-top: 80px;
+        transition: left 0.3s ease-in-out;
+    }
 `;
 
 export const SidebarContent = styled.div`
@@ -32,6 +42,11 @@ export const SidebarButton = styled.button`
     width: 160px;
     text-align: center;
     transition: background-color 0.2s ease-in-out;
+
+     @media screen and (max-width: 480px) {
+        width: 100%;
+        font-size: 15px;
+    }
 `;
 
 export const BackButton = styled.img`
@@ -41,4 +56,12 @@ export const BackButton = styled.img`
   width: 24px;
   height: 24px;
   cursor: pointer;
+
+  
+    @media screen and (max-width: 480px) {
+        top: 25px;
+        left: 25px;
+        width: 24px;
+        height: 24px;
+    }
 `;

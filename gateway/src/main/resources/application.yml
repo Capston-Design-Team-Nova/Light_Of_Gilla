@@ -4,20 +4,30 @@ server:
 spring:
   cloud:
     gateway:
-      #      corsConfigurations:
-      #        '[/**]':  # ?? ??? ?? CORS ??
-      #          allowedOrigins: "http://localhost:3000"  # ?????? ??? ?? ??
-      #          allowedMethods:
-      #            - GET
-      #            - POST
-      #            - PUT
-      #            - DELETE  # ??? HTTP ???
-      #          allowedHeaders:
-      #            - "*"
-      #          allowCredentials: true
+#      globalcors:
+#        corsConfigurations:
+#          '[/**]':
+#            allowedOrigins: "http://localhost:3000"
+#            allowedMethods:
+#              - GET
+#              - POST
+#              - PUT
+#              - DELETE
+#            allowedHeaders:
+#              - "*"
+#            allowCredentials: true
 
       routes:
-        - id: community-service
-          uri: http://localhost:8082/  # ?? ??? URI
+        - id: community-service-post
+          uri: http://localhost:8082
           predicates:
-            - Path=/api/community/**  # /api/community/** ??? ???? ??? ? ???? ??
+            - Path=/post/**
+          filters:
+            - RewritePath=/post/(?<path>.*), /post/\${path}  # << 여기가 핵심!
+
+        - id: community-service-comment
+          uri: http://localhost:8082
+          predicates:
+              - Path=/comment/**
+          filters:
+              - RewritePath=/comment/(?<path>.*), /comment/${path}

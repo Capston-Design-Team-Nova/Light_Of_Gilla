@@ -16,7 +16,7 @@ function CommunityWS() {
         const postData = {
             title: title,
             content: content,
-            category_name: selectedOption
+            category: selectedOption
         };
         console.log(selectedOption)
         try {

@@ -24,7 +24,7 @@ const CustomSelect = ({ onChange }) => {
 
   return (
     <Container>
-      <Label htmlFor="symptom-select">증상 선택</Label>
+      <Label htmlFor="symptom-select"></Label>
       <Select
         id="symptom-select"
         value={selectedSymptom}

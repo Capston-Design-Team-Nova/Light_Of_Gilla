@@ -1,11 +1,12 @@
 import React,{useState,useRef} from "react";
 import { SearchInput, SearchBar } from "../styles/CommunityStyles";
 
-function SearchField() {
+function SearchField({onWrite}) {
     const [searchTerm, setSearchTerm] = useState('');
     const inputRef = useRef(null); // 검색 입력창 참조
     const handleSearch = async () => {
-
+        console.log(searchTerm)
+       onWrite(searchTerm)
     };
     
     return(

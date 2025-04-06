@@ -148,7 +148,7 @@ const CommunityView = () => {
   
 
     try {
-        await axios.post(`http://localhost:8082/post/like?post_id=${id}`);//백틱으로 선언해야함함
+        await axios.post(`http://localhost:8080/post/like?post_id=${id}`);//백틱으로 선언해야함함
       
     } catch (error) {
         console.error('좋아요 업데이트 중 오류 발생:', error);
@@ -198,7 +198,7 @@ const CommunityView = () => {
                         {postData.userid} | {postData.created_time}
                     </Meta>
                     <Content1>{postData.content}</Content1>
-                     <Category>#{postData.category_name}</Category>
+                     <Category>#{postData.category}</Category>
                     <MiddleRow>
                         <LikeButton onClick={handleLike}>♡좋아요 {likes}개</LikeButton>
                         <H3>💬 댓글 ({commentCount})</H3>
