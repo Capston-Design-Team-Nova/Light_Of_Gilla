@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
-import Papa from "papaparse";
-import hospitalData from "../assets/data/강서구/hospital_list_가양동_병원.csv";
 import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
 import {
   Main,
@@ -22,25 +20,46 @@ function HospitalMap() {
   });
 
   const [hospitals, setHospitals] = useState([]);
+  const [hospitalDetails, setHospitalDetails] = useState([]);
   const [selectedHospital, setSelectedHospital] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [csvData, setCsvData] = useState([]);
   const [sortOption, setSortOption] = useState(() => {
     return localStorage.getItem("sortOption") || "distance";
   });
-  const [selectedPosition, setSelectedPosition] = useState(null); // 병원 위치 좌표
+  const [selectedPosition, setSelectedPosition] = useState(null);
+  const [likedReviews, setLikedReviews] = useState({});
+  const [favoriteHospitals, setFavoriteHospitals] = useState({});
+
+  const toggleLike = (reviewIndex) => {
+    setLikedReviews((prev) => ({
+      ...prev,
+      [reviewIndex]: !prev[reviewIndex],
+    }));
+  };
+
+  const toggleFavorite = (hospitalName) => {
+    setFavoriteHospitals((prev) => ({
+      ...prev,
+      [hospitalName]: !prev[hospitalName],
+    }));
+  };
 
   useEffect(() => {
-    fetch(hospitalData)
-      .then((res) => res.text())
-      .then((text) => {
-        Papa.parse(text, {
-          header: true,
-          skipEmptyLines: true,
-          complete: (result) => setCsvData(result.data),
-        });
-      });
+    fetchHospitalDetails();
   }, []);
+
+  const fetchHospitalDetails = async () => {
+    try {
+      const res = await fetch(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/hospitals"
+      );
+      const data = await res.json();
+      console.log("전체 병원 데이터:", data);
+      setHospitalDetails(data);
+    } catch (err) {
+      console.error("병원 정보 로딩 실패", err);
+    }
+  };
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -87,10 +106,9 @@ function HospitalMap() {
   };
 
   const getHospitalDetails = (name) => {
-    return csvData.find((h) => h.name === name);
+    return hospitalDetails.find((h) => h.name === name);
   };
 
-  // 거리 구하기
   const getDistance = (lat1, lng1, lat2, lng2) => {
     const R = 6371e3;
     const toRad = (deg) => (deg * Math.PI) / 180;
@@ -99,8 +117,8 @@ function HospitalMap() {
     const Δφ = toRad(lat2 - lat1);
     const Δλ = toRad(lng2 - lng1);
     const a =
-      Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+      Math.sin(Δφ / 2) ** 2 +
+      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) ** 2;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   };
@@ -110,8 +128,8 @@ function HospitalMap() {
 
     if (sortOption === "rating") {
       sorted.sort((a, b) => {
-        const aData = csvData.find((x) => x.name === a.place_name);
-        const bData = csvData.find((x) => x.name === b.place_name);
+        const aData = getHospitalDetails(a.place_name);
+        const bData = getHospitalDetails(b.place_name);
         const aScore = aData?.score ? parseFloat(aData.score) : -1;
         const bScore = bData?.score ? parseFloat(bData.score) : -1;
 
@@ -131,7 +149,7 @@ function HospitalMap() {
         );
         return aDist - bDist;
       });
-    } else if (sortOption === "distance") {
+    } else {
       sorted.sort((a, b) => {
         const aDist = getDistance(
           state.center.lat,
@@ -174,17 +192,53 @@ function HospitalMap() {
     if (!reviews) return null;
     try {
       const list = JSON.parse(reviews.replace(/'/g, '"'));
-      return list.map((r, i) => (
-        <div
-          key={i}
-          style={{ padding: "10px", borderBottom: "1px solid #ccc" }}
-        >
-          <h4>{r.작성자}</h4>
-          <div>{renderRating(parseFloat(r.별점))}</div>
-          <p>{r.내용}</p>
-          <p>{r.날짜}</p>
-        </div>
-      ));
+      return list.map((r, i) => {
+        const liked = likedReviews[i] || false;
+        const baseLikes = !isNaN(parseInt(r.좋아요)) ? parseInt(r.좋아요) : 0;
+        const displayedLikes = liked ? baseLikes + 1 : baseLikes;
+
+        return (
+          <div
+            key={i}
+            style={{ padding: "10px", borderBottom: "1px solid #ccc" }}
+          >
+            <h4>{r.작성자}</h4>
+            <div>{renderRating(parseFloat(r.별점))}</div>
+            <p>{r.내용}</p>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginTop: "5px",
+              }}
+            >
+              <p>{r.날짜}</p>
+              <button
+                onClick={() => toggleLike(i)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  fontSize: "14px",
+                }}
+              >
+                <img
+                  src={
+                    liked
+                      ? require("../assets/images/채운 하트.png")
+                      : require("../assets/images/빈 하트.png")
+                  }
+                  alt="좋아요"
+                  style={{ width: "18px", height: "18px", marginRight: "6px" }}
+                />
+                {displayedLikes}
+              </button>
+            </div>
+          </div>
+        );
+      });
     } catch {
       return <p>리뷰 정보를 불러올 수 없습니다.</p>;
     }
@@ -212,18 +266,34 @@ function HospitalMap() {
     );
   };
 
-  const handleHospitalClick = (h) => {
-    const details = getHospitalDetails(h.place_name);
-    setSelectedHospital(
-      details || {
+  const handleHospitalClick = async (h) => {
+    try {
+      const res = await fetch(
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/hospitals/search?name=${encodeURIComponent(
+          h.place_name
+        )}`
+      );
+      const [details] = await res.json();
+
+      setSelectedHospital(
+        details || {
+          name: h.place_name,
+          address: h.road_address_name || h.address_name,
+          score: 0,
+          open_hour: "",
+          reviews: [],
+        }
+      );
+      setSelectedPosition({ lat: parseFloat(h.y), lng: parseFloat(h.x) });
+    } catch {
+      setSelectedHospital({
         name: h.place_name,
         address: h.road_address_name || h.address_name,
         score: 0,
         open_hour: "",
         reviews: [],
-      }
-    );
-    setSelectedPosition({ lat: parseFloat(h.y), lng: parseFloat(h.x) });
+      });
+    }
   };
 
   const handleSearch = () => {
@@ -316,20 +386,53 @@ function HospitalMap() {
           </select>
         </div>
         <div>
-          {getSortedHospitals().map((h, i) => (
-            <div
-              key={i}
-              onClick={() => handleHospitalClick(h)}
-              style={{
-                cursor: "pointer",
-                padding: "5px",
-                borderBottom: "1px solid #ccc",
-              }}
-            >
-              <h3>{h.place_name}</h3>
-              <p>{h.road_address_name || h.address_name}</p>
-            </div>
-          ))}
+          {getSortedHospitals().map((h, i) => {
+            const isFavorite = favoriteHospitals[h.place_name] || false;
+            return (
+              <div
+                key={i}
+                onClick={() => handleHospitalClick(h)}
+                style={{
+                  cursor: "pointer",
+                  padding: "5px",
+                  borderBottom: "1px solid #ccc",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <h3 style={{ margin: 0 }}>{h.place_name}</h3>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation(); // 병원 클릭 이벤트 방지
+                      toggleFavorite(h.place_name);
+                    }}
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: 0,
+                    }}
+                  >
+                    <img
+                      src={
+                        isFavorite
+                          ? require("../assets/images/채운 별.png")
+                          : require("../assets/images/빈 별.png")
+                      }
+                      alt="즐겨찾기"
+                      style={{ width: "20px", height: "20px" }}
+                    />
+                  </button>
+                </div>
+                <p>{h.road_address_name || h.address_name}</p>
+              </div>
+            );
+          })}
         </div>
       </Sidebar>
 
@@ -432,7 +535,34 @@ function HospitalMap() {
               onClick={handleGoBack}
               alt="뒤로가기"
             />
-            <h2>{selectedHospital.name}</h2>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <h2 style={{ margin: 0 }}>{selectedHospital.name}</h2>
+              <button
+                onClick={() => toggleFavorite(selectedHospital.name)}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                }}
+              >
+                <img
+                  src={
+                    favoriteHospitals[selectedHospital.name]
+                      ? require("../assets/images/채운 별.png")
+                      : require("../assets/images/빈 별.png")
+                  }
+                  alt="즐겨찾기"
+                  style={{ width: "22px", height: "22px" }}
+                />
+              </button>
+            </div>
             <p>{selectedHospital.address}</p>
             <p>{renderRating(parseFloat(selectedHospital.score))}</p>
             {selectedHospital.img_url && (
