@@ -565,15 +565,15 @@ function HospitalMap() {
             </div>
             <p>{selectedHospital.address}</p>
             <p>{renderRating(parseFloat(selectedHospital.score))}</p>
-            {selectedHospital.img_url && (
+            {selectedHospital.imgUrl && (
               <img
-                src={selectedHospital.img_url}
+                src={selectedHospital.imgUrl}
                 alt="병원 이미지"
                 style={{ width: "100%", height: "auto" }}
               />
             )}
             <h3>진료 시간</h3>
-            {formatOpenHours(selectedHospital.open_hour)}
+            {formatOpenHours(selectedHospital.openHour)}
             <h3>리뷰</h3>
             {renderReviews(selectedHospital.reviews)}
           </div>
