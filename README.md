@@ -199,7 +199,7 @@ API Gateway 엔드포인트
 - `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/hospitals`
 
 ## 2. 병원 이름으로 검색하기 (최대 500개)
-- **GET** `api/hospitals/search`
+- **GET** `/api/hospitals/search`
 - 파라미터 형식이므로 주의
 
 요청 예시:
