@@ -20,7 +20,7 @@ function CommunityWS() {
         };
         console.log(selectedOption)
         try {
-            await axios.post('http://localhost:8082/post/save', postData);
+            await axios.post('http://ec2-3-36-161-179.ap-northeast-2.compute.amazonaws.com:8082/post/save', postData);
             alert('글을 정상적으로 올렸습니다!');
             // setTitle('');
             // setContent('');
