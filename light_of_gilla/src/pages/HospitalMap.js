@@ -280,7 +280,7 @@ function HospitalMap() {
           name: h.place_name,
           address: h.road_address_name || h.address_name,
           score: 0,
-          open_hour: "",
+          openHour: "",
           reviews: [],
         }
       );
@@ -491,9 +491,9 @@ function HospitalMap() {
                 <div style={{ color: "#666", marginBottom: "5px" }}>
                   {selectedHospital.address}
                 </div>
-                {selectedHospital.img_url && (
+                {selectedHospital.imgURL && (
                   <img
-                    src={selectedHospital.img_url}
+                    src={selectedHospital.imgURL}
                     alt="병원 이미지"
                     style={{
                       width: "100%",
