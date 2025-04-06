@@ -39,6 +39,7 @@ public class PostService {
         for(PostEntity postEntity:PostEntityList){
             PostDTOList.add(PostDTO.toPostDTO(postEntity));
         }
+
         Collections.reverse(PostDTOList);
         return PostDTOList;
     }

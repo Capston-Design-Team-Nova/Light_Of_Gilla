@@ -170,7 +170,7 @@ const CommunityView = () => {
   };
   console.log("Post ID:", newCommentObj.post_id);
   // 1. 백엔드로 댓글 전송 (POST 요청 예시)
-  axios.post('http://ec2-3-36-161-179.ap-northeast-2.compute.amazonaws.com:8082/comment/save', newCommentObj)
+  axios.post('http://3.36.161.179:8082/comment/save', newCommentObj)
     .then((response) => {
       // 2. 댓글 추가 후 댓글 목록만 업데이트
       setComments([...comments, newCommentObj]); // 새 댓글 추가

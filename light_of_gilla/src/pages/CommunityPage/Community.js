@@ -57,7 +57,7 @@ function Community() {
     const searchString = encodeURIComponent(term);
     if (term && searchString !== "") {
       try {
-        // axios를 사용하여 API 호출
+       
         const response = await axios.get(
           `http://localhost:8080/post/search/${searchString}`
         );
@@ -67,7 +67,7 @@ function Community() {
       }
     } else {
       try {
-        const response = await axios.get("http://localhost:8080/post/");
+        const response = await axios.get(`http://localhost:8080/post/`);
         console.log("게시글 데이터를 불러오는 중");
         setPosts(response.data);
       } catch (error) {
