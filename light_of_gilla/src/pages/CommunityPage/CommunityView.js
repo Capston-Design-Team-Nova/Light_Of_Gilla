@@ -119,7 +119,7 @@ const CommunityView = () => {
   useEffect(() => {
     // API 호출
     axios
-        .get(`/post/${id}`)  
+        .get(`http://3.36.161.179:8082/post/${id}`)  
         .then((response) => {
             const { post, comments } = response.data;
             setPostData(post);
