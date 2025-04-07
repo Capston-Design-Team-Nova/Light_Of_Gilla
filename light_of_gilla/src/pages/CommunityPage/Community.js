@@ -31,7 +31,7 @@ function Community() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/view");
+        const response = await axios.get(`http://3.36.161.179:8082/post/view`);
         console.log("게시글 데이터를 불러오는 중");
         setPosts(response.data);
       } catch (error) {
@@ -45,7 +45,7 @@ function Community() {
     const category = encodeURIComponent(value);
     try {
       const response = await axios.get(
-        `http://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/category/${category}`
+        `http://3.36.161.179:8082/post/category/${category}`
       );
       setPosts(response.data);
     } catch (error) {
@@ -59,7 +59,7 @@ function Community() {
       try {
        
         const response = await axios.get(
-          `http://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/search/${searchString}`
+          `http://3.36.161.179:8082/post/search/${searchString}`
         );
         setPosts(response.data);
       } catch (error) {
@@ -67,7 +67,7 @@ function Community() {
       }
     } else {
       try {
-        const response = await axios.get(`http://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/`);
+        const response = await axios.get(`http://3.36.161.179:8082/post/view`);
         console.log("게시글 데이터를 불러오는 중");
         setPosts(response.data);
       } catch (error) {
