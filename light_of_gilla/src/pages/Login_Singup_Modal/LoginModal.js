@@ -10,9 +10,9 @@ import {
   KakaoButton,
   GoogleButton,
   FooterButtons,
-} from "../styles/LoginStyles";
+} from "../../styles/LoginStyles";
 
-const LoginModal = ({ onClose }) => {
+const LoginModal = ({ onClose, onSwitch }) => {
   return (
     <ModalBackground>
       <ModalContainer>
@@ -24,17 +24,17 @@ const LoginModal = ({ onClose }) => {
 
         <SocialLoginContainer>
           <KakaoButton>
-            <img src={require("../assets/images/kakao-logo.png")} />
+            <img src={require("../../assets/images/kakao-logo.png")} />
           </KakaoButton>
           <GoogleButton>
-            <img src={require("../assets/images/google-logo.png")}/>
+            <img src={require("../../assets/images/google-logo.png")} />
           </GoogleButton>
         </SocialLoginContainer>
 
         <FooterButtons>
-          <button>회원가입</button>
-          <button>아이디 찾기</button>
-          <button>비밀번호 찾기</button>
+          <button onClick={() => onSwitch("signup")}>회원가입</button>
+          <button onClick={() => onSwitch("findId")}>아이디 찾기</button>
+          <button onClick={() => onSwitch("findPassword")}>비밀번호 찾기</button>
         </FooterButtons>
       </ModalContainer>
     </ModalBackground>
