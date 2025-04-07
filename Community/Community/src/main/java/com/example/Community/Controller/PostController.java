@@ -53,7 +53,7 @@ public class PostController {
 
         return ResponseEntity.ok(posts);
     }
-    @GetMapping("/")
+    @GetMapping("/view")
     public ResponseEntity<List<PostDTO>> findAll(){
         List<PostDTO> postDTOList = postService.findAll();
         return ResponseEntity.ok(postDTOList);

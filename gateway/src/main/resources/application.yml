@@ -13,21 +13,22 @@ spring:
 #              - POST
 #              - PUT
 #              - DELETE
+#              - OPTIONS
 #            allowedHeaders:
 #              - "*"
 #            allowCredentials: true
 
       routes:
         - id: community-service-post
-          uri: http://localhost:8082
+          uri:  http://3.36.161.179:8082
           predicates:
             - Path=/post/**
           filters:
             - RewritePath=/post/(?<path>.*), /post/\${path}  # << 여기가 핵심!
 
         - id: community-service-comment
-          uri: http://localhost:8082
+          uri:  http://3.36.161.179:8082
           predicates:
               - Path=/comment/**
           filters:
-              - RewritePath=/comment/(?<path>.*), /comment/${path}
+              - RewritePath=/comment/(?<path>.*), /comment/\${path}
