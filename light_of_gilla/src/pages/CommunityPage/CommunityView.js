@@ -3,12 +3,12 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useParams, useNavigate, Await } from "react-router-dom";
 import styled from "styled-components";
-import { Main,Center,TopRow,Content } from "../../styles/CommunityStyles";
+import { Main,Center,TopRow,ToggleButton,Content } from "../../styles/CommunityStyles";
 import Header from "../../components/Header";
 import Sidebar from '../../components/Sidebar';
 
 const Wrapper = styled.div`
-  max-width: 600px;
+  width: 90%;
   margin: 0.5rem auto;
 `;
 
@@ -45,10 +45,12 @@ const Button = styled.button`
   color: black;
   border-radius: 6px;
   cursor: pointer;
+  width:60px;
+  height:32px;
 `;
 
 const LikeButton = styled.button`
-  margin-top: 5px;
+  margin-top: 3px;
   padding: 0.5rem 1rem;
   border: none;
   background: white;
@@ -78,30 +80,31 @@ const CommentForm = styled.form`
     font-size: 14px;
     resize: none;
 
-    background-color: #D9D9D9;  /*배경색*/
+    background-color: #DDDDDD;  /*배경색*/
     color: #000000;             /* ✅ 글자색: 검정 */
-    border: 1px solid #D9D9D9;     /* ✅ 테두리: 같은색 */
-    border-radius: 8px;         /* ✅ 테두리 둥글게 */
+    border: 1px solid #DDDDDD;     /* ✅ 테두리: 같은색 */
+    border-radius: 28px;         /* ✅ 테두리 둥글게 */
   }
 
   button {
-    padding: 0.5rem 1rem;
+    padding: 0.1rem 1rem;
     white-space: nowrap;
-    font-size: 17px;
+    font-size: 20px;
   }
 `;
 
 const MiddleRow = styled.div`
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    gap: 550px;
     flex-wrap: wrap; /* 반응형 대응 */
     border-top: 0.5px solid #00000073;
     border-bottom: 0.5px solid  #00000073;
     height: 57px;
 `;
 const H3 = styled.h3`
-    margin-top: 5px;
+    margin-top: 13px;
     font-family: Ourfont5;
     font-size: 14px;
 `;
@@ -188,10 +191,17 @@ const CommunityView = () => {
             {/* Sidebar */}
             <Center>
                 <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />    
-                <TopRow>
-                    <Button onClick={toggleSidebar}>Toggle Sidebar</Button>
-                </TopRow>
-                <Content>
+                {/* ✅ 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
+                {!isSidebarOpen && (
+                  <ToggleButton onClick={toggleSidebar}>
+                    <img
+                      src={require("../../assets/images/햄버거버튼.png")}
+                      alt="메뉴"
+                    />
+                  </ToggleButton>
+                )}
+                
+                <Content isSidebarOpen={isSidebarOpen}>
                 <Wrapper>
                     <Title>{postData.title}</Title>
                     <Meta>
