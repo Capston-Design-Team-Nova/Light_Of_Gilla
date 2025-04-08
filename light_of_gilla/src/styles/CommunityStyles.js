@@ -62,12 +62,17 @@ export const Content = styled.div`
   padding-top: 10px;
   border-radius: 15px;
   background-color: white;
+  position: relative;         // 고정 위치의 기준점
+  min-height: 80vh;
+
+  overflow: hidden; // 혹시 몰라서 넣음
 
   ${mobile} {
     width: 95%;
     height: 65%;
     margin-top: 5px;
     margin-left: 0;
+    
   }
 `;
 

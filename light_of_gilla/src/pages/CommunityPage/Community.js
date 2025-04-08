@@ -75,6 +75,7 @@ function Community() {
       }
     }
   };
+  
 
   return (
     <Main>
