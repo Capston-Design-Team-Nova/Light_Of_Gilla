@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/post")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://ddo857ydmq0nf.cloudfront.net")
 public class PostController {
     private final PostService postService;
     private final CommentService commentService;

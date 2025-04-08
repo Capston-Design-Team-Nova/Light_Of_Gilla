@@ -15,7 +15,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("comment")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://ddo857ydmq0nf.cloudfront.net")
 public class CommentController {
     private final CommentService commentService;
     private final PostService postService;
