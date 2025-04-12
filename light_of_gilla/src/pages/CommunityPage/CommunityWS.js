@@ -20,7 +20,7 @@ function CommunityWS() {
         };
         console.log(selectedOption)
         try {
-            await axios.post('https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/save', postData);
+            await axios.post('https://www.thegilla.com/post/save', postData);
             alert('글을 정상적으로 올렸습니다!');
             // setTitle('');
             // setContent('');

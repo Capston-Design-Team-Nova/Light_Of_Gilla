@@ -223,7 +223,7 @@ const CommunityView = () => {
   };
   console.log("Post ID:", newCommentObj.post_id);
   // 1. 백엔드로 댓글 전송 (POST 요청 예시)
-  axios.post('https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/save', newCommentObj)
+  axios.post(`https://www.thegilla.com/comment/save`, newCommentObj)
     .then((response) => {
       // 2. 댓글 추가 후 댓글 목록만 업데이트
       setComments([...comments, newCommentObj]); // 새 댓글 추가

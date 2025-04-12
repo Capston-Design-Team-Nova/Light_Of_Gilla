@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("comment")
 @CrossOrigin(origins = {"https://ddo857ydmq0nf.cloudfront.net",
-                        "http:localhost:3000"
+                        "http//:localhost:3000"
         ,"https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com"
 })
 public class CommentController {
