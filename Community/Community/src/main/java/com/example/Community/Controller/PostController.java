@@ -23,7 +23,9 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/post")
-@CrossOrigin(origins = {"https://ddo857ydmq0nf.cloudfront.net","http:localhost:3000"})
+@CrossOrigin(origins = {"https://ddo857ydmq0nf.cloudfront.net",
+        "http:localhost:3000"
+,"https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com"})
 public class PostController {
     private final PostService postService;
     private final CommentService commentService;

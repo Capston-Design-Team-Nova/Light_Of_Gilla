@@ -172,7 +172,7 @@ const CommunityView = () => {
   useEffect(() => {
     // API 호출
     axios
-        .get(`https://www.thegilla.com/post/${id}`)  
+        .get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/${id}`)  
         .then((response) => {
             const { post, comments } = response.data;
             setPostData(post);
@@ -201,7 +201,7 @@ const CommunityView = () => {
   
 
     try {
-        await axios.post(`https://www.thegilla.com/post/like?post_id=${id}`);//백틱으로 선언해야함함
+        await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like?post_id=${id}`);//백틱으로 선언해야함함
       
     } catch (error) {
         console.error('좋아요 업데이트 중 오류 발생:', error);
@@ -223,7 +223,7 @@ const CommunityView = () => {
   };
   console.log("Post ID:", newCommentObj.post_id);
   // 1. 백엔드로 댓글 전송 (POST 요청 예시)
-  axios.post('https://www.thegilla.com/comment/save', newCommentObj)
+  axios.post('https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/save', newCommentObj)
     .then((response) => {
       // 2. 댓글 추가 후 댓글 목록만 업데이트
       setComments([...comments, newCommentObj]); // 새 댓글 추가

@@ -17,6 +17,7 @@ import java.util.List;
 @RequestMapping("comment")
 @CrossOrigin(origins = {"https://ddo857ydmq0nf.cloudfront.net",
                         "http:localhost:3000"
+        ,"https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com"
 })
 public class CommentController {
     private final CommentService commentService;
