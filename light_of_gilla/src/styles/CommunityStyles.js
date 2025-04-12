@@ -129,7 +129,7 @@ export const SearchBar = styled.div`
     display:flex;
     align-item:center;
     width: 90%;
-    margin-top: 1px;
+    
     margin-left: 20px;
   }
 
@@ -236,14 +236,25 @@ export const Label = styled.label`
 `;
 
 export const PaginationWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
   display: flex;
   justify-content: center;
-  margin: 2rem 0;
-  gap: 6px;
+  align-items: center;
+  background-color: white;
+  gap:2px;
+  z-index: 10;
 
     ${mobile} {
+     height: 45px;
+    flex-wrap: wrap;
+    padding: 5px 0;
     flex-wrap: wrap;
     gap: 4px;
+     bottom: 2rem;  // ✅ 기본 0보다 위로 살짝 올림
     
   }
 `;
