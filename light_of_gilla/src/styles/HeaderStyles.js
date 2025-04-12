@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+const mobile = '@media screen and (max-width: 480px)';
+
 export const PageHeader = styled.header`
   width: 100%;
   background-color: #FFC86A;
@@ -10,6 +12,11 @@ export const PageHeader = styled.header`
   top: 0; /* 화면 상단에 위치 */
   left: 0; /* 화면 왼쪽에 위치 */
   z-index: 1000;
+
+  ${mobile} {
+    top: auto;
+    bottom: 0; /* ✅ 모바일에서 하단 고정 */
+  }
 `;
 
 export const Nav = styled.nav`
@@ -24,6 +31,11 @@ export const NavRight = styled.nav`
   display: flex; /* Flexbox 활성화 */
   justify-content: flex-end; /* 우측 정렬 */
   align-items: center; /* 세로 방향으로 중앙 정렬 */
+
+  /* ✅ 모바일에서만 간격 일정하게 */
+  @media screen and (max-width: 480px) {
+    gap: 25px; // 👉 원하는 만큼 조절 (예: 8px, 16px 등)
+  }
 `;
 
 export const Button = styled.button`
@@ -37,6 +49,12 @@ export const Button = styled.button`
   font-size: 1.3vw;
   cursor: pointer;
   border: none;
+
+  @media screen and (max-width: 480px) {
+    padding: 8px 12px;
+    font-size: 10px;
+    min-width: 90px;
+  }
 `;
 
 export const ImageButton1 = styled.button`
@@ -51,6 +69,13 @@ export const ImageButton1 = styled.button`
     height: 55px; /* 비율에 맞게 높이 자동 조정 */
     
   }
+
+  @media screen and (max-width: 480px) {
+    img {
+      margin-left:5px;
+      width: 36px;
+      height: 36px;  /* ✅ 모바일에서는 살짝 줄임 */
+    }
 `;
 
 export const ImageButton2 = styled.button`
@@ -65,4 +90,11 @@ export const ImageButton2 = styled.button`
     height: 40px; /* 비율에 맞게 높이 자동 조정 */
     
   }
+
+  @media screen and (max-width: 480px) {
+    img {
+      margin-right:5px;
+      width: 36px;
+      height: 36px;  /* ✅ 모바일에서는 살짝 줄임 */
+    }
 `;
