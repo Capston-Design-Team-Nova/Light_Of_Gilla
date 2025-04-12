@@ -20,7 +20,7 @@ function HospitalMap() {
   });
 
   const [hospitals, setHospitals] = useState([]);
-  const [hospitalDetails, setHospitalDetails] = useState([]);
+  const [hospitalDetails, setHospitalDetails] = useState({});
   const [selectedHospital, setSelectedHospital] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState(() => {
@@ -31,10 +31,7 @@ function HospitalMap() {
   const [favoriteHospitals, setFavoriteHospitals] = useState({});
 
   const toggleLike = (reviewIndex) => {
-    setLikedReviews((prev) => ({
-      ...prev,
-      [reviewIndex]: !prev[reviewIndex],
-    }));
+    setLikedReviews((prev) => ({ ...prev, [reviewIndex]: !prev[reviewIndex] }));
   };
 
   const toggleFavorite = (hospitalName) => {
@@ -42,23 +39,6 @@ function HospitalMap() {
       ...prev,
       [hospitalName]: !prev[hospitalName],
     }));
-  };
-
-  useEffect(() => {
-    fetchHospitalDetails();
-  }, []);
-
-  const fetchHospitalDetails = async () => {
-    try {
-      const res = await fetch(
-        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/hospitals"
-      );
-      const data = await res.json();
-      console.log("전체 병원 데이터:", data);
-      setHospitalDetails(data);
-    } catch (err) {
-      console.error("병원 정보 로딩 실패", err);
-    }
   };
 
   useEffect(() => {
@@ -92,6 +72,58 @@ function HospitalMap() {
     }
   }, []);
 
+  useEffect(() => {
+    if (sortOption === "rating") {
+      fetchRatingsForHospitals();
+    }
+  }, [hospitals, sortOption]);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          setState({
+            center: {
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude,
+            },
+            isLoading: false,
+            errMsg: null,
+          });
+          fetchHospitals(pos.coords.latitude, pos.coords.longitude);
+        },
+        (err) => {
+          setState((prev) => ({
+            ...prev,
+            errMsg: err.message,
+            isLoading: false,
+          }));
+        }
+      );
+    }
+  }, []);
+
+  const fetchRatingsForHospitals = async () => {
+    const newDetails = {};
+    await Promise.all(
+      hospitals.map(async (h) => {
+        try {
+          const res = await fetch(
+            `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/hospitals/search?name=${encodeURIComponent(
+              h.place_name
+            )}`
+          );
+          const [details] = await res.json();
+          if (details && details.name) newDetails[h.place_name] = details;
+        } catch (e) {
+          newDetails[h.place_name] = { score: 0 };
+        }
+      }),
+      console.log(newDetails)
+    );
+    setHospitalDetails(newDetails);
+  };
+
   const fetchHospitals = (lat, lng, category = "HP8") => {
     const ps = new window.kakao.maps.services.Places();
     ps.categorySearch(
@@ -105,9 +137,7 @@ function HospitalMap() {
     );
   };
 
-  const getHospitalDetails = (name) => {
-    return hospitalDetails.find((h) => h.name === name);
-  };
+  const getHospitalDetails = (name) => hospitalDetails[name] || { score: 0 };
 
   const getDistance = (lat1, lng1, lat2, lng2) => {
     const R = 6371e3;
@@ -124,30 +154,12 @@ function HospitalMap() {
   };
 
   const getSortedHospitals = () => {
-    let sorted = [...hospitals];
-
+    const sorted = [...hospitals];
     if (sortOption === "rating") {
       sorted.sort((a, b) => {
-        const aData = getHospitalDetails(a.place_name);
-        const bData = getHospitalDetails(b.place_name);
-        const aScore = aData?.score ? parseFloat(aData.score) : -1;
-        const bScore = bData?.score ? parseFloat(bData.score) : -1;
-
-        if (bScore !== aScore) return bScore - aScore;
-
-        const aDist = getDistance(
-          state.center.lat,
-          state.center.lng,
-          parseFloat(a.y),
-          parseFloat(a.x)
-        );
-        const bDist = getDistance(
-          state.center.lat,
-          state.center.lng,
-          parseFloat(b.y),
-          parseFloat(b.x)
-        );
-        return aDist - bDist;
+        const aScore = parseFloat(getHospitalDetails(a.place_name).score || 0);
+        const bScore = parseFloat(getHospitalDetails(b.place_name).score || 0);
+        return bScore - aScore;
       });
     } else {
       sorted.sort((a, b) => {
@@ -166,7 +178,6 @@ function HospitalMap() {
         return aDist - bDist;
       });
     }
-
     return sorted;
   };
 
@@ -388,6 +399,11 @@ function HospitalMap() {
         <div>
           {getSortedHospitals().map((h, i) => {
             const isFavorite = favoriteHospitals[h.place_name] || false;
+            const hospitalDetail = getHospitalDetails(h.place_name);
+            const score = hospitalDetail?.score
+              ? parseFloat(hospitalDetail.score)
+              : 0;
+
             return (
               <div
                 key={i}
@@ -408,7 +424,7 @@ function HospitalMap() {
                   <h3 style={{ margin: 0 }}>{h.place_name}</h3>
                   <button
                     onClick={(e) => {
-                      e.stopPropagation(); // 병원 클릭 이벤트 방지
+                      e.stopPropagation();
                       toggleFavorite(h.place_name);
                     }}
                     style={{
@@ -429,6 +445,12 @@ function HospitalMap() {
                     />
                   </button>
                 </div>
+
+                {/* 평점 표시 추가 */}
+                {score !== null && (
+                  <div style={{ margin: "4px 0" }}>{renderRating(score)}</div>
+                )}
+
                 <p>{h.road_address_name || h.address_name}</p>
               </div>
             );
