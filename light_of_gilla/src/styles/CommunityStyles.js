@@ -50,32 +50,38 @@ export const TopRow = styled.div`
 `;
 
 export const Content = styled.div`
+  position: relative; // 기준이 되는 부모
   width: ${({ isSidebarOpen }) => (isSidebarOpen ? "calc(97% - 250px)" : "80%")};
   margin-left: ${({ isSidebarOpen }) => (isSidebarOpen ? "250px" : "0")};
   transition: margin-left 0.3s ease;
-  height: 500px;
-  overflow: visible;
+  height: 83vh; // 전체 높이 고정
+  background-color: white;
+  border-radius: 15px;
+  overflow: hidden; // 자식 요소 넘침 방지
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding-top: 10px;
-  border-radius: 15px;
-  background-color: white;
-  position: relative;         // 고정 위치의 기준점
-  min-height: 80vh;
-
-  overflow: hidden; // 혹시 몰라서 넣음
 
   ${mobile} {
     width: 95%;
-    height: 65%;
+    height: 65vh;
     margin-top: 5px;
     margin-left: 0;
-    
   }
 `;
 
+
+export const CommunityListWrapper = styled.div`
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+  padding: 10px 0 60px; /* 아래 패딩으로 페이지네이션 안 가려지게 */
+
+  ${mobile} {
+    padding-bottom: 70px;
+  }
+`;
 
 export const Button = styled.button`
   padding: 2px;
@@ -245,19 +251,16 @@ export const PaginationWrapper = styled.div`
   justify-content: center;
   align-items: center;
   background-color: white;
-  gap:2px;
-  z-index: 10;
+  z-index: 5;
+  gap: 2px;
 
-    ${mobile} {
-     height: 45px;
-    flex-wrap: wrap;
+  ${mobile} {
+    height: 45px;
     padding: 5px 0;
-    flex-wrap: wrap;
     gap: 4px;
-     bottom: 2rem;  // ✅ 기본 0보다 위로 살짝 올림
-    
   }
 `;
+
 
 export const PageButton = styled.button`
   padding: 6px 12px;

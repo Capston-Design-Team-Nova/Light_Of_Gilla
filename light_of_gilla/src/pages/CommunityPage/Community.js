@@ -9,7 +9,7 @@ import {
   Content,
   Button,
   TopRow,
-  ToggleButton
+  ToggleButton, CommunityListWrapper
   
 } from "../../styles/CommunityStyles";
 import { Link } from "react-router-dom";
@@ -118,7 +118,10 @@ function Community() {
           </Link>
         </TopRow>
         <Content isSidebarOpen={isSidebarOpen}>
-          <CommunityList posts={currentPosts} />
+          <CommunityListWrapper>
+            <CommunityList posts={currentPosts} />
+          </CommunityListWrapper>
+
           {/* 페이지네이션 */}
           {totalPages > 0 && (
             <Pagination
