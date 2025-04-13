@@ -2,8 +2,7 @@ import styled from 'styled-components';
 
 // 모바일 기준 (갤럭시 S24)
 const mobile = '@media screen and (max-width: 480px)';
-// 태블릿 ~ 작은 데스크탑
-const tablet = '@media screen and (max-width: 1024px)';
+
 
 export const Center = styled.div`
   width: 100%;
@@ -45,7 +44,7 @@ export const TopRow = styled.div`
     flex-direction: column;
     margin-left: 0;
     align-items: stretch;
-     gap: 1px; /* ✅ 모바일에서 간격만 좁게 조절 */
+     gap: 1px; /*  모바일에서 간격만 좁게 조절 */
   }
 `;
 
@@ -76,7 +75,7 @@ export const CommunityListWrapper = styled.div`
   flex: 1;
   width: 100%;
   overflow-y: auto;
-  padding: 10px 0 60px; /* 아래 패딩으로 페이지네이션 안 가려지게 */
+  padding: 10px 5px 60px; /* 아래 패딩으로 페이지네이션 안 가려지게 */
 
   ${mobile} {
     padding-bottom: 70px;

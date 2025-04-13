@@ -97,7 +97,7 @@ function Community() {
       <Header />
       <Center>
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        {/* ✅ 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
+        {/* 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
         {!isSidebarOpen && (
           <ToggleButton onClick={toggleSidebar}>
             <img
