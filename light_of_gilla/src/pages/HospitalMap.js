@@ -350,6 +350,19 @@ function HospitalMap() {
 
   const handleGoBack = () => setSelectedHospital(null);
 
+  const scrollCategory = (direction) => {
+    const scrollContainer = document.getElementById("category-scroll");
+    const scrollAmount = 150;
+
+    if (!scrollContainer) return;
+
+    if (direction === "left") {
+      scrollContainer.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+    } else {
+      scrollContainer.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
   return (
     <Main>
       <Header />
@@ -369,22 +382,43 @@ function HospitalMap() {
           />
         </SearchBox>
         <CategoryButtons>
-          {[
-            "약국",
-            "내과",
-            "피부과",
-            "치과",
-            "소아과",
-            "산부인과",
-            "정형외과",
-            "안과",
-            "성형외과",
-            "이비인후과",
-          ].map((cat) => (
-            <button key={cat} onClick={() => handleCategoryClick(cat)}>
-              #{cat}
-            </button>
-          ))}
+          <button
+            className="scroll-btn left-btn"
+            onClick={() => scrollCategory("left")}
+          >
+            ◀
+          </button>
+
+          <div className="category-scroll" id="category-scroll">
+            {[
+              "약국",
+              "내과",
+              "피부과",
+              "치과",
+              "소아과",
+              "산부인과",
+              "정형외과",
+              "안과",
+              "성형외과",
+              "이비인후과",
+              "마치통증의학과",
+              "비뇨기과",
+              "신경과",
+              "병리과",
+              "가정의학과",
+            ].map((cat) => (
+              <button key={cat} onClick={() => handleCategoryClick(cat)}>
+                #{cat}
+              </button>
+            ))}
+          </div>
+
+          <button
+            className="scroll-btn right-btn"
+            onClick={() => scrollCategory("right")}
+          >
+            ▶
+          </button>
         </CategoryButtons>
       </SearchContainer>
 
@@ -594,7 +628,7 @@ function HospitalMap() {
                 style={{ width: "100%", height: "auto" }}
               />
             )}
-            <h3>진료 시간</h3>
+            <h3>운영 시간</h3>
             {formatOpenHours(selectedHospital.openHour)}
             <h3>리뷰</h3>
             {renderReviews(selectedHospital.reviews)}
