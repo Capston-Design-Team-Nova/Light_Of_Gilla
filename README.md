@@ -102,17 +102,17 @@ API Gateway 엔드포인트
 
 ## 🔴 3. 리뷰 삭제 (Delete)
 
-- **DELETE** `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/{reviewId}`
+- **DELETE** `/api/reviews/{reviewId}`
 
 요청 예시:
-`DELETE /api/reviews/1`
+`DELETE https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/1`
 
 ## 🔵 4. 병원 리뷰 목록 조회
 
 - **GET** `/api/reviews/hospital/{hospitalId}`
 
 요청 예시:
-`GET /api/reviews/hospital/1`
+`GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/1`
 
 응답 예시:
 ```json
@@ -140,11 +140,11 @@ API Gateway 엔드포인트
 
 ## 💖 5. 좋아요 토글
 
-- **POST** `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/{reviewId}/like`
+- **POST** `/api/reviews/{reviewId}/like`
 - 요청 헤더 주의. User-name을 보내야함.
 
 요청 예시:
-`POST /api/reviews/101/like`
+`POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/101/like`
 `X-User-Name: hyunseo`
 
 ---
