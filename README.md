@@ -30,7 +30,7 @@ API Gateway 엔드포인트
 
 ## 🟢 1. 리뷰 등록 (Create)
 
-- **POST** `/api/reviews/{hospitalId}
+- **POST** `/api/reviews/{hospitalId}`
 
 요청 예시:
 `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/1`
