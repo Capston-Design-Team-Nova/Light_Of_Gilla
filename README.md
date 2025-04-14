@@ -33,7 +33,7 @@ API Gateway 엔드포인트
 - **POST** `/api/reviews/{hospitalId}
 
 요청 예시:
-`POST /api/reviews/1`
+`POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/1`
 ```json
 {
   "author": "hyunseo",
@@ -69,7 +69,7 @@ API Gateway 엔드포인트
 - **PUT** `/api/reviews/{reviewId}`
 
 요청 예시:
-`PUT /api/reviews/1`
+`PUT https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/1`
 ```json
 {
   "author": "hyunseo",
@@ -102,7 +102,7 @@ API Gateway 엔드포인트
 
 ## 🔴 3. 리뷰 삭제 (Delete)
 
-- **DELETE** `/api/reviews/{reviewId}`
+- **DELETE** `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/{reviewId}`
 
 요청 예시:
 `DELETE /api/reviews/1`
@@ -140,7 +140,7 @@ API Gateway 엔드포인트
 
 ## 💖 5. 좋아요 토글
 
-- **POST** `/api/reviews/{reviewId}/like`
+- **POST** `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/{reviewId}/like`
 - 요청 헤더 주의. User-name을 보내야함.
 
 요청 예시:
