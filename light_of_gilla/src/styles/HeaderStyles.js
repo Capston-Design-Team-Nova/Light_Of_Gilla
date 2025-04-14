@@ -12,12 +12,6 @@ export const PageHeader = styled.header`
   top: 0; /* 화면 상단에 위치 */
   left: 0; /* 화면 왼쪽에 위치 */
   z-index: 1000;
-
-  ${mobile} {
-    top: auto;
-    bottom: 0; /* ✅ 모바일에서 하단 고정 */
-    height: 42px;
-  }
 `;
 
 export const Nav = styled.nav`
