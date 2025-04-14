@@ -252,7 +252,7 @@ API Gateway 엔드포인트
 
 ## 🟡 2. 리뷰 수정 (Update)
 
-- **PUT** `/api/reviews/{reviewId}
+- **PUT** `/api/reviews/{reviewId}`
 
 요청 예시:
 `PUT /api/reviews/1`
@@ -288,14 +288,14 @@ API Gateway 엔드포인트
 
 ## 🔴 3. 리뷰 삭제 (Delete)
 
-- **DELETE** `/api/reviews/{reviewId}
+- **DELETE** `/api/reviews/{reviewId}`
 
 요청 예시:
 `DELETE /api/reviews/1`
 
 ## 🔵 4. 병원 리뷰 목록 조회
 
-- **GET** `/api/reviews/hospital/{hospitalId}
+- **GET** `/api/reviews/hospital/{hospitalId}`
 
 요청 예시:
 `GET /api/reviews/hospital/1`
