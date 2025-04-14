@@ -16,6 +16,7 @@ export const PageHeader = styled.header`
   ${mobile} {
     top: auto;
     bottom: 0; /* ✅ 모바일에서 하단 고정 */
+    height: 42px;
   }
 `;
 

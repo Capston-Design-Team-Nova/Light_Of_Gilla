@@ -2,8 +2,7 @@ import styled from 'styled-components';
 
 // 모바일 기준 (갤럭시 S24)
 const mobile = '@media screen and (max-width: 480px)';
-// 태블릿 ~ 작은 데스크탑
-const tablet = '@media screen and (max-width: 1024px)';
+
 
 export const Center = styled.div`
   width: 100%;
@@ -45,32 +44,43 @@ export const TopRow = styled.div`
     flex-direction: column;
     margin-left: 0;
     align-items: stretch;
-     gap: 1px; /* ✅ 모바일에서 간격만 좁게 조절 */
+     gap: 1px; /*  모바일에서 간격만 좁게 조절 */
   }
 `;
 
 export const Content = styled.div`
+  position: relative; // 기준이 되는 부모
   width: ${({ isSidebarOpen }) => (isSidebarOpen ? "calc(97% - 250px)" : "80%")};
   margin-left: ${({ isSidebarOpen }) => (isSidebarOpen ? "250px" : "0")};
   transition: margin-left 0.3s ease;
-  height: 500px;
-  overflow: visible;
+  height: 83vh; // 전체 높이 고정
+  background-color: white;
+  border-radius: 15px;
+  overflow: hidden; // 자식 요소 넘침 방지
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding-top: 10px;
-  border-radius: 15px;
-  background-color: white;
 
   ${mobile} {
     width: 95%;
-    height: 65%;
+    height: 65vh;
     margin-top: 5px;
     margin-left: 0;
   }
 `;
 
+
+export const CommunityListWrapper = styled.div`
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+  padding: 10px 5px 60px; /* 아래 패딩으로 페이지네이션 안 가려지게 */
+
+  ${mobile} {
+    padding-bottom: 70px;
+  }
+`;
 
 export const Button = styled.button`
   padding: 2px;
@@ -124,7 +134,7 @@ export const SearchBar = styled.div`
     display:flex;
     align-item:center;
     width: 90%;
-    margin-top: 1px;
+    
     margin-left: 20px;
   }
 
@@ -231,17 +241,25 @@ export const Label = styled.label`
 `;
 
 export const PaginationWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
   display: flex;
   justify-content: center;
-  margin: 2rem 0;
-  gap: 6px;
+  align-items: center;
+  background-color: white;
+  z-index: 5;
+  gap: 2px;
 
-    ${mobile} {
-    flex-wrap: wrap;
+  ${mobile} {
+    height: 45px;
+    padding: 5px 0;
     gap: 4px;
-    
   }
 `;
+
 
 export const PageButton = styled.button`
   padding: 6px 12px;

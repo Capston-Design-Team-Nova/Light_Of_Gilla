@@ -3,9 +3,14 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useParams, useNavigate, Await } from "react-router-dom";
 import styled from "styled-components";
-import { Main,Center,TopRow,ToggleButton,Content } from "../../styles/CommunityStyles";
+import { Main,Center,ToggleButton,Content } from "../../styles/CommunityStyles";
 import Header from "../../components/Header";
 import Sidebar from '../../components/Sidebar';
+
+// 모바일 기준 (갤럭시 S24)
+const mobile = '@media screen and (max-width: 480px)';
+// 태블릿 ~ 작은 데스크탑
+const tablet = '@media screen and (max-width: 1024px)';
 
 const Wrapper = styled.div`
   width: 90%;
@@ -50,16 +55,25 @@ const Button = styled.button`
 `;
 
 const LikeButton = styled.button`
-  margin-top: 3px;
-  padding: 0.5rem 1rem;
-  border: none;
+  margin: 0;                     // ✅ 위쪽 마진 제거
+  padding: 0.3rem 0.7rem;
+  height: 32px;                  // ✅ 높이 고정
   background: white;
   color: black;
   cursor: pointer;
+  border:none;
+  display: flex;
+  align-items: center;           // ✅ 버튼 안 글자 중앙정렬
 `;
 
 const CommentSection = styled.div`
-  margin-top: 2rem;
+  max-height: calc(100vh - 150px);  // 전체 높이에서 입력창 공간 제외
+  overflow-y: auto;                 // 댓글 목록 스크롤 가능
+  padding-bottom: 1rem;             // 아래 공간 여유
+
+  ${mobile} {
+    max-height: calc(100vh - 220px);
+  }
 `;
 
 const CommentItem = styled.div`
@@ -68,10 +82,15 @@ const CommentItem = styled.div`
 `;
 
 const CommentForm = styled.form`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 95%;
   display: flex;
   align-items: center;
-  margin-top: 1rem;
+  padding: 0.5rem 1rem;
   gap: 0.5rem;
+  padding-bottom: 1rem;
 
   textarea {
     flex: 1;  // 남은 공간 전부 사용
@@ -91,6 +110,23 @@ const CommentForm = styled.form`
     white-space: nowrap;
     font-size: 20px;
   }
+
+  ${mobile} {
+    bottom: -90px;           
+    height: 50%;
+    font-size: 11px;
+    
+
+    textarea {
+      height: 32px;
+      font-size: 13px;
+    }
+    button {
+      font-size: 18px;
+      padding: 0.1rem 0.8rem;
+    }
+  }
+
 `;
 
 const MiddleRow = styled.div`
@@ -102,11 +138,25 @@ const MiddleRow = styled.div`
     border-top: 0.5px solid #00000073;
     border-bottom: 0.5px solid  #00000073;
     height: 57px;
+
+    ${mobile} {
+      width: 96%;
+      flex-direction: row;   // ✅ 세로 말고 가로 정렬
+      justify-content: center;
+      align-items: center;   // ✅ 같은 높이 맞추기
+      gap: 46px;             // ✅ 요소 사이 간격 설정
+      margin-left: 0;
+    }
+
 `;
+
 const H3 = styled.h3`
-    margin-top: 13px;
-    font-family: Ourfont5;
-    font-size: 14px;
+  margin: 0;                     // ✅ 마진 제거
+  font-family: Ourfont5;
+  font-size: 14px;
+  height: 32px;                  // ✅ 버튼과 동일한 높이
+  display: flex;
+  align-items: center;           // ✅ 중앙 정렬
 `;
 
 const CommunityView = () => {
@@ -173,7 +223,7 @@ const CommunityView = () => {
   };
   console.log("Post ID:", newCommentObj.post_id);
   // 1. 백엔드로 댓글 전송 (POST 요청 예시)
-  axios.post('https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/save', newCommentObj)
+  axios.post(`https://www.thegilla.com/comment/save`, newCommentObj)
     .then((response) => {
       // 2. 댓글 추가 후 댓글 목록만 업데이트
       setComments([...comments, newCommentObj]); // 새 댓글 추가
@@ -221,7 +271,9 @@ const CommunityView = () => {
                         </CommentItem>
                         ))}
 
-                        <CommentForm onSubmit={handleCommentSubmit}>
+                        
+                    </CommentSection>
+                    <CommentForm onSubmit={handleCommentSubmit}>
                             <textarea
                                 placeholder="댓글 쓰기"
                                 rows="3"
@@ -231,8 +283,7 @@ const CommunityView = () => {
                                 }   
                             />
                             <Button type="submit">⬆</Button>
-                        </CommentForm>
-                    </CommentSection>
+                    </CommentForm>
                     
                 </Wrapper>
                 </Content>

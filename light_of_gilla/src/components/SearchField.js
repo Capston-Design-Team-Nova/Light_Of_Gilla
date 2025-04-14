@@ -9,6 +9,11 @@ function SearchField({onWrite}) {
        onWrite(searchTerm)
     };
     
+    // 검색창에서 Enter 키 입력 가능하도록 설정
+    const handleKeyPress = (e) => {
+    if (e.key === "Enter") handleSearch();
+    };
+
     return(
         <SearchBar>
             <SearchInput
@@ -17,6 +22,7 @@ function SearchField({onWrite}) {
             ref={inputRef}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={handleKeyPress} // Enter 키로 검색 가능
         />
         <img
             src={require("../assets/images/검색버튼.png")}

@@ -10,10 +10,16 @@ import React from 'react';
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
+
+// 모바일 기준 (갤럭시 S24)
+const mobile = '@media screen and (max-width: 480px)';
+
+
 const PostList = styled.div`
   width: 95%;
   margin: 1px;
   padding: 0 0px;
+
 `;
 
 const PostItem = styled.div`
@@ -47,6 +53,10 @@ const PostTitle = styled.h2`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+
+   ${mobile} {
+    font-size: 13px;
+  }
 `;
 
 const PostAuthor = styled.div`
@@ -58,6 +68,10 @@ const PostAuthor = styled.div`
   align-items: center;
   white-space: nowrap;
   flex: 1; /* 균등한 간격을 위한 flex 설정 */
+
+  ${mobile} {
+    font-size: 12px;
+  }
 `;
 
 const PostTime = styled.div`
@@ -69,6 +83,10 @@ const PostTime = styled.div`
   align-items: center;
   white-space: nowrap;
   flex: 1; /* 균등한 간격을 위한 flex 설정 */
+
+  ${mobile} {
+    font-size: 12px;
+  }
 `;
 
 const PostLikes = styled.div`
@@ -79,6 +97,10 @@ const PostLikes = styled.div`
   justify-content: center; /* 가운데 정렬 */
   align-items: center;
   white-space: nowrap;
+
+  ${mobile} {
+    font-size: 12px;
+  }
 
 `;
 

@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import Header from "../../components/Header";
+import Pagination from "../../components/Pagination"; 
 import {
   Main,
   Center,
   Content,
   Button,
   TopRow,
-  ToggleButton,
-  ActivePageButton,
-  PageButton,
-  PaginationWrapper,
+  ToggleButton, CommunityListWrapper
+  
 } from "../../styles/CommunityStyles";
 import { Link } from "react-router-dom";
 import CustomSelect from "./CustomSelect";
@@ -67,7 +66,7 @@ function Community() {
       }
     } else {
       try {
-        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/view`);
+        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/`);
         console.log("게시글 데이터를 불러오는 중");
         setPosts(response.data);
       } catch (error) {
@@ -75,13 +74,30 @@ function Community() {
       }
     }
   };
-
+  // 페이지네이션 상태와 로직 추가
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 10; /*한 페이지에 글 10개씩 보여주기*/
+  
+  // 현재 페이지의 게시글 계산
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  
+  // 총 페이지 수
+  const totalPages = Math.max(1, Math.ceil(posts.length / postsPerPage));
+  
+  // 페이지 변경 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo(0, 0); // 선택 시 스크롤 맨 위로
+  };
+  
   return (
     <Main>
       <Header />
       <Center>
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-        {/* ✅ 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
+        {/* 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
         {!isSidebarOpen && (
           <ToggleButton onClick={toggleSidebar}>
             <img
@@ -102,19 +118,19 @@ function Community() {
           </Link>
         </TopRow>
         <Content isSidebarOpen={isSidebarOpen}>
-          <CommunityList posts={posts} />
-          <PaginationWrapper>
-            <PageButton>{"«"}</PageButton>
-            <PageButton>{"<"}</PageButton>
-            <ActivePageButton>1</ActivePageButton>
-            {/*현재 위치한 페이지를 효과로 나타냄 */}
-            <PageButton>2</PageButton>
-            <PageButton>3</PageButton>
-            <PageButton>4</PageButton>
-            <PageButton>5</PageButton>
-            <PageButton>{">"}</PageButton>
-            <PageButton>{"»"}</PageButton>
-          </PaginationWrapper>
+          <CommunityListWrapper>
+            <CommunityList posts={currentPosts} />
+          </CommunityListWrapper>
+
+          {/* 페이지네이션 */}
+          {totalPages > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          )}  
+
         </Content>
       </Center>
     </Main>
@@ -122,3 +138,17 @@ function Community() {
 }
 
 export default Community;
+
+
+{/*<PaginationWrapper>
+          <PageButton>{"«"}</PageButton>
+          <PageButton>{"<"}</PageButton>
+          <ActivePageButton>1</ActivePageButton>
+          {/*현재 위치한 페이지를 효과로 나타냄 */}
+          {/*<PageButton>2</PageButton>
+          <PageButton>3</PageButton>
+          <PageButton>4</PageButton>
+          <PageButton>5</PageButton>
+          <PageButton>{">"}</PageButton>
+          <PageButton>{"»"}</PageButton>
+        </PaginationWrapper>*/}

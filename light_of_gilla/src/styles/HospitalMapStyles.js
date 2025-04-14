@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+const mobile = "@media screen and (max-width: 480px)";
+
 export const Main = styled.main`
   width: 100%;
   height: 80vh;
@@ -18,20 +20,28 @@ export const MapContainer = styled.div`
   height: 100%;
   border: 1px solid #ddd;
   border-radius: 8px;
+
+  ${mobile} {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
 `;
 
 /* 사이드바 */
 export const Sidebar = styled.div`
-  position: absolute; /* 절대 위치 설정 */
-  top: 90px; /* 검색창과 같은 높이 */
-  left: 0; /* 화면 왼쪽에 위치 */
+  position: absolute;
+  top: 90px;
+  left: 0;
   width: 300px;
   height: 110%;
   background: #f8f9fa;
   padding: 20px;
   overflow-y: auto;
   border-right: 1px solid #ddd;
-  z-index: 10; /* 지도 위에 표시 */
+  z-index: 10;
 
   h2 {
     font-size: 18px;
@@ -54,27 +64,46 @@ export const Sidebar = styled.div`
     border-radius: 5px;
 
     &:hover {
-      background:rgb(226, 226, 226);
+      background: rgb(226, 226, 226);
     }
+  }
+
+  ${mobile} {
+    position:fixed;
+    width: 90%;
+    height: auto;
+    bottom: 42px; /* 헤더 높이만큼 위로 */
+    top: 60%;
+    left: 0;
+    border-right: none;
+    border-top: 1px solid #ddd;
+    font-size: 14px;
   }
 `;
 
-/* 검색창과 카테고리 버튼을 감싸는 div */
 export const SearchContainer = styled.div`
-  position: absolute; /* 고정 위치 설정 */
-  top: 90px; /* 헤더 아래에 위치 */
-  left: 60%;
-  transform: translateX(-50%); /* 가운데 정렬 */
-  width: 74%;
+  position: absolute;
+  top: 90px;
+  left: calc(360px + 5%);
+  width: calc(90% - 360px);
   padding: 15px;
   border-radius: 8px;
-  z-index: 10; /* 지도 위에 표시 */
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  ${mobile} {
+    top: 10px;
+    left: 10px;
+    right: 5px;
+    width: auto;
+    padding: 10px;
+    box-sizing: border-box;
+  }
 `;
 
-/* 검색창을 감싸는 div */
+
 export const SearchBox = styled.div`
   display: flex;
   width: 100%;
@@ -90,12 +119,19 @@ export const SearchBox = styled.div`
     cursor: pointer;
 
     &:hover {
-      background:rgb(226, 226, 226);
+      background: rgb(226, 226, 226);
+    }
+  }
+
+  ${mobile} {
+    img {
+      width: 30px;
+      height: 30px;
     }
   }
 `;
 
-/* 검색창 */
+
 export const SearchInput = styled.input`
   width: 100%;
   padding: 8px;
@@ -105,14 +141,48 @@ export const SearchInput = styled.input`
   margin-bottom: 10px;
 `;
 
-/* 카테고리 버튼*/
 export const CategoryButtons = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 15px;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  right: 0px;
 
-  button {
+  .scroll-btn {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: #eee;
+    }
+  }
+
+  .category-scroll {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-behavior: smooth;
+    flex: 1;
+    gap: 8px;
+    margin: 0 8px;
+  }
+
+  .category-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-scroll button {
+    flex: 0 0 auto;
     padding: 5px 20px;
     font-size: 20px;
     border: none;
@@ -124,6 +194,14 @@ export const CategoryButtons = styled.div`
 
     &:hover {
       background: #ff4757;
+    }
+  }
+
+  ${mobile} {
+    .scroll-btn {
+      width: 28px;
+      height: 28px;
+      font-size: 14px;
     }
   }
 `;
