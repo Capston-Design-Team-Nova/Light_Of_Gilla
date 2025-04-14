@@ -212,7 +212,7 @@ API Gateway 엔드포인트
 
 # 📘 Hospital Review API 명세서
 
-- Base URL: `/api/reviews`
+- Base URL: `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews`
 
 ## 🟢 1. 리뷰 등록 (Create)
 
