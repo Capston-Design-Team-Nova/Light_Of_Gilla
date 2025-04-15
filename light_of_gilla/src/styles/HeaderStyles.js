@@ -63,6 +63,8 @@ export const ImageButton1 = styled.button`
   border: none;
   cursor: pointer;
   margin-top:2px; 
+  position: relative;
+  
 
   img {
     width: 95px; /* 버튼의 크기에 맞게 이미지 크기 설정 */
@@ -84,7 +86,8 @@ export const ImageButton2 = styled.button`
   border: none;
   cursor: pointer;
   margin-top:2px; 
-
+  position: relative;
+  
   img {
     width: 45px; /* 버튼의 크기에 맞게 이미지 크기 설정 */
     height: 40px; /* 비율에 맞게 높이 자동 조정 */
@@ -98,3 +101,19 @@ export const ImageButton2 = styled.button`
       height: 36px;  /* ✅ 모바일에서는 살짝 줄임 */
     }
 `;
+
+export const Tooltip = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 30%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 100;
+`;
+
+
