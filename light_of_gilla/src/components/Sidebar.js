@@ -20,6 +20,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 <Link to="/MyLikes">
                     <SidebarButton onClick={toggleSidebar}>내가 좋아요 한 글</SidebarButton>
                 </Link>
+                <Link to="/FAQ">
+                    <SidebarButton onClick={toggleSidebar}>전문가 FAQ</SidebarButton>
+                </Link>
+
             </SidebarContent>
         </SidebarContainer>
     );
