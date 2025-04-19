@@ -172,6 +172,7 @@ API Gateway 엔드포인트
 
 ## 2. 로그인 (JWT 발급)
 - **POST** `/api/users/login`
+- 이메일, 아이디 둘 다 가능
 
 요청 예시: `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/login`
 ```json
