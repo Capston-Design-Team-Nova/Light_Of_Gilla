@@ -149,10 +149,7 @@ API Gateway 엔드포인트
 
 ---
 
-# 🧩 User API 명세서
-
-Spring Boot 기반의 User 서비스 API 문서입니다.  
-토큰이 필요한 API는 요청 헤더에 다음과 같이 JWT를 포함시켜야 합니다.
+# 🧩 유저 서비스 API 명세서서
 
 ---
 
@@ -179,7 +176,7 @@ Spring Boot 기반의 User 서비스 API 문서입니다.
 요청 예시: `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/login`
 ```json
 {
-  "email": "test@example.com",
+  "emailOrUserId": "test@example.com",
   "password": "password123"
 }
 ```
