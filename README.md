@@ -160,7 +160,7 @@ Spring Boot 기반의 User 서비스 API 문서입니다.
 
 - **POST** `/api/users/signup`
 
-요청 예시:
+요청 예시: `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/signup`
 ```json
 {
   "userId": "user123",
@@ -176,7 +176,7 @@ Spring Boot 기반의 User 서비스 API 문서입니다.
 ## 2. 로그인 (JWT 발급)
 - **POST** `/api/users/login`
 
-요청 예시:
+요청 예시: `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/login`
 ```json
 {
   "email": "test@example.com",
@@ -192,6 +192,8 @@ Spring Boot 기반의 User 서비스 API 문서입니다.
 ## 3. 로그아웃
 - **POST** `/api/users/logout`
 
+요청 예시: `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/logout`
+
 요청 헤더:
 ```
 Authorization: Bearer {토큰값}
@@ -199,6 +201,8 @@ Authorization: Bearer {토큰값}
 
 ## 4. 액세스 토큰 재발급
 - **POST** `/api/users/token/refresh`
+
+요청 예시: `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/token/refresh`
 
 요청 헤더:
 ```
@@ -214,6 +218,8 @@ Authorization: Bearer {리프레시 토큰값}
 
 ## 5. 내 정보 조회
 - **GET** `/api/users/me`
+
+요청 예시: `GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/me`
 
 요청 헤더:
 ```
@@ -231,6 +237,8 @@ Authorization: Bearer {토큰값}
 
 ## 6. 회원 목록 전체 조회
 - **GET** `/api/users`
+
+요청 예시: `GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users`
 
 응답 예시:
 
@@ -260,6 +268,8 @@ Authorization: Bearer {토큰값}
 ## 7. 이메일로 유저 정보 조회
 - **GET** `/api/users/email/{email}`
 
+요청 예시: `GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/email/test@example.com`
+
 응답 예시:
 
 ```json
@@ -276,6 +286,8 @@ Authorization: Bearer {토큰값}
 
 ## 8. userId로 유저 조회
 - **GET** `/api/users/{userId}`
+  
+요청 예시: `GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/{userId}`
 
 ## 9. 회원 정보 수정
 - **PUT** `/api/users/{userId}`
@@ -292,9 +304,13 @@ Authorization: Bearer {토큰값}
 
 ## 10. 회원 탈퇴
 - **DELETE** `/api/users/{userId}`
+  
+요청 예시: `DELETE https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123`
 
 ## 11. 비밀번호 변경
 - **PUT** `/api/users/{userId}/password`
+  
+요청 예시: `PUT https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123/password`
 
 요청 예시:
 
@@ -307,7 +323,7 @@ Authorization: Bearer {토큰값}
 ## 12. 닉네임 변경
 - **PATCH** `/api/users/{userId}/nickname`
 
-요청 예시:
+요청 예시: `PATCH https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123/nickname`
 
 ```json
 {
@@ -318,7 +334,7 @@ Authorization: Bearer {토큰값}
 ## 13. 프로필 이미지 변경
 - **PATCH** `/api/users/{userId}/profile-image`
 
-요청 예시:
+요청 예시: `PATCH https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123/profile-image`
 
 ```json
 {
@@ -328,8 +344,38 @@ Authorization: Bearer {토큰값}
 
 ## 14. 닉네임으로 유저 검색
 - **GET** `/api/users/search?nickname=닉네임`
+  
+요청 예시: `GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/search?nickname=새로운닉네임`
 
 ## 15. 전체 유저 수 조회
 - **GET** `/api/users/count`
+  
+요청 예시: `GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/count`
 
----
+## 16. 비밀번호 리셋 (메일 보내기)
+- **POST** `/api/users/reset-password`
+- 발신자: vmffotlka1@gmail.com
+- 스팸으로 분류되어 있을 수 있으니 주의
+  
+요청 예시: `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/reset-password`
+
+요청 예시:
+```json
+{
+  "email": "testuser@example.com"
+}
+```
+
+성공 시:
+```json
+{
+  "message": "임시 비밀번호가 이메일로 전송되었습니다."
+}
+```
+
+실패 시:
+```json
+{
+  "message": "등록되지 않은 이메일입니다."
+}
+```
