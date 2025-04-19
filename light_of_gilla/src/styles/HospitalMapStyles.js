@@ -20,6 +20,7 @@ export const MapContainer = styled.div`
   height: 100%;
   border: 1px solid #ddd;
   border-radius: 8px;
+  z-index: 3;
 
   ${mobile} {
     top: 0;
@@ -27,6 +28,7 @@ export const MapContainer = styled.div`
     width: 100%;
     height: 100vh;
     border-radius: 0;
+    z-index: 3;
   }
 `;
 
@@ -41,7 +43,7 @@ export const Sidebar = styled.div`
   padding: 20px;
   overflow-y: auto;
   border-right: 1px solid #ddd;
-  z-index: 10;
+  z-index: 4;
 
   h2 {
     font-size: 18px;
@@ -78,6 +80,7 @@ export const Sidebar = styled.div`
     border-right: none;
     border-top: 1px solid #ddd;
     font-size: 14px;
+    z-index: 4;
   }
 `;
 
@@ -88,7 +91,7 @@ export const SearchContainer = styled.div`
   width: calc(90% - 360px);
   padding: 15px;
   border-radius: 8px;
-  z-index: 10;
+  z-index: 4;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -100,6 +103,7 @@ export const SearchContainer = styled.div`
     width: auto;
     padding: 10px;
     box-sizing: border-box;
+    z-index: 4;
   }
 `;
 
@@ -148,7 +152,8 @@ export const CategoryButtons = styled.div`
   overflow: hidden;
   position: relative;
   right: 0px;
-
+  z-index: 4;
+  
   .scroll-btn {
     background: white;
     border: 1px solid #ccc;
@@ -198,6 +203,7 @@ export const CategoryButtons = styled.div`
   }
 
   ${mobile} {
+    z-index: 4;
     .scroll-btn {
       width: 28px;
       height: 28px;

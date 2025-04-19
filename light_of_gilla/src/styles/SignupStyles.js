@@ -10,7 +10,7 @@ export const ModalBackground = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  z-index: 1000;
 `;
 
 export const ModalContainer = styled.div`
@@ -21,6 +21,7 @@ export const ModalContainer = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 380px;
   text-align: center;
+  z-index: 1000;
 `;
 
 export const CloseButton = styled.button`

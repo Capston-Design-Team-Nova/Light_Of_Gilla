@@ -307,24 +307,72 @@ function HospitalMap() {
     }
   };
 
+  const symptomToCategory = {
+    "두통": "신경과",
+    "치통": "치과",
+    "소화불량": "내과",
+    "피부 가려움": "피부과",
+    "눈 충혈": "안과",
+    "충혈": "안과",
+    "귀 통증": "이비인후과",
+    "골절": "정형외과",
+    "산전 검사": "산부인과",
+    "복통": "내과",
+    "기침": "호흡기내과",
+    "발열": "내과",
+    "피로": "내과",
+    "어지러움": "신경과",
+    "가슴 통증": "심장내과",
+    "배뇨 문제": "비뇨기과",
+    "관절 통증": "정형외과",
+    "호흡 곤란": "호흡기내과",
+    "어깨 통증": "정형외과",
+    "배변 문제": "소화기내과",
+    "피부 발진": "피부과",
+    "근육통": "정형외과, 류마티스내과",
+    "손발 저림": "신경과, 혈관외과, 내분비내과",
+    "불면증": "정신건강의학과, 신경과",
+    "갑상선 문제": "내분비내과",
+    "알레르기": "알레르기내과, 피부과, 이비인후과",
+    "요통": "정형외과, 신경외과",
+    "탈모": "피부과",
+    "우울감": "정신건강의학과",
+    "불안감": "정신건강의학과",
+    "수면장애": "정신건강의학과, 신경과",
+    "구토": "소화기내과",
+    "설사": "소화기내과",
+  };  
+
   const handleSearch = () => {
-    if (!searchTerm.trim()) return;
-    const ps = new window.kakao.maps.services.Places();
-    ps.keywordSearch(
-      searchTerm,
-      (data, status) => {
-        setHospitals(
-          status === window.kakao.maps.services.Status.OK ? data : []
-        );
-      },
-      {
-        location: new window.kakao.maps.LatLng(
-          state.center.lat,
-          state.center.lng
-        ),
-      }
-    );
+    const trimmedTerm = searchTerm.trim();
+    if (!trimmedTerm) return;
+  
+    const matchedCategory = symptomToCategory[trimmedTerm];
+    if (matchedCategory) {
+      // 진료과에 해당하는 검색어일 경우 해당 카테고리(들)로 검색
+      matchedCategory.split(",").forEach((cat) => {
+        handleCategoryClick(cat.trim());
+      });
+    } else {
+      // 일반 키워드 검색 수행
+      const ps = new window.kakao.maps.services.Places();
+      ps.keywordSearch(
+        trimmedTerm,
+        (data, status) => {
+          setHospitals(
+            status === window.kakao.maps.services.Status.OK ? data : []
+          );
+        },
+        {
+          location: new window.kakao.maps.LatLng(
+            state.center.lat,
+            state.center.lng
+          ),
+        }
+      );
+    }
   };
+  
 
   const handleCategoryClick = (category) => {
     const ps = new window.kakao.maps.services.Places();
