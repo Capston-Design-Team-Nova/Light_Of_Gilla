@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   PageHeader,
   Nav,
@@ -12,6 +12,19 @@ import AuthModalManager from "../pages/Login_Singup_Modal/AuthModalManager";
 
 function Header() {
   const [showModal, setShowModal] = useState(false); // 로그인 모달 상태 관리
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부
+
+  // 로그인 상태를 localStorage에서 확인
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, [showModal]); // showModal 변경 시 로그인 상태 다시 확인
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    alert("로그아웃 되었습니다.");
+  };
 
   return (
     <>
@@ -29,9 +42,21 @@ function Header() {
             <Link to="/Community">
               <Button>Q&A</Button>
             </Link>
-            <ImageButton2 onClick={() => setShowModal(true)}>
-              <img src={require("../assets/images/login2.png")} alt=" " />
-            </ImageButton2>
+            {!isLoggedIn ? (
+              <ImageButton2 onClick={() => setShowModal(true)}>
+                <img
+                  src={require("../assets/images/login2.png")}
+                  alt="로그인"
+                />
+              </ImageButton2>
+            ) : (
+              <ImageButton2 onClick={handleLogout}>
+                <img
+                  src={require("../assets/images/login2.png")}
+                  alt="로그아웃"
+                />
+              </ImageButton2>
+            )}
           </NavRight>
         </Nav>
       </PageHeader>

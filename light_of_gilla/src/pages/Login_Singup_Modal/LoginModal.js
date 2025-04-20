@@ -14,13 +14,13 @@ import {
 } from "../../styles/LoginStyles";
 
 const LoginModal = ({ onClose, onSwitch }) => {
-  const [emailOrId, setEmailOrId] = useState("");
+  const [emailOrUserId, setEmailOrId] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
     try {
-      const res = await axios.post("/api/users/login", {
-        email: emailOrId,
+      const res = await axios.post("https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/login", {
+        emailOrUserId: emailOrUserId,
         password,
       });
       localStorage.setItem("token", res.data.token); // JWT 저장
@@ -40,7 +40,7 @@ const LoginModal = ({ onClose, onSwitch }) => {
         <InputField
           type="text"
           placeholder="이메일 입력"
-          value={emailOrId}
+          value={emailOrUserId}
           onChange={(e) => setEmailOrId(e.target.value)}
         />
         <InputField

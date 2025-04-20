@@ -56,27 +56,35 @@ const SignupModal = ({ onClose }) => {
 
   const handleSignup = async () => {
     try {
-      const profileImageUrl =
-        profilePreview || "https://example.com/default-profile.jpg";
-
-      const response = await axios.post("/api/users/signup", {
+      const payload = {
         userId: formData.userId,
         password: formData.password,
         email: formData.email,
-        phone: "01000000000", // 추후 추가 가능
+        phone: "01000000000", // 임시
         nickname: formData.nickname,
-        profileImage: profileImageUrl,
-        residentNumber: formData.residentNumber.replace(/[^0-9]/g, "").slice(0, 6),
-      });
+        profileImage:
+          profilePreview || "https://example.com/default-profile.jpg",
+        residentNumber: formData.residentNumber
+          .replace(/[^0-9]/g, "")
+          .slice(2, 8), // 19990127 → 990127
+      };
+
+      console.log("회원가입 요청 payload:", payload);
+
+      const response = await axios.post(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/signup",
+        payload
+      );
 
       alert("회원가입이 완료되었습니다!");
       onClose();
     } catch (error) {
       console.error("회원가입 오류:", error.response || error);
       alert(
-        error.response?.data?.message || "회원가입에 실패했습니다. 다시 시도해주세요."
+        error.response?.data?.message ||
+          "회원가입에 실패했습니다. 다시 시도해주세요."
       );
-    }    
+    }
   };
 
   const renderStep = () => {
@@ -111,10 +119,10 @@ const SignupModal = ({ onClose }) => {
                 value={formData.email}
                 onChange={(e) => updateField("email", e.target.value)}
               />
-              <EmailButton>인증</EmailButton>
+              <EmailButton disabled>인증</EmailButton>
             </EmailRow>
 
-            <InputField type="text" placeholder="확인코드 입력 (생략됨)" />
+            <InputField type="text" placeholder="확인코드 입력 (생략됨)" disabled />
             <NextButton onClick={handleNext}>다음</NextButton>
           </>
         );
@@ -140,7 +148,11 @@ const SignupModal = ({ onClose }) => {
                     <img
                       src={profilePreview}
                       alt="프로필"
-                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                      }}
                     />
                   )}
                 </div>
