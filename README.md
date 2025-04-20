@@ -147,7 +147,7 @@ API Gateway 엔드포인트
 `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/101/like`
 `X-User-Name: hyunseo`
 
-## 💖 6. 즐겨찾기 등록
+## 🟢 6. 즐겨찾기 등록
 
 - **POST** `/api/favorites/{hospitalId}`
 - 요청 헤더 주의. User-name을 보내야함. User테이블의 nickname에 해당.
@@ -156,7 +156,7 @@ API Gateway 엔드포인트
 `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/favorites/1`
 `X-User-Name: hyunseo`
 
-## 💖 7. 즐겨찾기 삭제
+## 🟡 7. 즐겨찾기 삭제
 
 - **DELETE** `/api/favorites/{hospitalId}`
 - 요청 헤더 주의. User-name을 보내야함. User테이블의 nickname에 해당.
@@ -165,7 +165,7 @@ API Gateway 엔드포인트
 `DEELTE https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/favorites/1`
 `X-User-Name: hyunseo`
 
-## 💖 8. 즐겨찾기 목록 조회
+## 🔵 8. 즐겨찾기 목록 조회
 
 - **GET** `/api/favorites`
 - 요청 헤더 주의. User-name을 보내야함. User테이블의 nickname에 해당.
