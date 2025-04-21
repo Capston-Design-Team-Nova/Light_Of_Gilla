@@ -19,6 +19,8 @@ import Sidebar from "../../components/Sidebar";
 import SearchField from "../../components/SearchField";
 
 function Community() {
+  const Email = localStorage.getItem("Email");
+  const [NickName,setNickName]=useState("")
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [posts, setPosts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -37,7 +39,17 @@ function Community() {
         console.error("게시글 데이터를 불러오는 중 오류 발생:", error);
       }
     };
+    const getNickName = async () => {
+      try {
+        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/sign`);
+        console.log("닉네임임 데이터를 불러오는 중");
+        localStorage.setItem("nickname", response.data.nickname);
+      } catch (error) {
+        console.error("사용자가 없음음:", error);
+      }
+    };
     fetchPosts();
+    getNickName();
   }, []);
   const handleSelectChange = async (value) => {
     console.log("선택한 카테고리:", value);

@@ -23,6 +23,7 @@ const LoginModal = ({ onClose, onSwitch }) => {
         emailOrUserId: emailOrUserId,
         password,
       });
+      localStorage.setItem("Email",emailOrUserId);
       localStorage.setItem("token", res.data.token); // JWT 저장
       alert("로그인 성공!");
       onClose();
