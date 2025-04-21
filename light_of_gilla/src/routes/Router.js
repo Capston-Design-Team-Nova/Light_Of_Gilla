@@ -4,7 +4,6 @@ import MainScreen from "../pages/MainScreen";
 import HospitalMap from "../pages/HospitalMap";
 
 import Community from "../pages/CommunityPage/Community";
-import Login from "../pages/LoginModal";
 import Write from "../pages/CommunityPage/CommunityWS";
 import MyArticles from "../pages/CommunityPage/MyArticles";
 import MyComments from "../pages/CommunityPage/MyComments";
@@ -34,7 +33,6 @@ function Router() {
         <Route path="/" element={<MainScreen />} />
         <Route path="/HospitalMap" element={<HospitalMap />} />
         <Route path="/Community" element={<Community />} />
-        <Route path="/Login" element={<Login />} />
         <Route path="/Write" element={<Write />} />
         <Route path="/MyArticles" element={<MyArticles />} />
         <Route path="/MyComments" element={<MyComments />} />

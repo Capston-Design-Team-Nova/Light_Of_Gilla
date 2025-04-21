@@ -1,10 +1,10 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-const mobile = '@media screen and (max-width: 480px)';
+const mobile = "@media screen and (max-width: 480px)";
 
 export const PageHeader = styled.header`
   width: 100%;
-  background-color: #FFC86A;
+  background-color: #ffc86a;
   display: flex; /* Flexbox 활성화 */
   justify-content: center; /* 가로 정렬: 중앙 */
   align-items: center; /* 세로 정렬: 중앙 */
@@ -16,13 +16,14 @@ export const PageHeader = styled.header`
   ${mobile} {
     top: auto;
     bottom: 0; /* ✅ 모바일에서 하단 고정 */
+    height: 42px;
   }
 `;
 
 export const Nav = styled.nav`
   width: 99%;
   display: flex; /* Flexbox 활성화 */
-  justify-content: flex-end;/*우측 정렬*/
+  justify-content: flex-end; /*우측 정렬*/
   align-items: center; /* 세로 방향으로 중앙 정렬 */
 `;
 
@@ -42,9 +43,9 @@ export const Button = styled.button`
   padding: 20px;
   width: 100%;
   height: 100%;
-  background-color: #FFC86A;
+  background-color: #ffc86a;
   color: black;
-  font-family: 'OurFont1';
+  font-family: "OurFont1";
   font-weight: bold;
   font-size: 1.3vw;
   cursor: pointer;
