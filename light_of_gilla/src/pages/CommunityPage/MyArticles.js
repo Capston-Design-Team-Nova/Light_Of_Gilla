@@ -8,6 +8,7 @@ import SearchField from '../../components/SearchField';
 //import Pagination from "../../components/Pagination";
 
 function MyArticles() {
+    const token = localStorage.getItem("token");
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [posts, setPosts] = useState([]);
 
@@ -16,13 +17,32 @@ function MyArticles() {
         setSidebarOpen(!isSidebarOpen);
     };
     const username = localStorage.getItem("username");
-
-  // 페이지네이션 상태와 로직 추가
-  //const [currentPage, setCurrentPage] = useState(1);
-  //const postsPerPage = 10; /*한 페이지에 글 10개씩 보여주기*/
+    const getEmailFromToken = () => {
+      if (token) {
+        const decodedToken = jwt_decode(token);  
+        return decodedToken.emailOrUserId; 
+      }
+      return null;
+    };
+    useEffect(() => {
+      const email = getEmailFromToken();  
+      if (email) {
+        // 이메일을 사용해 서버에 요청 보내기
+        axios.get(`https://your-api.com/user/posts?email=${email}`)
+          .then(response => {
+            setPosts(response.data);
+          })
+          .catch(error => {
+            console.error("Error fetching posts:", error);
+          });
+      }
+    }, [token]);
+  //페이지네이션 상태와 로직 추가
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 10; /*한 페이지에 글 10개씩 보여주기*/
   
   // 현재 페이지의 게시글 계산
- {/*} const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
   
@@ -33,7 +53,7 @@ function MyArticles() {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
     window.scrollTo(0, 0); // 선택 시 스크롤 맨 위로
-  };*/}
+  };
     return (
         <Main>
             <Header />
@@ -51,18 +71,18 @@ function MyArticles() {
                 </TopRow>
                 
                 <Content isSidebarOpen={isSidebarOpen}>
-                    {/*<CommunityListWrapper>
-                        <CommunityList posts={currentPosts} />
+                    <CommunityListWrapper>
+                        <CommunityList posts={currentPosts}/>
                     </CommunityListWrapper>
                     
                     {/* 페이지네이션 */}
-                    {/*{totalPages > 0 && (
+                    {totalPages > 0 && (
                         <Pagination
                             currentPage={currentPage}
                             totalPages={totalPages}
                             onPageChange={handlePageChange}
                         />
-                    )}*/}           
+                    )}           
                 </Content>
             </Center>
         </Main>
