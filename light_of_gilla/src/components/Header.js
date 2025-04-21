@@ -26,6 +26,15 @@ function Header() {
     setIsLoggedIn(false);
     alert("로그아웃 되었습니다.");
   };
+  const handleMouseEnter1 = () => {
+    timer1 = setTimeout(() => setShowTooltip1(true), 3000);
+  };
+
+  const handleMouseLeave1 = () => {
+    clearTimeout(timer1);
+    setShowTooltip1(false);
+  };
+
 
   return (
     <>
