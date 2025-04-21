@@ -72,6 +72,7 @@ const SignupModal = ({ onClose }) => {
       console.log("회원가입 요청 payload:", payload);
       const EmailandName={
         email: formData.email,
+        userId: formData.userId,
         nickname: formData.nickname
       }
       const call = await axios.post(
