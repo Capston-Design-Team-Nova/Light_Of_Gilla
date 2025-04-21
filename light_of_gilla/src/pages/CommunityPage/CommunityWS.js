@@ -7,6 +7,7 @@ import CustomSelect from './CustomSelect';
 import Sidebar from '../../components/Sidebar';
 
 function CommunityWS() {
+    const token = localStorage.getItem("token");
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
