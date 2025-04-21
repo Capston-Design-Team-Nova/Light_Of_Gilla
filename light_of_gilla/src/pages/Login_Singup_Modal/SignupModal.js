@@ -70,7 +70,14 @@ const SignupModal = ({ onClose }) => {
       };
 
       console.log("회원가입 요청 payload:", payload);
-
+      const EmailandName={
+        email: formData.email,
+        nickname: formData.nickname
+      }
+      const call = await axios.post(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/signup",
+        EmailandName
+      );
       const response = await axios.post(
         "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/signup",
         payload
