@@ -20,7 +20,7 @@ import SearchField from "../../components/SearchField";
 
 function Community() {
   const Email = localStorage.getItem("Email");
-  const [NickName,setNickName]=useState("")
+  
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [posts, setPosts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -30,6 +30,7 @@ function Community() {
     setSidebarOpen(!isSidebarOpen);
   };
   useEffect(() => {
+    console.log("Email:",Email);
     const fetchPosts = async () => {
       try {
         const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/view`);
@@ -41,11 +42,11 @@ function Community() {
     };
     const getNickName = async () => {
       try {
-        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/sign`);
+        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/sign/${Email}`);
         console.log("닉네임임 데이터를 불러오는 중");
-        localStorage.setItem("nickname", response.data.nickname);
+        localStorage.setItem("nickname", response.data);
       } catch (error) {
-        console.error("사용자가 없음음:", error);
+        console.error("사용자가 없음:", error);
       }
     };
     fetchPosts();

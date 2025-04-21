@@ -2,13 +2,13 @@ import React,{useState, useEffect} from 'react';
 import Header from '../../components/Header';
 import { Main, Center, Content, Button,TopRow,ToggleButton,CommunityListWrapper } from '../../styles/CommunityStyles';
 import { Link } from "react-router-dom";
-//import CommunityList from './CommunityList';
+import CommunityList from './CommunityList';
 import Sidebar from '../../components/Sidebar';
 import SearchField from '../../components/SearchField';
-//import Pagination from "../../components/Pagination";
+import Pagination from "../../components/Pagination";
 
 function MyArticles() {
-    const token = localStorage.getItem("token");
+    
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [posts, setPosts] = useState([]);
 
@@ -16,27 +16,8 @@ function MyArticles() {
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
     };
-    const username = localStorage.getItem("username");
-    const getEmailFromToken = () => {
-      if (token) {
-        const decodedToken = jwt_decode(token);  
-        return decodedToken.emailOrUserId; 
-      }
-      return null;
-    };
-    useEffect(() => {
-      const email = getEmailFromToken();  
-      if (email) {
-        // 이메일을 사용해 서버에 요청 보내기
-        axios.get(`https://your-api.com/user/posts?email=${email}`)
-          .then(response => {
-            setPosts(response.data);
-          })
-          .catch(error => {
-            console.error("Error fetching posts:", error);
-          });
-      }
-    }, [token]);
+    
+   
   //페이지네이션 상태와 로직 추가
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10; /*한 페이지에 글 10개씩 보여주기*/
