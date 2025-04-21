@@ -6,7 +6,6 @@ import {
   Button,
   ImageButton1,
   ImageButton2,
-  Tooltip,
 } from "../styles/HeaderStyles";
 import { Link } from "react-router-dom";
 import AuthModalManager from "../pages/Login_Singup_Modal/AuthModalManager";
@@ -26,24 +25,14 @@ function Header() {
     setIsLoggedIn(false);
     alert("로그아웃 되었습니다.");
   };
-  const handleMouseEnter1 = () => {
-    timer1 = setTimeout(() => setShowTooltip1(true), 3000);
-  };
-
-  const handleMouseLeave1 = () => {
-    clearTimeout(timer1);
-    setShowTooltip1(false);
-  };
-
 
   return (
     <>
       <PageHeader>
         <Nav>
           <Link to="/">
-            <ImageButton1 onMouseEnter={handleMouseEnter1} onMouseLeave={handleMouseLeave1}>
+            <ImageButton1>
               <img src={require("../assets/images/길라로고3.png")} alt=" " />
-              {showTooltip1 && <Tooltip>메인화면</Tooltip>}
             </ImageButton1>
           </Link>
           <NavRight>
