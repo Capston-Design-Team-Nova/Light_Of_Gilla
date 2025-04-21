@@ -64,6 +64,8 @@ export const ImageButton1 = styled.button`
   border: none;
   cursor: pointer;
   margin-top:2px; 
+  position: relative;
+  
 
   img {
     width: 95px; /* 버튼의 크기에 맞게 이미지 크기 설정 */
@@ -85,7 +87,8 @@ export const ImageButton2 = styled.button`
   border: none;
   cursor: pointer;
   margin-top:2px; 
-
+  position: relative;
+  
   img {
     width: 45px; /* 버튼의 크기에 맞게 이미지 크기 설정 */
     height: 40px; /* 비율에 맞게 높이 자동 조정 */

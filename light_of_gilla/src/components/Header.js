@@ -6,6 +6,7 @@ import {
   Button,
   ImageButton1,
   ImageButton2,
+  Tooltip,
 } from "../styles/HeaderStyles";
 import { Link } from "react-router-dom";
 import AuthModalManager from "../pages/Login_Singup_Modal/AuthModalManager";
@@ -31,8 +32,9 @@ function Header() {
       <PageHeader>
         <Nav>
           <Link to="/">
-            <ImageButton1>
+            <ImageButton1 onMouseEnter={handleMouseEnter1} onMouseLeave={handleMouseLeave1}>
               <img src={require("../assets/images/길라로고3.png")} alt=" " />
+              {showTooltip1 && <Tooltip>메인화면</Tooltip>}
             </ImageButton1>
           </Link>
           <NavRight>
