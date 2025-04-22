@@ -42,7 +42,7 @@ function Community() {
     };
     const getNickName = async () => {
       try {
-        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/sign/${Email}`);
+        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/sign?value=${Email}`);
         console.log("닉네임임 데이터를 불러오는 중");
         localStorage.setItem("nickname", response.data);
       } catch (error) {

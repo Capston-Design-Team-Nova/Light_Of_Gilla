@@ -24,6 +24,8 @@ public class PostEntity extends BaseEntity{
     private int commentCounts;
 
     @Column
+    private String NickName;
+    @Column
     private String category;
 
     @Column

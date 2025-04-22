@@ -19,6 +19,8 @@ public class CommentEntity extends BaseEntity{
 
     @Column
     private String user_id;
+    @Column
+    private String NickName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_comment_id", referencedColumnName = "id")
