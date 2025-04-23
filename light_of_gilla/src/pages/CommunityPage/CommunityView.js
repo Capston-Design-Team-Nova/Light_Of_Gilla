@@ -214,12 +214,14 @@ const CommunityView = () => {
     console.log("댓글 제출 클릭됨");
     const count = commentCount + 1; // UI 업데이트를 위해 좋아요 수 증가
     setCommentCount(count); // UI 먼저 업데이트
+    const name=localStorage.getItem("nickname");
   if (!newComment.text) return;
 
   const newCommentObj = {
     user_id: newComment.writer,
     comment: newComment.text,
-    post_id: id
+    post_id: id,
+    nickName: name
   };
   console.log("Post ID:", newCommentObj.post_id);
   // 1. 백엔드로 댓글 전송 (POST 요청 예시)
