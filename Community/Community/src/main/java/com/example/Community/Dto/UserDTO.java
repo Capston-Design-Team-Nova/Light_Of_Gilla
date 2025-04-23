@@ -11,15 +11,15 @@ import lombok.*;
 @AllArgsConstructor
 
 public class UserDTO {
-    private String Email;
-    private String NickName;
-    private String User_id;
+    private String email;
+    private String nickName;
+    private String userid;
 
     public static UserDTO toUserDTO(UserEntity userEntity) {
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail(userEntity.getEmail());
         userDTO.setNickName(userEntity.getNickName());
-        userDTO.setUser_id(userEntity.getUser_id());
+        userDTO.setUserid(userEntity.getUser_id());
         return userDTO;
     }
 }

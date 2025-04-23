@@ -26,7 +26,7 @@ public class UserEntity {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(userDTO.getEmail());
         userEntity.setNickName(userDTO.getNickName());
-        userEntity.setUser_id(userDTO.getUser_id());
+        userEntity.setUser_id(userDTO.getUserid());
         return userEntity;
     }
 }

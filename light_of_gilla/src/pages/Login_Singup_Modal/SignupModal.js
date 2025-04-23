@@ -72,17 +72,18 @@ const SignupModal = ({ onClose }) => {
       console.log("회원가입 요청 payload:", payload);
       const EmailandName={
         email: formData.email,
-        userId: formData.userId,
-        nickname: formData.nickname
+        userid: formData.userId,
+        nickName: formData.nickname
       }
+      console.log("회원가입 요청 EmailandName:", EmailandName);
       const call = await axios.post(
-        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/signup",
+        "http://localhost:8082/post/signup",
         EmailandName
       );
-      const response = await axios.post(
-        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/signup",
-        payload
-      );
+      // const response = await axios.post(
+      //   "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/signup",
+      //   payload
+      // );
 
       alert("회원가입이 완료되었습니다!");
       onClose();
