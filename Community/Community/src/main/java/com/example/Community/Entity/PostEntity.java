@@ -24,7 +24,7 @@ public class PostEntity extends BaseEntity{
     private int commentCounts;
 
     @Column
-    private String NickName;
+    private String nickName;
     @Column
     private String category;
 
@@ -46,6 +46,7 @@ public class PostEntity extends BaseEntity{
     public static PostEntity toSaveEntity(PostDTO postDTO){
       PostEntity postEntity = new PostEntity();
       postEntity.setTitle(postDTO.getTitle());
+      postEntity.setNickName(postDTO.getNickName());
       postEntity.setContent(postDTO.getContent());
       postEntity.setUserid(postDTO.getUser_id());
       postEntity.setCategory(postDTO.getCategory());

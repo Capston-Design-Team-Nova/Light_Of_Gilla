@@ -7,17 +7,18 @@ import CustomSelect from './CustomSelect';
 import Sidebar from '../../components/Sidebar';
 
 function CommunityWS() {
-    const Email = localStorage.getItem("Email");
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
     const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const name=localStorage.getItem("nickname");
     const navigate=useNavigate();
     const handleSubmit = async () => {
         const postData = {
             title: title,
             content: content,
-            category: selectedOption
+            category: selectedOption,
+            nickName: name
         };
         console.log(selectedOption)
         try {

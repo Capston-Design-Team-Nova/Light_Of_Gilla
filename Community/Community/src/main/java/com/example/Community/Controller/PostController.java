@@ -53,6 +53,12 @@ public class PostController {
         postService.saveSign(userDTO);
     }
 
+    @GetMapping("/getNickName")
+    public ResponseEntity<String> getNickName(@RequestParam("value") String nickName) {
+        String Nick = postService.findNickNameByEmail(nickName);
+        return ResponseEntity.ok(Nick);
+    }
+
     @GetMapping("/search/{searchString}")
     public ResponseEntity<List<PostDTO>> findSearchTitleOrContent(@PathVariable("searchString") String search) {
 
@@ -100,6 +106,5 @@ public class PostController {
         PostDTO postDTO=postService.update(post);
         return ResponseEntity.ok(postDTO);
     }
-
-
+   
 }

@@ -80,10 +80,10 @@ const SignupModal = ({ onClose }) => {
         "http://localhost:8082/post/signup",
         EmailandName
       );
-      // const response = await axios.post(
-      //   "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/signup",
-      //   payload
-      // );
+      const response = await axios.post(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/signup",
+        payload
+      );
 
       alert("회원가입이 완료되었습니다!");
       onClose();

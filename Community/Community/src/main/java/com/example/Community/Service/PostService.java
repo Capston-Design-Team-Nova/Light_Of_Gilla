@@ -104,4 +104,8 @@ public class PostService {
         UserEntity userEntity=UserEntity.toSaveUserEntity(userDTO);
         userRepository.save(userEntity);
     }
+    public String findNickNameByEmail(String value){
+        return userRepository.findNickNameByEmailOrUserId(value).orElse("닉네임 없음");
+
+    }
 }
