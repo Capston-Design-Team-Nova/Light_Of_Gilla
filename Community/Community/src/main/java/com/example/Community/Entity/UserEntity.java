@@ -20,7 +20,7 @@ public class UserEntity {
     @Column
     private String User_id;
     @Column
-    private String NickName;
+    private String nickName;
 
     public static UserEntity toSaveUserEntity(UserDTO userDTO) {
         UserEntity userEntity = new UserEntity();

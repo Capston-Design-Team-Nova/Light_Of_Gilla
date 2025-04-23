@@ -31,4 +31,8 @@ public interface PostRepository extends JpaRepository<PostEntity,Long> {
     @Query(value= "update PostEntity b set b.likes=b.likes+1 where b.post_id= :id")//updateHits의 쿼리문
     void updateLikes(@Param("id") Long id);
 
+
+    @Query("SELECT u.id FROM UserEntity u WHERE u.nickName = :nickName")
+    List<PostEntity> findIdByNickName(@Param("nickName") String nickName);
+
 }

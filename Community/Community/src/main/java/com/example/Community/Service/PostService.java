@@ -108,4 +108,13 @@ public class PostService {
         return userRepository.findNickNameByEmailOrUserId(value).orElse("닉네임 없음");
 
     }
+
+    public List<PostDTO> findByMyPost(String name) {
+        List<PostEntity> PostEntityList = postRepository.findIdByNickName(name);
+        List<PostDTO> PostDTOList=new ArrayList<>();
+        for(PostEntity postEntity:PostEntityList){
+            PostDTOList.add(PostDTO.toPostDTO(postEntity));
+        }
+        return PostDTOList;
+    }
 }

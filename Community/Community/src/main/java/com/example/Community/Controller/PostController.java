@@ -109,7 +109,7 @@ public class PostController {
     @GetMapping("/myPost")
     public ResponseEntity<List<PostDTO>> findMyPost(@RequestParam("value") String value) {
         String name = URLDecoder.decode(value,StandardCharsets.UTF_8);
-        List<PostDTO> posts = postService.findByCategory(name);
+        List<PostDTO> posts = postService.findByMyPost(name);
         return ResponseEntity.ok(posts);
     }
 }
