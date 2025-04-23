@@ -106,5 +106,10 @@ public class PostController {
         PostDTO postDTO=postService.update(post);
         return ResponseEntity.ok(postDTO);
     }
-   
+    @GetMapping("/myPost")
+    public ResponseEntity<List<PostDTO>> findMyPost(@RequestParam("value") String value) {
+        String name = URLDecoder.decode(value,StandardCharsets.UTF_8);
+        List<PostDTO> posts = postService.findByCategory(name);
+        return ResponseEntity.ok(posts);
+    }
 }

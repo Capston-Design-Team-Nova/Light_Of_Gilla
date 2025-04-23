@@ -6,18 +6,30 @@ import CommunityList from './CommunityList';
 import Sidebar from '../../components/Sidebar';
 import SearchField from '../../components/SearchField';
 import Pagination from "../../components/Pagination";
+import axios from "axios";
 
 function MyArticles() {
     
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [posts, setPosts] = useState([]);
-
+    const NickName=localStorage.getItem("nickname");
     // Toggle sidebar visibility
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
     };
     
-   
+     useEffect(()=>{
+      const fetchPosts = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8082/post/myPost?value=${NickName}`);
+        console.log("게시글 데이터를 불러오는 중");
+        setPosts(response.data);
+      } catch (error) {
+        console.error("게시글 데이터를 불러오는 중 오류 발생:", error);
+      }
+    };  
+  }
+  )
   //페이지네이션 상태와 로직 추가
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10; /*한 페이지에 글 10개씩 보여주기*/
