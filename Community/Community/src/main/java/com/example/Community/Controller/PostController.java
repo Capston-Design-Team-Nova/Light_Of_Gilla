@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.Community.Dto.UserDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,6 +53,11 @@ public class PostController {
         // 결과 반환
         return ResponseEntity.ok(posts);
     }
+    @GetMapping("/sign")
+    public void SaveSign(@RequestBody UserDTO userDTO) {
+        postService.saveSign(userDTO);
+    }
+
     @GetMapping("/search/{searchString}")
     public ResponseEntity<List<PostDTO>> findSearchTitleOrContent(@PathVariable("searchString") String search) {
 

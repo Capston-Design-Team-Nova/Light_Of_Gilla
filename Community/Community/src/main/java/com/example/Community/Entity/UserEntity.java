@@ -18,12 +18,15 @@ public class UserEntity {
     private String Email;
 
     @Column
+    private String User_id;
+    @Column
     private String NickName;
 
     public static UserEntity toSaveUserEntity(UserDTO userDTO) {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(userDTO.getEmail());
         userEntity.setNickName(userDTO.getNickName());
+        userEntity.setUser_id(userDTO.getUser_id());
         return userEntity;
     }
 }

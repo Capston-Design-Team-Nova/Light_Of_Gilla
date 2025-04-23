@@ -1,9 +1,12 @@
 package com.example.Community.Service;
 
 import com.example.Community.Dto.PostDTO;
+import com.example.Community.Dto.UserDTO;
 import com.example.Community.Entity.PostEntity;
+import com.example.Community.Entity.UserEntity;
 import com.example.Community.Repository.CommentRepository;
 import com.example.Community.Repository.PostRepository;
+import com.example.Community.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +21,7 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
-
+    private final UserRepository userRepository;
 
     public void save(PostDTO postDTO){
 //       Optional<CategoryEntity>OptionalcategoryEntity=categoryRepository.findById(postDTO.getCategory_Id());
@@ -95,5 +98,10 @@ public class PostService {
             PostDTOList.add(PostDTO.toPostDTO(postEntity));
         }
         return PostDTOList;
+    }
+
+    public void saveSign(UserDTO userDTO) {
+        UserEntity userEntity=UserEntity.toSaveUserEntity(userDTO);
+        userRepository.save(userEntity);
     }
 }

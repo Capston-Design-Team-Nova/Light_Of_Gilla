@@ -13,11 +13,13 @@ import lombok.*;
 public class UserDTO {
     private String Email;
     private String NickName;
+    private String User_id;
 
     public static UserDTO toUserDTO(UserEntity userEntity) {
         UserDTO userDTO = new UserDTO();
         userDTO.setEmail(userEntity.getEmail());
         userDTO.setNickName(userEntity.getNickName());
+        userDTO.setUser_id(userEntity.getUser_id());
         return userDTO;
     }
 }

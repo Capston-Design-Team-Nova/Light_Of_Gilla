@@ -1,8 +1,9 @@
 package com.example.Community.Repository;
 
-import org.apache.catalina.User;
+
+import com.example.Community.Entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
 }
