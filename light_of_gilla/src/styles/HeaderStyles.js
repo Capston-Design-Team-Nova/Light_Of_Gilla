@@ -102,3 +102,42 @@ export const ImageButton2 = styled.button`
       height: 36px;  /* ✅ 모바일에서는 살짝 줄임 */
     }
 `;
+
+export const DropdownWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
+export const DropdownMenu = styled.div`
+  position: absolute;
+  top: 100%; /* 버튼 바로 아래 */
+  right: 0;
+  width: 70px;
+  background-color: #444;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+
+  ${DropdownWrapper}:hover & {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+`;
+
+export const DropdownItem = styled.div`
+  padding: 5px 5px;
+  color: white;
+  font-size: 11px;
+  text-align: center;
+  cursor: pointer;
+  border-bottom: none;
+
+  &:hover {
+    background-color: #555;
+  }
+`;

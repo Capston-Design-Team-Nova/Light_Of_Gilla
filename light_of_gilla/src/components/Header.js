@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState} from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   PageHeader,
   Nav,
@@ -6,24 +7,32 @@ import {
   Button,
   ImageButton1,
   ImageButton2,
+  DropdownWrapper, 
+  DropdownMenu,     
+  DropdownItem,     
 } from "../styles/HeaderStyles";
-import { Link } from "react-router-dom";
 import AuthModalManager from "../pages/Login_Singup_Modal/AuthModalManager";
 
 function Header() {
-  const [showModal, setShowModal] = useState(false); // 로그인 모달 상태 관리
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 여부
+  const [showModal, setShowModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // ✅ 드롭다운 열림 여부
+  const location = useLocation();
+  const navigate = useNavigate(); 
 
-  // 로그인 상태를 localStorage에서 확인
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-  }, [showModal]); // showModal 변경 시 로그인 상태 다시 확인
+  }, [showModal]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     alert("로그아웃 되었습니다.");
+
+    if (location.pathname === "/mypage") {
+      navigate("/");
+    }
   };
 
   return (
@@ -42,6 +51,7 @@ function Header() {
             <Link to="/Community">
               <Button>Q&A</Button>
             </Link>
+
             {!isLoggedIn ? (
               <ImageButton2 onClick={() => setShowModal(true)}>
                 <img
@@ -50,12 +60,23 @@ function Header() {
                 />
               </ImageButton2>
             ) : (
-              <ImageButton2 onClick={handleLogout}>
-                <img
-                  src={require("../assets/images/login2.png")}
-                  alt="로그아웃"
-                />
-              </ImageButton2>
+              <DropdownWrapper
+                onMouseEnter={() => setIsDropdownOpen(true)}
+                onMouseLeave={() => setIsDropdownOpen(false)}
+              >
+                <ImageButton2>
+                  <img
+                    src={require("../assets/images/login2.png")}
+                    alt="프로필"
+                  />
+                </ImageButton2>
+                {isDropdownOpen && (
+                  <DropdownMenu>
+                    <DropdownItem as={Link} to="/mypage">마이페이지</DropdownItem>
+                    <DropdownItem onClick={handleLogout}>로그아웃</DropdownItem>
+                  </DropdownMenu>
+                )}
+              </DropdownWrapper>
             )}
           </NavRight>
         </Nav>
