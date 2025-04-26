@@ -388,7 +388,6 @@ Authorization: Bearer {토큰값}
   
 요청 예시: `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/reset-password`
 
-요청 예시:
 ```json
 {
   "email": "testuser@example.com"
@@ -406,5 +405,30 @@ Authorization: Bearer {토큰값}
 ```json
 {
   "message": "등록되지 않은 이메일입니다."
+}
+```
+
+## 17. 이메일 인증 (메일 보내기)
+- **POST** `/api/users/send-verification-email`
+- 발신자: vmffotlka1@gmail.com
+- 스팸으로 분류되어 있을 수 있으니 주의
+
+요청 예시: `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/send-verification-email`
+
+```json
+{
+  "email": "example@domain.com"
+}
+```
+
+## 18. 이메일 인증코드 검증
+- **POST** `/api/users/verify-email`
+
+요청 예시: `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/verify-email`
+
+```json
+{
+  "email": "example@domain.com",
+  "code": "123456"  // 받은 인증 코드 입력
 }
 ```
