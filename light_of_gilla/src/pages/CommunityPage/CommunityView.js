@@ -159,6 +159,23 @@ const H3 = styled.h3`
   align-items: center;           // ✅ 중앙 정렬
 `;
 
+
+const AuthorImg = styled.img`
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 4px;
+`;
+
+const ProfileImg = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 7px;
+`;
+
 const CommunityView = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [postData, setPostData] = useState(null); 
@@ -257,6 +274,10 @@ const CommunityView = () => {
                 <Wrapper>
                     <Title>{postData.title}</Title>
                     <Meta>
+                    {/*글 작성자 이미지 추가*/}
+                    {/*<div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        </div><AuthorImg src={postData.authorImg} alt="작성자 이미지" />
+*/}
                         {postData.userid} | {postData.created_time}
                     </Meta>
                     <Content1>{postData.content}</Content1>
@@ -269,6 +290,7 @@ const CommunityView = () => {
                     <CommentSection>        
                         {comments.map((c) => (
                         <CommentItem key={c.id}>
+                            {/*<ProfileImg src={c.profileImg} alt="댓글 작성자 이미지" />*/}
                             <strong>{c.user_id}</strong>: {c.comment}
                         </CommentItem>
                         ))}
