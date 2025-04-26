@@ -140,8 +140,8 @@ export const SearchBar = styled.div`
 
   img {
     padding: 5px 5px;
-    width: 14px;
-    height:23px;
+    width: 30px;
+    height: 30px;
     border: none;
     color: black;
     cursor: pointer;
@@ -150,7 +150,7 @@ export const SearchBar = styled.div`
 
 export const SearchInput = styled.input`
   padding: 10px;
-  width: 90%;
+  width: 96%;
   font-size: 15px;
   font-family: 'OurFont2';
   border:none;
