@@ -119,6 +119,7 @@ export const ToggleButton =styled.button`
 
   ${mobile} {
     top: 16px;
+    position: absolute;
   }
 `;
 
