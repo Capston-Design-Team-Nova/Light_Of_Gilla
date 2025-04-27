@@ -1,92 +1,167 @@
 import styled from "styled-components";
 
-// 모바일 기준 (갤럭시 S24)
 const mobile = '@media screen and (max-width: 480px)';
-
-export const Center = styled.div`
-  width: 100%;
-  height: 100%; /* 높이를 명시적으로 설정 */
-  display: flex; /* Flexbox 활성화 */
-  flex-direction: column; /* 세로 정렬 */
-  justify-content: flex-start; /* 가로 정렬: 중앙 */
-  align-items: center; /* 세로 정렬: 중앙 */
-  background-position: center; /* 중앙에 위치 */
-  padding-top: 90px; /* PageHeader의 높이에 맞는 여백 추가 */
-  background-color: white;/*#ffece3;*/
-
-  ${mobile} { 
-    padding-bottom: 50px;
-  }
-`;
 
 export const Main = styled.main`
   width: 100%;
   height: 100%;
 `;
 
-export const Title = styled.h2`
-    font-family: Ourfont4;
-    font-weight: semi bold;
-    font-size: 36px;
+export const Center = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 90px;
+  background-color: white;
+  
+  ${mobile} {
+    padding-bottom: 50px;
+  }
 `;
 
-export const ProfileImage = styled.image`
-    
-    width: 200px;
-    height: 196px;
+export const Title = styled.h2`
+  font-family: Ourfont4;
+  font-size: 36px;
+  
+`;
 
+
+export const HiddenFileInput = styled.input`
+  display: none;
+`;
+
+export const ProfileImageWrapper = styled.div`
+  width: 200px;
+  height: 200px;
+  margin: 20px 0;
+  cursor: pointer; /* ✅ 커서가 손모양으로 */
+`;
+
+
+
+export const ProfileImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+`;
+
+export const UserInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
 `;
 
 export const UserEmail = styled.h4`
-    font-family: Ourfont4;
-    font-weight: semi bold;
-    font-size: 28px;
+  font-family: Ourfont4;
+  font-size: 20px;
+  margin: 0; /* ✅ 위아래 여백 제거 */
 `;
 
 export const Birthday = styled.h4`
-    font-family: Ourfont4;
-    font-weight: semi bold;
-    font-size: 28px;
+  font-family: Ourfont4;
+  font-size: 18px;
+  margin: 5px 0 0 0; /* ✅ 위에만 약간 여백 */
 `;
 
-export const UserId = styled.h4`
-    font-family: Ourfont4;
-    font-weight: semi bold;
-    font-size: 28px;
+
+export const FormGroup = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  width: 450px; /* ✅ 전체 라인 길이를 고정해줌 */
+
+  ${mobile} {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 90%;
+  }
 `;
 
-export const UserName = styled.h4`
-    font-family: Ourfont4;
-    font-weight: semi bold;
-    font-size: 28px;
+export const Label = styled.label`
+  font-family: Ourfont4;
+  width: 150px; /* ✅ 라벨의 고정 너비 */
+  font-size: 18px;
+  flex-shrink: 0; /* ✅ 줄어들지 않게 고정 */
 `;
 
-export const NewPassword = styled.h4`
-    font-family: Ourfont4;
-    font-weight: semi bold;
-    font-size: 28px;
+export const Input = styled.input`
+  
+  height: 36px;
+  padding: 5px 10px;
+  font-size: 16px;
+  margin-right: 10px;
+
+  ${mobile} {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 `;
 
-export const CheckNewPassword = styled.h4`
-    font-family: Ourfont4;
-    font-weight: semi bold;
-    font-size: 28px;
+export const Button = styled.button`
+  
+  width: 180px;
+  height: 43px;
+  padding: 7px 20px;
+  background-color: white;
+  color: black;
+  font-size: 14px;
+  border: solid black 0.1rem;
+  border-radius: 5px;
+  cursor: pointer;
+
+  ${mobile} {
+    width: 100%;
+    margin-top: 5px;
+  }
 `;
+
+
 
 export const SaveButton = styled.button`
-  padding: 2px;
-  width: 94px;
-  height: 49px;
-  background-color: #white;
+  margin-top: 10px;
+  margin-bottom: 50px;
+  padding: 7px 20px;
+  background-color: white;
   color: black;
   font-family: 'OurFont2';
-  font-size: 30px;
+  font-size: 18px;
   cursor: pointer;
-  border: none;
+  border: solid black 0.1rem;
   border-radius: 8px;
+  
+  ${mobile} {
+    width: 90%;
+  }
+`;
 
-    ${mobile} {
-    
-    width: 95%;
+export const ErrorMessage = styled.div`
+  width: 400px;
+  font-size: 14px;
+  color: #ff6b00; /* 약간 주황빛 나는 색 */
+  margin-top: -10px;
+  margin-bottom: 10px;
+  margin-left: 250px;
+  font-family: Ourfont4;
+
+  @media screen and (max-width: 480px) {
+    width: 90%;
+  }
+`;
+
+export const SuccessMessage = styled.div`
+  width: 400px;
+  font-size: 14px;
+  color: green;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  font-family: Ourfont4;
+
+  @media screen and (max-width: 480px) {
+    width: 90%;
   }
 `;
