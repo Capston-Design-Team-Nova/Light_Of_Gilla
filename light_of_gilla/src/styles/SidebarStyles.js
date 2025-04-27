@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const SidebarContainer = styled.div`
-    position: absolute;
+    position: fixed;
     top: 63px;
     left: ${({ isOpen }) => (isOpen ? '0' : '-250px')};
     width: 250px;

@@ -107,7 +107,7 @@ export const ToggleButton =styled.button`
   border: none;
   cursor: pointer;
   margin-top:1px;
-  position: absolute;
+  position: fixed;
   left: 1px; 
   top: 60px;
   z-index:998;
