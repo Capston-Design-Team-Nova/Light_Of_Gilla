@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LikeDTO {
-    private String NickName;
+    private String nickName;
     private Long post_id;
     public static LikeDTO toLikeDTO(LikeEntity likeEntity) {
        LikeDTO likeDTO = new LikeDTO();

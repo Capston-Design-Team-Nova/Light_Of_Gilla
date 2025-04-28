@@ -39,19 +39,7 @@ function Community() {
         console.error("게시글 데이터를 불러오는 중 오류 발생:", error);
       }
     };
-    const getNickName = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8082/post/getNickName?value=${Email}`);
-        console.log("닉네임임 데이터를 불러오는 중");
-        localStorage.setItem("nickname", response.data);
-        console.log("nickname",response.data);
-
-      } catch (error) {
-        console.error("사용자가 없음:", error);
-      }
-    };
     fetchPosts();
-    getNickName();
   }, []);
   const handleSelectChange = async (value) => {
     console.log("선택한 카테고리:", value);

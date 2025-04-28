@@ -17,7 +17,7 @@ public class LikeEntity {
     private Long id;
 
     @Column
-    private String NickName;
+    private String nickName;
 
     @Column
     private Long post_id;

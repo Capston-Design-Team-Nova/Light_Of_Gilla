@@ -180,7 +180,7 @@ const CommunityView = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [postData, setPostData] = useState(null); 
     const [comments, setComments] = useState([]);
-
+    const name=localStorage.getItem("nickname");
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
     };
@@ -209,13 +209,23 @@ const CommunityView = () => {
   const [newComment, setNewComment] = useState({ writer: "", text: "" });
   const [commentCount, setCommentCount] = useState(0);
   const [likes, setLikes] = useState(0);
+  
   if (!postData) return <div>글을 찾을 수 없습니다.</div>;
 
   const handleLike = async () => {
     const updatedLikes = likes + 1; // UI 업데이트를 위해 좋아요 수 증가
     setLikes(updatedLikes); // UI 먼저 업데이트
-
-  
+    const likeData = {
+      post_id: id,
+      nickName: name
+  };
+  console.log(likeData.post_id,likeData.nickName);
+    try {
+      await axios.post(`http://localhost:8082/post/savelike`,likeData);//백틱으로 선언해야함함
+    
+  } catch (error) {
+      console.error('좋아요 업데이트 중 오류 발생:', error);
+  }
 
     try {
         await axios.post(`http://localhost:8082/post/like?post_id=${id}`);//백틱으로 선언해야함함
@@ -231,7 +241,7 @@ const CommunityView = () => {
     console.log("댓글 제출 클릭됨");
     const count = commentCount + 1; // UI 업데이트를 위해 좋아요 수 증가
     setCommentCount(count); // UI 먼저 업데이트
-    const name=localStorage.getItem("nickname");
+    
   if (!newComment.text) return;
 
   const newCommentObj = {

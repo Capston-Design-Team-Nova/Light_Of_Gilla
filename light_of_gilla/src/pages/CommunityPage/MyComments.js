@@ -2,12 +2,11 @@ import React,{useState, useEffect} from 'react';
 import Header from '../../components/Header';
 import { Main, Center, Content, Button, TopRow,ToggleButton,CommunityListWrapper } from '../../styles/CommunityStyles';
 import { Link } from "react-router-dom";
-//import CommunityList from './CommunityList';
+import CommunityList from './CommunityList';
 import Sidebar from '../../components/Sidebar';
 import SearchField from '../../components/SearchField';
 import axios from "axios";
-import CommunityList from './CommunityList';
-//import Pagination from "../../components/Pagination";
+import Pagination from "../../components/Pagination";
 
 function MyComments() {
     const token = localStorage.getItem("token");
@@ -74,13 +73,13 @@ function MyComments() {
                     </CommunityListWrapper>
                      
                     {/* 페이지네이션 */}
-                    {/*{totalPages > 0 && (
+                    {totalPages > 0 && (
                         <Pagination
                             currentPage={currentPage}
                             totalPages={totalPages}
                             onPageChange={handlePageChange}
                         />
-                    )}*/}           
+                    )}          
                 </Content>              
                 
             </Center>

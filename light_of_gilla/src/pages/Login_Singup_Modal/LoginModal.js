@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from "axios";
 import {
   ModalBackground,
@@ -26,12 +26,27 @@ const LoginModal = ({ onClose, onSwitch }) => {
       localStorage.setItem("Email",emailOrUserId);
       localStorage.setItem("token", res.data.token); // JWT 저장
       alert("로그인 성공!");
+      await getNickName();
       onClose();
     } catch (error) {
       console.error(error);
       alert("로그인 실패: 아이디 또는 비밀번호를 확인하세요.");
     }
   };
+  const getNickName = async () => {
+    const Email = localStorage.getItem("Email");
+    console.log("Email:", Email);
+  
+    try {
+      const response = await axios.get(`http://localhost:8082/post/getNickName?value=${Email}`);
+      console.log("닉네임 데이터를 불러오는 중");
+      localStorage.setItem("nickname", response.data);
+      console.log("nickname", response.data);
+    } catch (error) {
+      console.error("사용자가 없음:", error);
+    }
+  };
+  
 
   return (
     <ModalBackground>

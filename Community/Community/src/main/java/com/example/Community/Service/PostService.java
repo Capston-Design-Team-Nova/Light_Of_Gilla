@@ -1,20 +1,22 @@
 package com.example.Community.Service;
 
+import com.example.Community.Dto.LikeDTO;
 import com.example.Community.Dto.PostDTO;
 import com.example.Community.Dto.UserDTO;
+import com.example.Community.Entity.CommentEntity;
+import com.example.Community.Entity.LikeEntity;
 import com.example.Community.Entity.PostEntity;
 import com.example.Community.Entity.UserEntity;
 import com.example.Community.Repository.CommentRepository;
+import com.example.Community.Repository.LikeRepository;
 import com.example.Community.Repository.PostRepository;
 import com.example.Community.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
 
     public void save(PostDTO postDTO){
 //       Optional<CategoryEntity>OptionalcategoryEntity=categoryRepository.findById(postDTO.getCategory_Id());
@@ -117,5 +120,33 @@ public class PostService {
         }
         Collections.reverse(PostDTOList);
         return PostDTOList;
+    }
+
+    public void likesave(LikeDTO likeDTO) {
+        LikeEntity likeEntity=LikeEntity.toSaveLikeEntity(likeDTO);
+        likeRepository.save(likeEntity);
+    }
+
+    public List<PostDTO> findByMyLike(String name) {
+        List<LikeEntity> LikeEntities = likeRepository.findAllByNickName(name);
+
+
+        Set<Long> postIds = LikeEntities.stream()
+                .map(likeEntity -> likeEntity.getPost_id())
+                .collect(Collectors.toSet());
+
+
+        List<PostDTO> postDTOList = new ArrayList<>();
+        for (Long postId : postIds) {
+            Optional<PostEntity> postEntityOptional = postRepository.findById(postId);
+            if (postEntityOptional.isPresent()) {
+                postDTOList.add(PostDTO.toPostDTO(postEntityOptional.get()));
+            }
+        }
+
+
+        Collections.reverse(postDTOList);
+
+        return postDTOList;
     }
 }

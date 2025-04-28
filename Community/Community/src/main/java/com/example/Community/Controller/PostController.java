@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.Community.Dto.LikeDTO;
 import com.example.Community.Dto.UserDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -110,6 +111,20 @@ public class PostController {
     public ResponseEntity<List<PostDTO>> findMyPost(@RequestParam("value") String value) {
         String name = URLDecoder.decode(value,StandardCharsets.UTF_8);
         List<PostDTO> posts = postService.findByMyPost(name);
+        return ResponseEntity.ok(posts);
+    }
+    @PostMapping("/savelike")
+    public void saveLike(@RequestBody LikeDTO likeDTO) {
+        System.out.println(likeDTO.getPost_id());
+        System.out.println(likeDTO.getNickName());
+
+        postService.likesave(likeDTO);
+
+    }
+    @GetMapping("/mylike")
+    public ResponseEntity<List<PostDTO>> findMyLike(@RequestParam("value") String value) {
+        String name = URLDecoder.decode(value,StandardCharsets.UTF_8);
+        List<PostDTO> posts = postService.findByMyLike(name);
         return ResponseEntity.ok(posts);
     }
 }
