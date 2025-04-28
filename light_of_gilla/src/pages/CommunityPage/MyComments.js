@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import Sidebar from '../../components/Sidebar';
 import SearchField from '../../components/SearchField';
 import axios from "axios";
+import CommunityList from './CommunityList';
 //import Pagination from "../../components/Pagination";
 
 function MyComments() {
@@ -25,7 +26,7 @@ function MyComments() {
       const fetchPosts = async () => {
         const name = encodeURIComponent(NickName);
       try {
-        const response = await axios.get(`http://localhost:8082/post/myComment?value=${name}`);
+        const response = await axios.get(`http://localhost:8082/comment/myComment?value=${name}`);
         console.log("댓글글 데이터를 불러오는 중");
         setPosts(response.data);
       } catch (error) {
@@ -40,18 +41,18 @@ function MyComments() {
   const postsPerPage = 10; /*한 페이지에 글 10개씩 보여주기*/
   
   // 현재 페이지의 게시글 계산
-  //const indexOfLastPost = currentPage * postsPerPage;
-  //const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  //const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
   
   // 총 페이지 수
-  //const totalPages = Math.max(1, Math.ceil(posts.length / postsPerPage));
+  const totalPages = Math.max(1, Math.ceil(posts.length / postsPerPage));
   
-  // 페이지 변경 함수
-  //const handlePageChange = (pageNumber) => {
-    //setCurrentPage(pageNumber);
-    //window.scrollTo(0, 0); // 선택 시 스크롤 맨 위로
-  //};
+  //페이지 변경 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo(0, 0); // 선택 시 스크롤 맨 위로
+  };
     return (
         <Main>
             <Header />
@@ -68,10 +69,10 @@ function MyComments() {
                     </Link>
                 </TopRow>
                 <Content isSidebarOpen={isSidebarOpen}>
-                    {/*<CommunityListWrapper>
+                    <CommunityListWrapper>
                         <CommunityList posts={currentPosts} />
                     </CommunityListWrapper>
-                    
+                     
                     {/* 페이지네이션 */}
                     {/*{totalPages > 0 && (
                         <Pagination

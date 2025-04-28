@@ -45,6 +45,7 @@ public class CommentController {
     }
     @GetMapping("/myComment")
     public ResponseEntity<List<PostDTO>> findMyPost(@RequestParam("value") String value) {
+        System.out.println(value);
         String name = URLDecoder.decode(value, StandardCharsets.UTF_8);
         List<PostDTO> posts = commentService.findByMyComment(name);
         return ResponseEntity.ok(posts);
