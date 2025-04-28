@@ -240,7 +240,7 @@ const CommunityView = () => {
     post_id: id,
     nickName: name
   };
-  console.log("Post ID:", newCommentObj.post_id);
+  console.log("NickName:", newCommentObj.nickName);
   // 1. 백엔드로 댓글 전송 (POST 요청 예시)
   axios.post(`http://localhost:8082/comment/save`, newCommentObj)
     .then((response) => {
@@ -291,7 +291,7 @@ const CommunityView = () => {
                         {comments.map((c) => (
                         <CommentItem key={c.id}>
                             {/*<ProfileImg src={c.profileImg} alt="댓글 작성자 이미지" />*/}
-                            <strong>{c.user_id}</strong>: {c.comment}
+                            <strong>{c.nickName}</strong>: {c.comment}
                         </CommentItem>
                         ))}
 

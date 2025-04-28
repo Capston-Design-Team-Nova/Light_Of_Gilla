@@ -20,7 +20,7 @@ public class CommentEntity extends BaseEntity{
     @Column
     private String user_id;
     @Column
-    private String NickName;
+    private String nickName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_comment_id", referencedColumnName = "id")
@@ -37,6 +37,7 @@ public class CommentEntity extends BaseEntity{
         CommentEntity commentEntity=new CommentEntity();
         commentEntity.setComment(commentDTO.getComment());
         commentEntity.setUser_id(commentDTO.getUser_id());
+        commentEntity.setNickName(commentDTO.getNickName());
         if (parentComment != null) {
             commentEntity.setCommentEntity(parentComment);
         } else {

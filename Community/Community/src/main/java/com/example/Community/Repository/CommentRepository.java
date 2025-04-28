@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     Optional<CommentEntity> findById(Long Id);
     List<CommentEntity> findAllByPostEntityOrderByIdDesc(PostEntity postEntity);
+    List<CommentEntity> findAllByNickName(String nickName);
 }

@@ -5,19 +5,36 @@ import { Link } from "react-router-dom";
 //import CommunityList from './CommunityList';
 import Sidebar from '../../components/Sidebar';
 import SearchField from '../../components/SearchField';
+import axios from "axios";
 //import Pagination from "../../components/Pagination";
 
 function MyComments() {
+    const token = localStorage.getItem("token");
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [posts, setPosts] = useState([]);
     const [myCommentedPostIds, setMyCommentedPostIds] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
-    const userId = localStorage.getItem("userId"); // 현재 로그인된 유저
+    const NickName=localStorage.getItem("nickname");
+    //const userId = localStorage.getItem("userId"); // 현재 로그인된 유저
   
     // Toggle sidebar visibility
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
     };
+    useEffect(()=>{
+      const fetchPosts = async () => {
+        const name = encodeURIComponent(NickName);
+      try {
+        const response = await axios.get(`http://localhost:8082/post/myComment?value=${name}`);
+        console.log("댓글글 데이터를 불러오는 중");
+        setPosts(response.data);
+      } catch (error) {
+        console.error("댓글글 데이터를 불러오는 중 오류 발생:", error);
+      }
+    };
+    fetchPosts();    
+  },[])
+  
 // 페이지네이션 상태와 로직 추가
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10; /*한 페이지에 글 10개씩 보여주기*/

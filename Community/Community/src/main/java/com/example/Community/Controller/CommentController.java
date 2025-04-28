@@ -1,14 +1,13 @@
 package com.example.Community.Controller;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import com.example.Community.Dto.PostDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.Community.Dto.CommentDTO;
 import com.example.Community.Service.CommentService;
@@ -29,7 +28,7 @@ public class CommentController {
     @PostMapping("/save")
     public ResponseEntity save(@RequestBody CommentDTO commentDTO)//자동으로 CommentDTO로 매핑
     {
-        //ResponseBody를 붙혀서 문자열을 그대로 반환하게 함
+        System.out.println(commentDTO.getNickName());
         postService.updateCommentCounts(commentDTO.getPost_id());
         Long saveResult=commentService.save(commentDTO);
         if(saveResult !=null)
@@ -43,6 +42,12 @@ public class CommentController {
             return new ResponseEntity<>("해당 게시글이 존재하지 않습니다.",HttpStatus.NOT_FOUND);
         }
 
+    }
+    @GetMapping("/myComment")
+    public ResponseEntity<List<PostDTO>> findMyPost(@RequestParam("value") String value) {
+        String name = URLDecoder.decode(value, StandardCharsets.UTF_8);
+        List<PostDTO> posts = commentService.findByMyComment(name);
+        return ResponseEntity.ok(posts);
     }
 
 }
