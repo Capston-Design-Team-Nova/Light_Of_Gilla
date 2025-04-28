@@ -110,11 +110,12 @@ public class PostService {
     }
 
     public List<PostDTO> findByMyPost(String name) {
-        List<PostEntity> PostEntityList = postRepository.findIdByNickName(name);
+        List<PostEntity> PostEntityList = postRepository.findAllByNickName(name);
         List<PostDTO> PostDTOList=new ArrayList<>();
         for(PostEntity postEntity:PostEntityList){
             PostDTOList.add(PostDTO.toPostDTO(postEntity));
         }
+        Collections.reverse(PostDTOList);
         return PostDTOList;
     }
 }

@@ -13,6 +13,8 @@ public interface PostRepository extends JpaRepository<PostEntity,Long> {
 
     List<PostEntity> findAllByCategory(String category);
 
+    List<PostEntity> findAllByNickName(String nickName);
+
     List<PostEntity> findByTitleContaining(String title);
     // 제목과 내용에 '사과'가 포함된 글을 모두 검색
 
@@ -31,8 +33,5 @@ public interface PostRepository extends JpaRepository<PostEntity,Long> {
     @Query(value= "update PostEntity b set b.likes=b.likes+1 where b.post_id= :id")//updateHits의 쿼리문
     void updateLikes(@Param("id") Long id);
 
-
-    @Query("SELECT u.id FROM UserEntity u WHERE u.nickName = :nickName")
-    List<PostEntity> findIdByNickName(@Param("nickName") String nickName);
 
 }

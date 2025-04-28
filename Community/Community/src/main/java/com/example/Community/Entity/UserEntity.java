@@ -15,10 +15,10 @@ public class UserEntity {
     private Long id;
 
     @Column
-    private String Email;
+    private String email;
 
     @Column
-    private String User_id;
+    private String userid;
     @Column
     private String nickName;
 
@@ -26,7 +26,7 @@ public class UserEntity {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(userDTO.getEmail());
         userEntity.setNickName(userDTO.getNickName());
-        userEntity.setUser_id(userDTO.getUserid());
+        userEntity.setUserid(userDTO.getUserid());
         return userEntity;
     }
 }

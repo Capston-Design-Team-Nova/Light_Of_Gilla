@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {
-    @Query("SELECT u.NickName FROM UserEntity u WHERE u.Email = :value OR u.User_id = :value")
+    @Query("SELECT u.nickName FROM UserEntity u WHERE u.email = :value OR u.userid = :value")
     Optional<String> findNickNameByEmailOrUserId(@Param("value") String value);
 }

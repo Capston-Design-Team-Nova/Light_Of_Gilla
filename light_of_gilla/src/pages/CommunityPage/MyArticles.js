@@ -20,16 +20,18 @@ function MyArticles() {
     
      useEffect(()=>{
       const fetchPosts = async () => {
+        const name = encodeURIComponent(NickName);
       try {
-        const response = await axios.get(`http://localhost:8082/post/myPost?value=${NickName}`);
+        const response = await axios.get(`http://localhost:8082/post/myPost?value=${name}`);
         console.log("게시글 데이터를 불러오는 중");
         setPosts(response.data);
       } catch (error) {
         console.error("게시글 데이터를 불러오는 중 오류 발생:", error);
       }
-    };  
-  }
-  )
+    };
+    fetchPosts();  
+  },[]);
+  
   //페이지네이션 상태와 로직 추가
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10; /*한 페이지에 글 10개씩 보여주기*/
