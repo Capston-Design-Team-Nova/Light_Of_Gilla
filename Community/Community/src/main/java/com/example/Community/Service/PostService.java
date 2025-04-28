@@ -130,11 +130,9 @@ public class PostService {
     public List<PostDTO> findByMyLike(String name) {
         List<LikeEntity> LikeEntities = likeRepository.findAllByNickName(name);
 
-
         Set<Long> postIds = LikeEntities.stream()
                 .map(likeEntity -> likeEntity.getPost_id())
                 .collect(Collectors.toSet());
-
 
         List<PostDTO> postDTOList = new ArrayList<>();
         for (Long postId : postIds) {
@@ -143,8 +141,6 @@ public class PostService {
                 postDTOList.add(PostDTO.toPostDTO(postEntityOptional.get()));
             }
         }
-
-
         Collections.reverse(postDTOList);
 
         return postDTOList;
