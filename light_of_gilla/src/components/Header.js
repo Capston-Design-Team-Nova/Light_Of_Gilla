@@ -27,6 +27,7 @@ function Header() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("nickname");
     setIsLoggedIn(false);
     alert("로그아웃 되었습니다.");
 
