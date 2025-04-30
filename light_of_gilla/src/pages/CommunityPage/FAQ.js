@@ -7,7 +7,7 @@ import SearchField from '../../components/SearchField';
 //import Pagination from "../../components/Pagination";
 
 function FAQ() {
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(true);
 
     // Toggle sidebar visibility
     const toggleSidebar = () => {
