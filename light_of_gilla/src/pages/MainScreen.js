@@ -1,15 +1,14 @@
-import React,{useEffect,useState} from 'react';
+import React,{useEffect} from 'react';
 import { Main, Center, P, P3,P4, FeaturesSection, FeatureImage, FeatureBox1, FeatureBox2, FeaturesContainer, Footer,LastSection,MobileOnlyBr, P2 } from '../styles/MainScreenStyles';
 import Header from '../components/Header';
 import featureImage1 from '../assets/images/featureImage1.png';
 import featureImage2 from '../assets/images/featureImage2.png';
+//import AnimatedFeatureBox from '../components/AnimatedFeatureBox';
 import AOS from "aos";
 import "aos/dist/aos.css";
-import LoginModal from './LoginModal';
+
 
 function MainScreen() {
-    const [isModalOpen, setIsModalOpen] = useState(false); // 로그인 모달 상태 관리
-    
     useEffect(() => {
         document.body.className = 'body-MainScreen';
         AOS.init({
@@ -23,7 +22,6 @@ function MainScreen() {
     }, []);
 
     return (
-        <>
         <Main>
             <Header />
             <Center>                                
@@ -46,18 +44,11 @@ function MainScreen() {
             <LastSection data-aos="fade-up">
                 <P data-aos="fade-up" data-aos-delay="0">GILLA의 모든 서비스를 이용하고 싶다면?</P>
                 <P2 data-aos="fade-up" data-aos-delay="600">로그인하세요</P2>
-                {/* 로그인 문구 클릭 시 로그인 모달 열기 */}
-                <P3 onClick={() => setIsModalOpen(true)} data-aos="fade-up" data-aos-delay="800">로그인 & 회원가입 하러가기 {'>'}</P3>
+                <P3 data-aos="fade-up" data-aos-delay="800">로그인 & 회원가입 하러가기 {'>'}</P3>
             </LastSection>
 
             <Footer>{/* TEAM NOVA FROM HANSUNG UNIVERSITY, SEOUL, REPUBLIC OF KOREA \n */}  ©2025 LIGHT OF GILLA ALL RIGHTS RESERVED. </Footer>
         </Main>
-
-        {/* 모달 렌더링 (isModalOpen이 true일 때만 보이게) */}
-        {isModalOpen && <LoginModal onClose={() => setIsModalOpen(false)} />}
-        
-        </>
-        
     );
 }
 
