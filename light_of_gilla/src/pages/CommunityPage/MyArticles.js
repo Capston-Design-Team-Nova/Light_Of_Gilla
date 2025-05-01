@@ -10,7 +10,7 @@ import axios from "axios";
 
 function MyArticles() {
     
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [posts, setPosts] = useState([]);
     const NickName=localStorage.getItem("nickname");
     // Toggle sidebar visibility
@@ -54,7 +54,11 @@ function MyArticles() {
             <Header />
             {/* Sidebar */}
             <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-            <ToggleButton onClick={toggleSidebar}><img src={require("../../assets/images/햄버거버튼.png")} alt=" " /></ToggleButton>
+            {window.innerWidth <= 480 && !isSidebarOpen && (
+              <ToggleButton onClick={toggleSidebar}>
+                <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
+              </ToggleButton>
+            )}
             <Center>
                 <TopRow isSidebarOpen={isSidebarOpen}>
                     <SearchField />

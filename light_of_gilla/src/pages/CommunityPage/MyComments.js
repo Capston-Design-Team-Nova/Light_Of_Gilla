@@ -10,7 +10,7 @@ import Pagination from "../../components/Pagination";
 
 function MyComments() {
     const token = localStorage.getItem("token");
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [posts, setPosts] = useState([]);
     const [myCommentedPostIds, setMyCommentedPostIds] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
@@ -57,8 +57,12 @@ function MyComments() {
             <Header />
             {/* Sidebar */}
             <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-            <ToggleButton onClick={toggleSidebar}><img src={require("../../assets/images/햄버거버튼.png")} alt=" " /></ToggleButton>
-            <Center>
+            {window.innerWidth <= 480 && !isSidebarOpen && (
+              <ToggleButton onClick={toggleSidebar}>
+                <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
+              </ToggleButton>
+              )}
+              <Center>
                 <TopRow isSidebarOpen={isSidebarOpen}>
                     <SearchField />
                     <div style={{ flex: 1 }} /> {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}

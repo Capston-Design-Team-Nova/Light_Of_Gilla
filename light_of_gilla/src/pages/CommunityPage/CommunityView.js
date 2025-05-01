@@ -177,7 +177,7 @@ const ProfileImg = styled.img`
 `;
 
 const CommunityView = () => {
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [postData, setPostData] = useState(null); 
     const [comments, setComments] = useState([]);
     const name=localStorage.getItem("nickname");
@@ -271,12 +271,9 @@ const CommunityView = () => {
             <Center>
                 <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />    
                 {/* ✅ 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
-                {!isSidebarOpen && (
+                {window.innerWidth <= 480 && !isSidebarOpen && (
                   <ToggleButton onClick={toggleSidebar}>
-                    <img
-                      src={require("../../assets/images/햄버거버튼.png")}
-                      alt="메뉴"
-                    />
+                    <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
                   </ToggleButton>
                 )}
                 
