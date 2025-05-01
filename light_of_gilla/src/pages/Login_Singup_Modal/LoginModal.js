@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {
   ModalBackground,
@@ -14,39 +14,53 @@ import {
 } from "../../styles/LoginStyles";
 
 const LoginModal = ({ onClose, onSwitch }) => {
-  const [emailOrUserId, setEmailOrId] = useState("");
+  const [emailOrUserId, setEmailOrUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    if (!emailOrUserId || !password) {
+      alert("이메일 또는 비밀번호를 입력하세요.");
+      return;
+    }
+
+    setLoading(true);
     try {
-      const res = await axios.post("https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/login", {
-        emailOrUserId: emailOrUserId,
-        password,
-      });
-      localStorage.setItem("Email",emailOrUserId);
-      localStorage.setItem("token", res.data.token); // JWT 저장
+      const response = await axios.post(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/login",
+        {
+          emailOrUserId,
+          password,
+        }
+      );
+
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+      localStorage.setItem("emailOrUserId", emailOrUserId);
+
+      // 내 정보 조회
+      const userInfo = await axios.get(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/me",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const { nickname } = userInfo.data;
+      localStorage.setItem("nickname", nickname);
+
       alert("로그인 성공!");
-      await getNickName();
       onClose();
+      window.location.href = "/"; // 메인화면으로 강제 이동
     } catch (error) {
-      console.error(error);
-      alert("로그인 실패: 아이디 또는 비밀번호를 확인하세요.");
+      console.error("로그인 실패:", error);
+      alert("로그인 실패: 이메일(또는 아이디)와 비밀번호를 다시 확인하세요.");
+    } finally {
+      setLoading(false);
     }
   };
-  const getNickName = async () => {
-    const Email = localStorage.getItem("Email");
-    console.log("Email:", Email);
-  
-    try {
-      const response = await axios.get(`http://localhost:8082/post/getNickName?value=${Email}`);
-      console.log("닉네임 데이터를 불러오는 중");
-      localStorage.setItem("nickname", response.data);
-      console.log("nickname", response.data);
-    } catch (error) {
-      console.error("사용자가 없음:", error);
-    }
-  };
-  
 
   return (
     <ModalBackground>
@@ -55,9 +69,9 @@ const LoginModal = ({ onClose, onSwitch }) => {
         <Title>GILLA</Title>
         <InputField
           type="text"
-          placeholder="이메일 입력"
+          placeholder="이메일 또는 아이디 입력"
           value={emailOrUserId}
-          onChange={(e) => setEmailOrId(e.target.value)}
+          onChange={(e) => setEmailOrUserId(e.target.value)}
         />
         <InputField
           type="password"
@@ -65,14 +79,16 @@ const LoginModal = ({ onClose, onSwitch }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <LoginButton onClick={handleLogin}>로그인</LoginButton>
+        <LoginButton onClick={handleLogin} disabled={loading}>
+          {loading ? "로그인 중..." : "로그인"}
+        </LoginButton>
 
         <SocialLoginContainer>
           <KakaoButton>
-            <img src={require("../../assets/images/kakao-logo.png")} />
+            <img src={require("../../assets/images/kakao-logo.png")} alt="Kakao Login" />
           </KakaoButton>
           <GoogleButton>
-            <img src={require("../../assets/images/google-logo.png")} />
+            <img src={require("../../assets/images/google-logo.png")} alt="Google Login" />
           </GoogleButton>
         </SocialLoginContainer>
 

@@ -135,6 +135,27 @@ export const SearchBox = styled.div`
   }
 `;
 
+export const HospitalItem = styled.div`
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgb(226, 226, 226);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  p {
+    margin: 4px 0 0 0;
+    font-size: 14px;
+  }
+`;
+
 
 export const SearchInput = styled.input`
   width: 100%;
