@@ -221,14 +221,14 @@ const CommunityView = () => {
   };
   console.log(likeData.post_id,likeData.nickName);
     try {
-      await axios.post(`http://localhost:8082/post/savelike`,likeData);//백틱으로 선언해야함함
+      await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/savelike`,likeData);//백틱으로 선언해야함함
     
   } catch (error) {
       console.error('좋아요 업데이트 중 오류 발생:', error);
   }
 
     try {
-        await axios.post(`http://localhost:8082/post/like?post_id=${id}`);//백틱으로 선언해야함함
+        await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like?post_id=${id}`);//백틱으로 선언해야함함
       
     } catch (error) {
         console.error('좋아요 업데이트 중 오류 발생:', error);
@@ -252,7 +252,7 @@ const CommunityView = () => {
   };
   console.log("NickName:", newCommentObj.nickName);
   // 1. 백엔드로 댓글 전송 (POST 요청 예시)
-  axios.post(`http://localhost:8082/comment/save`, newCommentObj)
+  axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/save`, newCommentObj)
     .then((response) => {
       // 2. 댓글 추가 후 댓글 목록만 업데이트
       setComments([...comments, newCommentObj]); // 새 댓글 추가
