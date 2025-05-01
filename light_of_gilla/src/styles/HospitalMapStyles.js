@@ -121,7 +121,6 @@ export const SearchBox = styled.div`
     border-radius: 5px;
     color: white;
     cursor: pointer;
-
     &:hover {
       background: rgb(226, 226, 226);
     }
@@ -129,8 +128,8 @@ export const SearchBox = styled.div`
 
   ${mobile} {
     img {
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
     }
   }
 `;
@@ -156,10 +155,9 @@ export const HospitalItem = styled.div`
   }
 `;
 
-
 export const SearchInput = styled.input`
   width: 100%;
-  padding: 8px;
+  padding: 12px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
