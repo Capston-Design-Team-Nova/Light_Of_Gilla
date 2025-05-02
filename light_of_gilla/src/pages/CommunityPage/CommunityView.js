@@ -263,6 +263,20 @@ const CommunityView = () => {
       console.error("댓글 추가 오류:", error);
     });
   };
+  const handleDelete = async (postId) => {
+    const confirmDelete = window.confirm("정말 이 글을 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+  
+    try {
+      await axios.delete(`http://localhost:8082/post/delete/${postId}`);
+      alert("글이 삭제되었습니다.");
+      navigate("/Community"); // 삭제 후 커뮤니티 목록으로 이동
+    } catch (err) {
+      console.error("글 삭제 오류:", err);
+      alert("글 삭제 중 오류가 발생했습니다.");
+    }
+  };
+  
 
   return (
     <Main>
@@ -278,6 +292,13 @@ const CommunityView = () => {
                 )}
                 
                 <Content isSidebarOpen={isSidebarOpen}>
+                {postData.nickName === name && ( // 닉네임이 같을 경우에만 수정, 삭제 버튼 보여줌
+                  <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+                  <Button onClick={() => navigate(`/edit/${postData.id}`)}>수정</Button>
+                  <Button onClick={() => handleDelete(postData.id)}>삭제</Button>
+                  </div>
+                )}
+
                 <Wrapper>
                     <Title>{postData.title}</Title>
                     <Meta>
