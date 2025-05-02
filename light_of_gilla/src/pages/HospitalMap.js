@@ -40,8 +40,47 @@ function HospitalMap() {
   const [editedReviewRating, setEditedReviewRating] = useState(5);
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
 
-  const toggleLike = (reviewIndex) => {
-    setLikedReviews((prev) => ({ ...prev, [reviewIndex]: !prev[reviewIndex] }));
+  const toggleLike = async (reviewId, index) => {
+    const userNickname = localStorage.getItem("nickname");
+    if (!userNickname || !reviewId) return;
+
+    try {
+      const res = await fetch(
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/${reviewId}/like`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-User-Name": userNickname,
+          },
+        }
+      );
+
+      if (res.ok) {
+        // UI에서 상태 업데이트
+        setLikedReviews((prev) => ({
+          ...prev,
+          [index]: !prev[index],
+        }));
+
+        // 서버에서 최신 좋아요 수를 받아오지는 않으므로 수동 반영
+        setHospitalReviews((prev) => {
+          const updated = [...prev];
+          const current = updated[index];
+          if (!current) return prev;
+
+          updated[index] = {
+            ...current,
+            likes: (current.likes || 0) + (likedReviews[index] ? -1 : 1),
+          };
+          return updated;
+        });
+      } else {
+        console.warn("좋아요 요청 실패", await res.text());
+      }
+    } catch (e) {
+      console.error("좋아요 토글 중 오류:", e);
+    }
   };
 
   const toggleFavorite = async (hospitalName) => {
@@ -429,6 +468,32 @@ function HospitalMap() {
                 {new Date(r.createdAt).toLocaleDateString("ko-KR")}
               </p>
 
+              {/* 좋아요 버튼*/}
+              <button
+                onClick={() => toggleLike(r.id, i)}
+                style={{
+                  border: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                }}
+              >
+                <img
+                  src={
+                    liked
+                      ? require("../assets/images/채운 하트.png")
+                      : require("../assets/images/빈 하트.png")
+                  }
+                  alt="좋아요"
+                  style={{ width: "16px", height: "16px" }}
+                />
+                <span style={{ fontSize: "13px", color: "#666" }}>
+                  {displayedLikes}
+                </span>
+              </button>
+
               {isMine && (
                 <div style={{ position: "relative" }}>
                   <button
@@ -451,7 +516,7 @@ function HospitalMap() {
                         position: "absolute",
                         top: "100%",
                         right: "0",
-                        transform: "translateY(8px)", // ← 여기가 핵심
+                        transform: "translateY(8px)",
                         background: "#fff",
                         border: "1px solid #ddd",
                         borderRadius: "10px",
