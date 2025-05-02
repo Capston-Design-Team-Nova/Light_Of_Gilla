@@ -9,7 +9,7 @@ import MyComments from "../pages/CommunityPage/MyComments";
 import MyLikes from "../pages/CommunityPage/MyLikes";
 import CommunityView from "../pages/CommunityPage/CommunityView";
 import MyPage from "../pages/MyPage";
-import MyPageReview from "../pages/MyPageReview";
+
 import FAQ from "../pages/CommunityPage/FAQ";
 import FAQView from "../pages/CommunityPage/FAQView";
 
@@ -42,7 +42,7 @@ function Router() {
         {/*<Route path="/View" element={<View />}/>*/}
         <Route path="/post/:id" element={<CommunityView />} />
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="/mypagereview" element={<MyPageReview/>}/>
+        
         <Route path="/faq" element={<FAQ/>}/>
         <Route path="/faq/:id" element={<FAQView />} />
       </Routes>
