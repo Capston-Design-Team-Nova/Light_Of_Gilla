@@ -35,6 +35,10 @@ function HospitalMap() {
   const [reviewRating, setReviewRating] = useState(5);
   const [editingReviewId, setEditingReviewId] = useState(null); // null이면 신규 작성, 값이 있으면 수정 중
   const [hospitalReviews, setHospitalReviews] = useState([]);
+  const [editingReviewIndex, setEditingReviewIndex] = useState(null);
+  const [editedReviewContent, setEditedReviewContent] = useState("");
+  const [editedReviewRating, setEditedReviewRating] = useState(5);
+  const [openMenuIndex, setOpenMenuIndex] = useState(null);
 
   const toggleLike = (reviewIndex) => {
     setLikedReviews((prev) => ({ ...prev, [reviewIndex]: !prev[reviewIndex] }));
@@ -313,93 +317,206 @@ function HospitalMap() {
     }
   };
 
+  const handleEditSubmit = async (reviewId, index) => {
+    const userNickname = localStorage.getItem("nickname");
+    if (!userNickname || !reviewId || !editedReviewContent) return;
+
+    try {
+      const response = await fetch(
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/${reviewId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-User-Name": userNickname,
+          },
+          body: JSON.stringify({
+            author: userNickname,
+            content: editedReviewContent,
+            rating: editedReviewRating,
+          }),
+        }
+      );
+
+      const result = await response.json();
+      console.log("✏️ 리뷰 수정 완료", result);
+
+      setEditingReviewIndex(null);
+      await refreshSelectedHospital();
+    } catch (e) {
+      console.error("리뷰 수정 실패:", e);
+    }
+  };
+
   const renderReviews = () => {
-    if (!Array.isArray(hospitalReviews) || hospitalReviews.length === 0) {
+    if (!Array.isArray(hospitalReviews) || hospitalReviews.length === 0)
       return <p>리뷰가 없습니다.</p>;
-    }
 
-    const validReviews = hospitalReviews.filter(
-      (r) =>
-        typeof r.author === "string" &&
-        typeof r.content === "string" &&
-        r.content.trim() !== "" &&
-        typeof r.rating === "number" &&
-        !isNaN(r.rating)
-    );
+    return hospitalReviews
+      .filter(
+        (r) =>
+          typeof r.author === "string" &&
+          typeof r.content === "string" &&
+          r.content.trim() !== "" &&
+          typeof r.rating === "number" &&
+          !isNaN(r.rating) &&
+          r.rating > 0
+      )
+      .map((r, i) => {
+        const liked = likedReviews[i] || false;
+        const isMine = r.author === localStorage.getItem("nickname");
+        const displayedLikes = liked ? r.likes + 1 : r.likes;
 
-    if (validReviews.length === 0) {
-      return <p>유효한 리뷰가 없습니다.</p>;
-    }
-
-    return validReviews.map((r, i) => {
-      const liked = likedReviews[i] || false;
-      const displayedLikes = liked ? r.likes + 1 : r.likes;
-      const isMine = r.author === localStorage.getItem("nickname");
-
-      return (
-        <div
-          key={r.id}
-          style={{ padding: "10px", borderBottom: "1px solid #ccc" }}
-        >
-          <h4>{r.author}</h4>
-          <div>{renderRating(r.rating)}</div>
-          <p>{r.content}</p>
+        return (
           <div
-            style={{ display: "flex", alignItems: "center", marginTop: "5px" }}
+            key={r.id}
+            style={{ padding: "10px", borderBottom: "1px solid #ccc" }}
           >
-            <p style={{ marginRight: "10px" }}>
-              {new Date(r.createdAt).toLocaleDateString("ko-KR")}
-            </p>
-            <button
-              onClick={() => toggleLike(i)}
+            <h4>{r.author}</h4>
+            <div>{renderRating(r.rating)}</div>
+
+            {editingReviewIndex === i ? (
+              <>
+                <textarea
+                  value={editedReviewContent}
+                  onChange={(e) => setEditedReviewContent(e.target.value)}
+                  style={{ width: "100%", height: "60px", margin: "5px 0" }}
+                />
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "5px" }}
+                >
+                  {[1, 2, 3, 4, 5].map((val) => (
+                    <span
+                      key={val}
+                      onClick={() => setEditedReviewRating(val)}
+                      style={{
+                        cursor: "pointer",
+                        fontSize: "20px",
+                        color: val <= editedReviewRating ? "red" : "lightgray",
+                      }}
+                    >
+                      <BsStarFill />
+                    </span>
+                  ))}
+                  <button
+                    onClick={() => handleEditSubmit(r.id, i)}
+                    style={{
+                      marginLeft: "auto",
+                      background: "red",
+                      color: "#fff",
+                      border: "none",
+                      padding: "4px 10px",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    저장
+                  </button>
+                </div>
+              </>
+            ) : (
+              <p>{r.content}</p>
+            )}
+
+            <div
               style={{
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
-                fontSize: "14px",
+                justifyContent: "space-between",
+                position: "relative", // 드롭다운 기준 anchor
               }}
             >
-              <img
-                src={
-                  liked
-                    ? require("../assets/images/채운 하트.png")
-                    : require("../assets/images/빈 하트.png")
-                }
-                alt="좋아요"
-                style={{ width: "18px", height: "18px", marginRight: "6px" }}
-              />
-              {displayedLikes}
-            </button>
-            {isMine && (
-              <>
-                <button
-                  onClick={() => {
-                    setReviewContent(r.content);
-                    setReviewRating(r.rating);
-                    setEditingReviewId(r.id);
-                  }}
-                  style={{ marginLeft: "10px", fontSize: "14px" }}
-                >
-                  수정
-                </button>
-                <button
-                  onClick={() => handleDeleteReview(r.id)}
-                  style={{
-                    marginLeft: "5px",
-                    fontSize: "14px",
-                    color: "red",
-                  }}
-                >
-                  삭제
-                </button>
-              </>
-            )}
+              <p style={{ fontSize: "13px", color: "#666" }}>
+                {new Date(r.createdAt).toLocaleDateString("ko-KR")}
+              </p>
+
+              {isMine && (
+                <div style={{ position: "relative" }}>
+                  <button
+                    onClick={() =>
+                      setOpenMenuIndex(openMenuIndex === i ? null : i)
+                    }
+                    style={{
+                      border: "none",
+                      background: "transparent",
+                      fontSize: "18px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    ...
+                  </button>
+
+                  {openMenuIndex === i && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "100%",
+                        right: "0",
+                        transform: "translateY(8px)", // ← 여기가 핵심
+                        background: "#fff",
+                        border: "1px solid #ddd",
+                        borderRadius: "10px",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                        zIndex: 100,
+                        display: "flex",
+                        flexDirection: "column",
+                        minWidth: "70px",
+                        overflow: "hidden",
+                      }}
+                    >
+                      <button
+                        onClick={() => {
+                          setEditingReviewIndex(i);
+                          setEditedReviewContent(r.content);
+                          setEditedReviewRating(r.rating);
+                          setOpenMenuIndex(null);
+                        }}
+                        style={{
+                          padding: "8px 12px",
+                          fontSize: "14px",
+                          textAlign: "left",
+                          border: "none",
+                          background: "white",
+                          cursor: "pointer",
+                        }}
+                        onMouseOver={(e) =>
+                          (e.currentTarget.style.background =
+                            "rgb(226,226,226)")
+                        }
+                        onMouseOut={(e) =>
+                          (e.currentTarget.style.background = "white")
+                        }
+                      >
+                        수정
+                      </button>
+                      <button
+                        onClick={() => handleDeleteReview(r.id)}
+                        style={{
+                          padding: "8px 12px",
+                          fontSize: "14px",
+                          textAlign: "left",
+                          border: "none",
+                          background: "white",
+                          cursor: "pointer",
+                          color: "red",
+                        }}
+                        onMouseOver={(e) =>
+                          (e.currentTarget.style.background =
+                            "rgb(226,226,226)")
+                        }
+                        onMouseOut={(e) =>
+                          (e.currentTarget.style.background = "white")
+                        }
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      );
-    });
+        );
+      });
   };
 
   const renderRating = (score) => {
@@ -674,7 +791,6 @@ function HospitalMap() {
       setSelectedHospital(details);
       console.log("📥 병원 상세 데이터 재로딩 완료", details);
 
-      // 리뷰도 다시 로딩
       const reviewRes = await fetch(
         `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/${details.id}`
       );
@@ -1029,7 +1145,7 @@ function HospitalMap() {
               }}
             >
               <textarea
-                placeholder="댓글을 남겨보세요"
+                placeholder="리뷰를 남겨보세요"
                 value={reviewContent}
                 onChange={(e) => setReviewContent(e.target.value)}
                 style={{
