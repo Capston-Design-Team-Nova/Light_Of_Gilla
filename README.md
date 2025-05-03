@@ -376,13 +376,14 @@ Authorization: Bearer {토큰값}
 
 ## 13. 프로필 이미지 변경
 - **PATCH** `/api/users/{userId}/profile-image`
+- `Content-Type: multipart/form-data` **(중요)**
 
 요청 예시: `PATCH https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123/profile-image`
 
-```json
-{
-  "profileImage": "https://example.com/new-profile.jpg"
-}
+```
+- key: profileImage
+- type: File
+- value: [업로드할 이미지 파일]
 ```
 
 ## 14. 닉네임으로 유저 검색
