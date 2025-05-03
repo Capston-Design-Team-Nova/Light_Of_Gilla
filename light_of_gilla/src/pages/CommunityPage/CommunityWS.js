@@ -10,7 +10,7 @@ function CommunityWS() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
-    const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const name=localStorage.getItem("nickname");
     const navigate=useNavigate();
     const handleSubmit = async () => {

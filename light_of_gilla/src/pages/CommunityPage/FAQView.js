@@ -18,9 +18,17 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.h1`
+
     color: #000;
     font-family: Ourfont5;
     font-size: 23px;
+    
+  margin-bottom: 1.5rem;
+
+  white-space: normal;       // ✅ 줄바꿈 허용
+  overflow: visible;         // ✅ 잘리지 않도록
+  text-overflow: unset;      // ✅ 생략 (...) 없애기
+
 `;
 
 const Meta = styled.div`
@@ -36,12 +44,8 @@ const Content1 = styled.p`
   `;
 
 
-
-
-
-
 const FAQView = () => {
-    const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const { id } = useParams();
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);

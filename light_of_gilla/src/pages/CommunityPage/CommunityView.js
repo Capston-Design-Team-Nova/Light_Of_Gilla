@@ -177,7 +177,7 @@ const ProfileImg = styled.img`
 `;
 
 const CommunityView = () => {
-    const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const [postData, setPostData] = useState(null); 
     const [comments, setComments] = useState([]);
     const name=localStorage.getItem("nickname");

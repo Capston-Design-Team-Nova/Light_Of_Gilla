@@ -74,7 +74,7 @@ function FAQList(){
 
     // 여기선 하드코딩했지만 실제론 props로 질문 목록을 받아서 map 돌리는 구조가 일반적이에요.
     const handleClick = () => {
-      navigate('/faq/1'); // 예시로 id=1로 이동 (나중에 동적으로 변경 가능)
+      navigate('/faq/:id'); // 예시로 id=1로 이동 (나중에 동적으로 변경 가능)
     };
   
   return(

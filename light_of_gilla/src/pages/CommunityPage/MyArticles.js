@@ -10,7 +10,7 @@ import axios from "axios";
 
 function MyArticles() {
     
-    const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const [posts, setPosts] = useState([]);
     const NickName=localStorage.getItem("nickname");
     // Toggle sidebar visibility

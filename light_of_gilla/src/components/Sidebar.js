@@ -18,16 +18,16 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       )}
             <SidebarContent>
                 <Link to="/MyArticles">
-                    <SidebarButton onClick={toggleSidebar} isActive={location.pathname === "/MyArticles"}>내가 쓴 글</SidebarButton>
+                    <SidebarButton onClick={toggleSidebar} isActive={location.pathname.startsWith("/MyArticles")}>내가 쓴 글</SidebarButton>
                 </Link>
                 <Link to="/MyComments">
-                    <SidebarButton onClick={toggleSidebar} isActive={location.pathname === "/MyComments"}>내가 쓴 댓글</SidebarButton>
+                    <SidebarButton onClick={toggleSidebar} isActive={location.pathname.startsWith("/MyComments")}>내가 쓴 댓글</SidebarButton>
                 </Link>
                 <Link to="/MyLikes">
-                    <SidebarButton onClick={toggleSidebar} isActive={location.pathname === "/MyLikes"}>내가 좋아요 한 글</SidebarButton>
+                    <SidebarButton onClick={toggleSidebar} isActive={location.pathname.startsWith("/MyLikes")}>내가 좋아요 한 글</SidebarButton>
                 </Link>
-                <Link to="/FAQ">
-                    <SidebarButton onClick={toggleSidebar} isActive={location.pathname === "/FAQ"}>전문가 FAQ</SidebarButton>
+                <Link to="/faq">
+                    <SidebarButton onClick={toggleSidebar} isActive={location.pathname.startsWith("/faq")}>전문가 FAQ</SidebarButton>
                 </Link>
 
             </SidebarContent>

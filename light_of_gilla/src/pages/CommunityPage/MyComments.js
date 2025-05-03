@@ -10,7 +10,7 @@ import Pagination from "../../components/Pagination";
 
 function MyComments() {
     const token = localStorage.getItem("token");
-    const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const [posts, setPosts] = useState([]);
     const [myCommentedPostIds, setMyCommentedPostIds] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);

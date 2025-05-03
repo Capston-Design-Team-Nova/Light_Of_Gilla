@@ -20,7 +20,7 @@ import SearchField from "../../components/SearchField";
 
 function Community() {
   const Email = localStorage.getItem("Email");
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480);
   const [posts, setPosts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
