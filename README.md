@@ -353,7 +353,7 @@ Authorization: Bearer {토큰값}
 ## 11. 비밀번호 변경
 - **PUT** `/api/users/{userId}/password`
   
-요청 예시: `PUT https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123/pa법
+요청 예시: `PUT https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123/password`
 - http://3.37.188.91:8080/images/파일이름.png
 
 ## 14. 닉네임으로 유저 검색
