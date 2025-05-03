@@ -366,9 +366,9 @@ Authorization: Bearer {토큰값}
 }
 ```
 
-## 13. 프로필 이미지 변경
+## 13. 프로필 이미지 변경 // 변경 사항
 - **PATCH** `/api/users/{userId}/profile-image`
-- `Content-Type: multipart/form-data` **중요**
+- `Content-Type: multipart/form-data` **(중요)**
 
 요청 예시:
 
@@ -378,7 +378,7 @@ type: File
 value: [업로드할 이미지 파일]
 ```
 이미지 접근 방법
-- http://3.37.188.91:8080/images/파일이름.png
+- http://3.37.188.91:8080/images/파일이름
 
 ## 14. 닉네임으로 유저 검색
 - **GET** `/api/users/search?nickname=닉네임`
