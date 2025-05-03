@@ -110,9 +110,11 @@ API Gateway 엔드포인트
 ## 🔵 4. 병원 리뷰 목록 조회
 
 - **GET** `/api/reviews/hospital/{hospitalId}`
+- 요청 헤더 주의. User-name을 보내야함.
 
 요청 예시:
 `GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/1`
+`X-User-Name: hyunseo`
 
 응답 예시:
 ```json
