@@ -40,6 +40,7 @@ function HospitalMap() {
   const [editedReviewRating, setEditedReviewRating] = useState(5);
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
 
+  // 좋아요 토글
   const toggleLike = async (reviewId, index) => {
     const userNickname = localStorage.getItem("nickname");
     if (!userNickname || !reviewId) return;
@@ -83,6 +84,7 @@ function HospitalMap() {
     }
   };
 
+  // 즐겨찾기 토글
   const toggleFavorite = async (hospitalName) => {
     const hospitalDetail = getHospitalDetails(hospitalName);
     const hospitalId = hospitalDetail?.id;
@@ -147,6 +149,7 @@ function HospitalMap() {
     }
   };
 
+  // 즐겨찾기 패치
   useEffect(() => {
     const fetchFavoriteHospitals = async () => {
       const userNickname = localStorage.getItem("nickname");
@@ -193,6 +196,7 @@ function HospitalMap() {
     fetchFavoriteHospitals();
   }, []);
 
+  // GPS
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(

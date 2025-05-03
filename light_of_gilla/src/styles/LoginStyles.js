@@ -32,6 +32,10 @@ export const CloseButton = styled.button`
   border: none;
   font-size: 22px;
   cursor: pointer;
+
+  &:hover {
+    background: #eeeeee;
+  }
 `;
 
 export const Title = styled.h2`
@@ -60,6 +64,10 @@ export const LoginButton = styled.button`
   border-radius: 5px;
   font-size: 18px;
   cursor: pointer;
+
+  &:hover {
+    background-color: #e59260;
+  }
 `;
 
 export const SocialLoginContainer = styled.div`
@@ -82,6 +90,13 @@ export const KakaoButton = styled.button`
     width: 30%;
     height: 90%;
   }
+
+  &:hover {
+  background-color: #f7d600;
+}
+
+}
+
 `;
 
 export const GoogleButton = styled.button`
@@ -95,6 +110,10 @@ export const GoogleButton = styled.button`
   img {
     width: 30%;
     height: 90%;
+  }
+
+  &:hover {
+    background-color: #d5d5d5;
   }
 `;
 
@@ -112,5 +131,10 @@ export const FooterButtons = styled.div`
     cursor: pointer;
     font-size: 14px;
     margin-left: 10px;
+    &:hover {
+    background: #f0c98b;
   }
+  }
+
+  
 `;

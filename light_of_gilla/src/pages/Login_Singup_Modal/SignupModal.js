@@ -14,6 +14,8 @@ import {
 
 const SignupModal = ({ onClose }) => {
   const [step, setStep] = useState(1);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
 
   const [formData, setFormData] = useState({
     userId: "",
@@ -32,6 +34,31 @@ const SignupModal = ({ onClose }) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleSendVerificationEmail = async () => {
+    try {
+      await axios.post(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/send-verification-email",
+        { email: formData.email }
+      );
+      alert("인증 이메일이 전송되었습니다. 메일함을 확인하세요.");
+    } catch (err) {
+      alert("인증 이메일 전송 실패");
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    try {
+      await axios.post(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/verify-email",
+        { email: formData.email, code: verificationCode }
+      );
+      setEmailVerified(true);
+      alert("이메일 인증 완료");
+    } catch (err) {
+      alert("인증 코드가 올바르지 않습니다");
+    }
+  };
+
   const handleNext = () => {
     if (step === 1) {
       if (!formData.userId || !formData.password || !formData.email) {
@@ -40,6 +67,10 @@ const SignupModal = ({ onClose }) => {
       }
       if (formData.password !== formData.confirmPassword) {
         alert("비밀번호가 일치하지 않습니다.");
+        return;
+      }
+      if (!emailVerified) {
+        alert("이메일 인증을 완료해주세요.");
         return;
       }
     }
@@ -69,18 +100,7 @@ const SignupModal = ({ onClose }) => {
           .slice(2, 8), // 19990127 → 990127
       };
 
-      console.log("회원가입 요청 payload:", payload);
-      const EmailandName={
-        email: formData.email,
-        userid: formData.userId,
-        nickName: formData.nickname
-      }
-      console.log("회원가입 요청 EmailandName:", EmailandName);
-      const call = await axios.post(
-        "http://localhost:8082/post/signup",
-        EmailandName
-      );
-      const response = await axios.post(
+      await axios.post(
         "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/signup",
         payload
       );
@@ -128,10 +148,19 @@ const SignupModal = ({ onClose }) => {
                 value={formData.email}
                 onChange={(e) => updateField("email", e.target.value)}
               />
-              <EmailButton disabled>인증</EmailButton>
+              <EmailButton onClick={handleSendVerificationEmail}>인증</EmailButton>
             </EmailRow>
 
-            <InputField type="text" placeholder="확인코드 입력 (생략됨)" disabled />
+            <EmailRow>
+              <EmailInput
+                type="text"
+                placeholder="확인코드 입력"
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+              />
+              <EmailButton onClick={handleVerifyCode}>확인</EmailButton>
+            </EmailRow>
+
             <NextButton onClick={handleNext}>다음</NextButton>
           </>
         );
