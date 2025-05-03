@@ -366,17 +366,32 @@ Authorization: Bearer {토큰값}
 }
 ```
 
-## 13. 프로필 이미지 변경 // 변경 사항
+## 13. 프로필 이미지 변경
 - **PATCH** `/api/users/{userId}/profile-image`
 - `Content-Type: multipart/form-data` **(중요)**
 
 요청 예시:
-
+- `PATCH https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/1/profile-image`
 ```
 key: profileImage
 type: File
 value: [업로드할 이미지 파일]
 ```
+
+성공 시:
+```json
+{
+    "userId": "1",
+    "password": "$2a$10$z5Wa81FpB1uGXdw35FLSk.pVhUZrWhe7xCvmk2OT7nFRAPNiWqbNi",
+    "email": "1@1.com",
+    "phone": "01000000000",
+    "nickname": "1",
+    "profileImage": "/images/1_스크린샷 2025-03-13 015522.png",
+    "createdAt": "2025-04-20T07:42:07",
+    "residentNumber": ""
+}
+```
+
 이미지 접근 방법
 - http://3.37.188.91:8080/images/파일이름
 
