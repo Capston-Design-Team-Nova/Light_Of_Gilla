@@ -456,3 +456,40 @@ value: [업로드할 이미지 파일]
   "code": "123456"  // 받은 인증 코드 입력
 }
 ```
+
+
+# 🧩 검색기록 API 명세서
+
+API Gateway 엔드포인트
+
+`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com`
+
+## 1. 검색기록 저장
+- **POST** `/api/search/log`
+- Bearer Token에 JWT 토큰 기입 필수
+
+요청 예시: `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/log`
+
+```json
+{
+  "keyword": "서울병원"
+}
+```
+
+## 2. 검색기록 조회
+- **GET** `/api/search/history`
+- Bearer Token에 JWT 토큰 기입 필수
+
+요청 예시: `GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history`
+
+## 3. 검색기록 전체 삭제
+- **DELETE** `/api/search/history`
+- Bearer Token에 JWT 토큰 기입 필수
+
+요청 예시: `DELETE https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history`
+
+## 3. 검색기록 한 개 삭제
+- **DELETE** `/api/search/history/{historyId}`
+- Bearer Token에 JWT 토큰 기입 필수
+
+요청 예시: `DELETE https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history/1`
