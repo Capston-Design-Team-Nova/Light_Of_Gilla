@@ -2,13 +2,16 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainScreen from "../pages/MainScreen";
 import HospitalMap from "../pages/HospitalMap";
-
 import Community from "../pages/CommunityPage/Community";
 import Write from "../pages/CommunityPage/CommunityWS";
 import MyArticles from "../pages/CommunityPage/MyArticles";
 import MyComments from "../pages/CommunityPage/MyComments";
 import MyLikes from "../pages/CommunityPage/MyLikes";
 import CommunityView from "../pages/CommunityPage/CommunityView";
+import MyPage from "../pages/MyPage";
+
+import FAQ from "../pages/CommunityPage/FAQ";
+import FAQView from "../pages/CommunityPage/FAQView";
 
 //React Router는 SPA(Single Page Application)의 화면 렌더링을 구현하는 데 도움을 주는 라이브러리.
 //즉, 페이지 전체를 새로고침하지 않고 url의 변경에 따라 컴포넌트를 동적으로 렌더링하여 SPA의 핵심적인 기능을 제공.
@@ -38,6 +41,10 @@ function Router() {
         <Route path="/MyLikes" element={<MyLikes />} />
         {/*<Route path="/View" element={<View />}/>*/}
         <Route path="/post/:id" element={<CommunityView />} />
+        <Route path="/mypage" element={<MyPage />} />
+        
+        <Route path="/faq" element={<FAQ/>}/>
+        <Route path="/faq/:id" element={<FAQView />} />
       </Routes>
     </BrowserRouter>
   );

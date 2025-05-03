@@ -10,7 +10,7 @@ export const ModalBackground = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  z-index: 1000;
 `;
 
 export const ModalContainer = styled.div`
@@ -31,6 +31,9 @@ export const CloseButton = styled.button`
   border: none;
   font-size: 22px;
   cursor: pointer;
+  &:hover {
+    background: #eeeeee;
+  }
 `;
 
 export const Title = styled.h2`
@@ -41,22 +44,68 @@ export const Title = styled.h2`
 `;
 
 export const InputField = styled.input`
-  width: 80%;
-  padding: 12px;
-  margin: 12px 0;
+  width: 100%;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 15px;
+  flex: 1;
 `;
 
 export const ConfirmButton = styled.button`
-  width: 87%;
+  width: 100%;
   padding: 12px;
-  margin-top: 15px;
+  margin-top: 5px;
   background-color: #f5a26f;
   color: white;
   border: none;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
+  &:hover {
+    background-color: #e59260;
+  }
 `;
+
+export const InputWithButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+`;
+
+export const SideButton = styled.button`
+  padding: 10px 14px;
+  background-color: #f9d8a1;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  margin-left: 5px;
+
+  &:hover {
+    background: #f0c98b;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+export const TimerInput = styled.div`
+  position: relative;
+  flex: 1;
+  display: flex;
+`;
+
+export const TimerText = styled.span`
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #999;
+`;
+

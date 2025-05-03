@@ -7,16 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.Community.Dto.LikeDTO;
+import com.example.Community.Dto.UserDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.Community.Dto.CommentDTO;
 import com.example.Community.Dto.PostDTO;
@@ -30,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/post")
 @CrossOrigin(origins = {"https://ddo857ydmq0nf.cloudfront.net",
-        "http:localhost:3000"
+        "http://localhost:3000"
 ,"https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com"})
 public class PostController {
     private final PostService postService;
@@ -52,6 +46,20 @@ public class PostController {
         // 결과 반환
         return ResponseEntity.ok(posts);
     }
+    @PostMapping("/signup")
+    public void SaveSign(@RequestBody UserDTO userDTO) {
+        System.out.println(userDTO.getUserid());
+        System.out.println(userDTO.getNickName());
+        System.out.println(userDTO.getEmail());
+        postService.saveSign(userDTO);
+    }
+
+    @GetMapping("/getNickName")
+    public ResponseEntity<String> getNickName(@RequestParam("value") String nickName) {
+        String Nick = postService.findNickNameByEmail(nickName);
+        return ResponseEntity.ok(Nick);
+    }
+
     @GetMapping("/search/{searchString}")
     public ResponseEntity<List<PostDTO>> findSearchTitleOrContent(@PathVariable("searchString") String search) {
 
@@ -99,6 +107,24 @@ public class PostController {
         PostDTO postDTO=postService.update(post);
         return ResponseEntity.ok(postDTO);
     }
+    @GetMapping("/myPost")
+    public ResponseEntity<List<PostDTO>> findMyPost(@RequestParam("value") String value) {
+        String name = URLDecoder.decode(value,StandardCharsets.UTF_8);
+        List<PostDTO> posts = postService.findByMyPost(name);
+        return ResponseEntity.ok(posts);
+    }
+    @PostMapping("/savelike")
+    public void saveLike(@RequestBody LikeDTO likeDTO) {
+        System.out.println(likeDTO.getPost_id());
+        System.out.println(likeDTO.getNickName());
 
+        postService.likesave(likeDTO);
 
+    }
+    @GetMapping("/mylike")
+    public ResponseEntity<List<PostDTO>> findMyLike(@RequestParam("value") String value) {
+        String name = URLDecoder.decode(value,StandardCharsets.UTF_8);
+        List<PostDTO> posts = postService.findByMyLike(name);
+        return ResponseEntity.ok(posts);
+    }
 }

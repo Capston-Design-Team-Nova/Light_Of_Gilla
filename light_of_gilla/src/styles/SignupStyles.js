@@ -10,7 +10,7 @@ export const ModalBackground = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  z-index: 1000;
 `;
 
 export const ModalContainer = styled.div`
@@ -21,6 +21,7 @@ export const ModalContainer = styled.div`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   width: 380px;
   text-align: center;
+  z-index: 1000;
 `;
 
 export const CloseButton = styled.button`
@@ -31,6 +32,10 @@ export const CloseButton = styled.button`
   border: none;
   font-size: 22px;
   cursor: pointer;
+
+  &:hover {
+    background: #eeeeee;
+  }
 `;
 
 export const Title = styled.h2`
@@ -60,6 +65,10 @@ export const NextButton = styled.button`
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
+
+  &:hover {
+    background-color: #e59260;
+  }
 `;
 
 export const EmailRow = styled.div`
@@ -87,5 +96,8 @@ export const EmailButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  &:hover {
+    background: #f0c98b;
+  }
 `;
 

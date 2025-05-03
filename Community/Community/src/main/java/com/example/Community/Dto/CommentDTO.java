@@ -16,6 +16,7 @@ public class CommentDTO {
     private Long id;
     private String comment;
     private String user_id;
+    private String nickName;
     private Long post_id;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime postCreated_date;
@@ -30,6 +31,7 @@ public class CommentDTO {
         commentDTO.setComment(commentEntity.getComment());
         commentDTO.setUser_id(commentEntity.getUser_id());
         commentDTO.setPost_id(post_id);
+        commentDTO.setNickName(commentEntity.getNickName());
         commentDTO.setPostCreated_date(commentEntity.getCreatedTime());
         commentDTO.setPostUpdated_date(commentEntity.getUpdatedTime());
         commentDTO.setParentComment_id(commentDTO.getParentComment_id());

@@ -20,6 +20,7 @@ export const MapContainer = styled.div`
   height: 100%;
   border: 1px solid #ddd;
   border-radius: 8px;
+  z-index: 3;
 
   ${mobile} {
     top: 0;
@@ -27,6 +28,7 @@ export const MapContainer = styled.div`
     width: 100%;
     height: 100vh;
     border-radius: 0;
+    z-index: 3;
   }
 `;
 
@@ -41,7 +43,7 @@ export const Sidebar = styled.div`
   padding: 20px;
   overflow-y: auto;
   border-right: 1px solid #ddd;
-  z-index: 10;
+  z-index: 4;
 
   h2 {
     font-size: 18px;
@@ -78,6 +80,7 @@ export const Sidebar = styled.div`
     border-right: none;
     border-top: 1px solid #ddd;
     font-size: 14px;
+    z-index: 4;
   }
 `;
 
@@ -88,7 +91,7 @@ export const SearchContainer = styled.div`
   width: calc(90% - 360px);
   padding: 15px;
   border-radius: 8px;
-  z-index: 10;
+  z-index: 4;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -100,6 +103,7 @@ export const SearchContainer = styled.div`
     width: auto;
     padding: 10px;
     box-sizing: border-box;
+    z-index: 4;
   }
 `;
 
@@ -117,7 +121,6 @@ export const SearchBox = styled.div`
     border-radius: 5px;
     color: white;
     cursor: pointer;
-
     &:hover {
       background: rgb(226, 226, 226);
     }
@@ -125,16 +128,36 @@ export const SearchBox = styled.div`
 
   ${mobile} {
     img {
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
     }
   }
 `;
 
+export const HospitalItem = styled.div`
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgb(226, 226, 226);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  p {
+    margin: 4px 0 0 0;
+    font-size: 14px;
+  }
+`;
 
 export const SearchInput = styled.input`
   width: 100%;
-  padding: 8px;
+  padding: 12px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -148,7 +171,8 @@ export const CategoryButtons = styled.div`
   overflow: hidden;
   position: relative;
   right: 0px;
-
+  z-index: 4;
+  
   .scroll-btn {
     background: white;
     border: 1px solid #ccc;
@@ -198,6 +222,7 @@ export const CategoryButtons = styled.div`
   }
 
   ${mobile} {
+    z-index: 4;
     .scroll-btn {
       width: 28px;
       height: 28px;

@@ -10,7 +10,7 @@ export const ModalBackground = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  z-index: 1000;
 `;
 
 export const ModalContainer = styled.div`
@@ -31,6 +31,10 @@ export const CloseButton = styled.button`
   border: none;
   font-size: 22px;
   cursor: pointer;
+
+  &:hover {
+    background: #eeeeee;
+  }
 `;
 
 export const Title = styled.h2`
@@ -41,57 +45,29 @@ export const Title = styled.h2`
 `;
 
 export const InputField = styled.input`
-  width: 80%;
+  width: 100%;
   padding: 12px;
-  margin: 12px 0;
+  flex: 1;
+  padding: 12px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 15px;
 `;
 
-export const VerifyButton = styled.button`
-  width: 87%;
-  padding: 12px;
-  margin-top: 15px;
-  background-color: #f5a26f;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-`;
-
-export const ButtonRow = styled.div`
+export const InputWithButtonWrapper = styled.div`
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-top: 15px;
-`;
-
-export const LeftButton = styled.button`
-  padding: 10px 20px;
-  background-color: #f9d8a1;
-  color: black;
-  border: none;
-  border-radius: 5px;
-  font-size: 15px;
-  cursor: pointer;
-`;
-
-export const RightButton = styled.button`
-  padding: 10px 20px;
-  background-color: #f5a26f;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 15px;
-  cursor: pointer;
+  gap: 8px;
+  width: 100%;
+  margin: 12px auto;
 `;
 
 export const InlineRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   width: 80%;
   margin: 12px auto;
 `;
@@ -99,31 +75,53 @@ export const InlineRow = styled.div`
 export const CodeInput = styled.input`
   flex: 1;
   padding: 12px;
-  border: none;
-  border-bottom: 1px solid #ccc;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   font-size: 15px;
   outline: none;
+  position: relative;
+`;
+
+export const TimerText = styled.span`
+  position: absolute;
+  right: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #666;
+  pointer-events: none;
 `;
 
 export const InlineButton = styled.button`
-  margin-left: 8px;
-  padding: 10px 16px;
+  padding: 12px;
   font-size: 14px;
   background-color: #f9d8a1;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  min-width: 60px;
+  &:hover {
+    background: #f0c98b;
+  }
 `;
 
-export const NextButton = styled.button`
-  width: 80%;
+export const ConfirmButton = styled.button`
+  width: 100%;
   padding: 12px;
-  margin: 25px auto 0;
+  margin-top: 5px;
   background-color: #f5a26f;
   color: white;
   border: none;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  display: block;
+  &:hover {
+    background-color: #e59260;
+  }
+`;
+
+export const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
 `;

@@ -1,6 +1,7 @@
 package com.example.Community.Service;
 
 import com.example.Community.Dto.CommentDTO;
+import com.example.Community.Dto.PostDTO;
 import com.example.Community.Entity.CommentEntity;
 import com.example.Community.Entity.PostEntity;
 import com.example.Community.Repository.CommentRepository;
@@ -8,9 +9,8 @@ import com.example.Community.Repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -83,4 +83,27 @@ public class CommentService {
         return childList;
     }
 
+    public List<PostDTO> findByMyComment(String name) {
+        List<CommentEntity> commentEntities = commentRepository.findAllByNickName(name);
+
+
+        Set<Long> postIds = commentEntities.stream()
+                .map(commentEntity -> commentEntity.getPostEntity().getPost_id())
+                .collect(Collectors.toSet());
+
+        
+        List<PostDTO> postDTOList = new ArrayList<>();
+        for (Long postId : postIds) {
+            Optional<PostEntity> postEntityOptional = PostRepository.findById(postId);
+            if (postEntityOptional.isPresent()) {
+                postDTOList.add(PostDTO.toPostDTO(postEntityOptional.get()));
+            }
+        }
+
+
+        Collections.reverse(postDTOList);
+
+        return postDTOList;
+
+    }
 }

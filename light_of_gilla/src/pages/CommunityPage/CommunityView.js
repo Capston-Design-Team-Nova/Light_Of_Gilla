@@ -159,11 +159,28 @@ const H3 = styled.h3`
   align-items: center;           // ✅ 중앙 정렬
 `;
 
+
+const AuthorImg = styled.img`
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 4px;
+`;
+
+const ProfileImg = styled.img`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 7px;
+`;
+
 const CommunityView = () => {
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const [postData, setPostData] = useState(null); 
     const [comments, setComments] = useState([]);
-
+    const name=localStorage.getItem("nickname");
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
     };
@@ -172,7 +189,7 @@ const CommunityView = () => {
   useEffect(() => {
     // API 호출
     axios
-        .get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/${id}`)  
+        .get(`http://localhost:8082/post/${id}`)  
         .then((response) => {
             const { post, comments } = response.data;
             setPostData(post);
@@ -192,13 +209,23 @@ const CommunityView = () => {
   const [newComment, setNewComment] = useState({ writer: "", text: "" });
   const [commentCount, setCommentCount] = useState(0);
   const [likes, setLikes] = useState(0);
+  
   if (!postData) return <div>글을 찾을 수 없습니다.</div>;
 
   const handleLike = async () => {
     const updatedLikes = likes + 1; // UI 업데이트를 위해 좋아요 수 증가
     setLikes(updatedLikes); // UI 먼저 업데이트
-
-  
+    const likeData = {
+      post_id: id,
+      nickName: name
+  };
+  console.log(likeData.post_id,likeData.nickName);
+    try {
+      await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/savelike`,likeData);//백틱으로 선언해야함함
+    
+  } catch (error) {
+      console.error('좋아요 업데이트 중 오류 발생:', error);
+  }
 
     try {
         await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like?post_id=${id}`);//백틱으로 선언해야함함
@@ -214,16 +241,18 @@ const CommunityView = () => {
     console.log("댓글 제출 클릭됨");
     const count = commentCount + 1; // UI 업데이트를 위해 좋아요 수 증가
     setCommentCount(count); // UI 먼저 업데이트
+    
   if (!newComment.text) return;
 
   const newCommentObj = {
     user_id: newComment.writer,
     comment: newComment.text,
-    post_id: id
+    post_id: id,
+    nickName: name
   };
-  console.log("Post ID:", newCommentObj.post_id);
+  console.log("NickName:", newCommentObj.nickName);
   // 1. 백엔드로 댓글 전송 (POST 요청 예시)
-  axios.post(`https://www.thegilla.com/comment/save`, newCommentObj)
+  axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/save`, newCommentObj)
     .then((response) => {
       // 2. 댓글 추가 후 댓글 목록만 업데이트
       setComments([...comments, newCommentObj]); // 새 댓글 추가
@@ -234,6 +263,20 @@ const CommunityView = () => {
       console.error("댓글 추가 오류:", error);
     });
   };
+  const handleDelete = async (postId) => {
+    const confirmDelete = window.confirm("정말 이 글을 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+  
+    try {
+      await axios.delete(`http://localhost:8082/post/delete/${postId}`);
+      alert("글이 삭제되었습니다.");
+      navigate("/Community"); // 삭제 후 커뮤니티 목록으로 이동
+    } catch (err) {
+      console.error("글 삭제 오류:", err);
+      alert("글 삭제 중 오류가 발생했습니다.");
+    }
+  };
+  
 
   return (
     <Main>
@@ -242,19 +285,27 @@ const CommunityView = () => {
             <Center>
                 <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />    
                 {/* ✅ 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
-                {!isSidebarOpen && (
+                {window.innerWidth <= 480 && !isSidebarOpen && (
                   <ToggleButton onClick={toggleSidebar}>
-                    <img
-                      src={require("../../assets/images/햄버거버튼.png")}
-                      alt="메뉴"
-                    />
+                    <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
                   </ToggleButton>
                 )}
                 
                 <Content isSidebarOpen={isSidebarOpen}>
+                {postData.nickName === name && ( // 닉네임이 같을 경우에만 수정, 삭제 버튼 보여줌
+                  <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+                  <Button onClick={() => navigate(`/edit/${postData.id}`)}>수정</Button>
+                  <Button onClick={() => handleDelete(postData.id)}>삭제</Button>
+                  </div>
+                )}
+
                 <Wrapper>
                     <Title>{postData.title}</Title>
                     <Meta>
+                    {/*글 작성자 이미지 추가*/}
+                    {/*<div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        </div><AuthorImg src={postData.authorImg} alt="작성자 이미지" />
+*/}
                         {postData.userid} | {postData.created_time}
                     </Meta>
                     <Content1>{postData.content}</Content1>
@@ -267,7 +318,8 @@ const CommunityView = () => {
                     <CommentSection>        
                         {comments.map((c) => (
                         <CommentItem key={c.id}>
-                            <strong>{c.user_id}</strong>: {c.comment}
+                            {/*<ProfileImg src={c.profileImg} alt="댓글 작성자 이미지" />*/}
+                            <strong>{c.nickName}</strong>: {c.comment}
                         </CommentItem>
                         ))}
 

@@ -19,7 +19,8 @@ import Sidebar from "../../components/Sidebar";
 import SearchField from "../../components/SearchField";
 
 function Community() {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const Email = localStorage.getItem("Email");
+  const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480);
   const [posts, setPosts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,6 +29,7 @@ function Community() {
     setSidebarOpen(!isSidebarOpen);
   };
   useEffect(() => {
+    console.log("Email:",Email);
     const fetchPosts = async () => {
       try {
         const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/view`);
@@ -98,14 +100,12 @@ function Community() {
       <Center>
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         {/* 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
-        {!isSidebarOpen && (
+        {window.innerWidth <= 480 && !isSidebarOpen && (
           <ToggleButton onClick={toggleSidebar}>
-            <img
-              src={require("../../assets/images/햄버거버튼.png")}
-              alt="메뉴"
-            />
+            <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
           </ToggleButton>
         )}
+
 
         <TopRow isSidebarOpen={isSidebarOpen}>
           {/* 검색 필드 */}

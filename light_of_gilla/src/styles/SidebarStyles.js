@@ -1,27 +1,29 @@
 import styled from "styled-components";
 
 export const SidebarContainer = styled.div`
-    position: absolute;
-    top: 63px;
-    left: ${({ isOpen }) => (isOpen ? '0' : '-250px')};
-    width: 250px;
-    height: calc(100% - 30px);  // ✅ 헤더 높이를 뺀 실제 높이;
-    background-color: #FAF2E8; /*#ffedcb;*/
-    transition: left 0.3s ease-in-out;
-    padding-top: 60px;
-    z-index:999; /*추가: 햄버거 버튼 위로 올라오게*/
+  position: fixed;
+  top: 63px;
+  left: ${({ isOpen }) => (isOpen ? '0' : '-250px')};
+  width: 250px;
+  height: calc(100% - 30px);
+  background-color: #FAF2E8;
+  transition: left 0.3s ease-in-out;
+  padding-top: 60px;
+  z-index: 999;
+
+  @media screen and (max-width: 480px) {
+  top: 0;
+    left: ${({ isOpen }) => (isOpen ? '0' : '-100%')};
+    width: 80%;
+    height: 100%;
     
-        // ✅ 모바일 반응형 
-    @media screen and (max-width: 480px) {
-        position: fixed;
-        top: 0;
-        left: ${({ isOpen }) => (isOpen ? '0' : '-100%')};
-        width: 80%;
-        height: 100%;
-        padding-top: 80px;
-        transition: left 0.3s ease-in-out;
-    }
+  }
+
+  @media screen and (min-width: 481px) {
+    left: 0 !important; /* 강제 고정 */
+  }
 `;
+
 
 export const SidebarContent = styled.div`
     display: flex;
@@ -33,7 +35,8 @@ export const SidebarButton = styled.button`
     padding: 15px;
     margin: 10px 0;
     color: black;
-    background-color: #FAF2E8;/* #ffedcb;*/
+    background-color: ${({ isActive }) => (isActive ? "#FFE2B1" : "#FAF2E8")};
+    
     font-family: Ourfont4;
     font-weight: bold;
     font-size: 16px;
@@ -43,12 +46,18 @@ export const SidebarButton = styled.button`
     text-align: center;
     transition: background-color 0.2s ease-in-out;
 
+    &:hover {
+        background-color:rgb(254, 232, 190);
+    }
+
+
+
      @media screen and (max-width: 480px) {
         width: 100%;
         font-size: 15px;
     }
 `;
-
+//background-color: #FAF2E8;/* #ffedcb;*/
 export const BackButton = styled.img`
   position: absolute;
   top: 20px;

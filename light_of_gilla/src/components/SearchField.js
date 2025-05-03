@@ -25,7 +25,7 @@ function SearchField({onWrite}) {
             onKeyPress={handleKeyPress} // Enter 키로 검색 가능
         />
         <img
-            src={require("../assets/images/검색버튼.png")}
+            src={require("../assets/images/돋보기.png")}
             alt=" "
             onClick={handleSearch}
         />

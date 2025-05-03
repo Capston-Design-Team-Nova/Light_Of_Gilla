@@ -145,6 +145,7 @@ justify-content: center;
 
 ${mobile} {
   padding: 30px 10px;
+  height: 75%;
 }
 `;
 
