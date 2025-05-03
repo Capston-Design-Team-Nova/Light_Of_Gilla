@@ -72,12 +72,14 @@ const LoginModal = ({ onClose, onSwitch }) => {
           placeholder="이메일 또는 아이디 입력"
           value={emailOrUserId}
           onChange={(e) => setEmailOrUserId(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
         />
         <InputField
           type="password"
           placeholder="비밀번호 입력"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
         />
         <LoginButton onClick={handleLogin} disabled={loading}>
           {loading ? "로그인 중..." : "로그인"}
@@ -85,17 +87,25 @@ const LoginModal = ({ onClose, onSwitch }) => {
 
         <SocialLoginContainer>
           <KakaoButton>
-            <img src={require("../../assets/images/kakao-logo.png")} alt="Kakao Login" />
+            <img
+              src={require("../../assets/images/kakao-logo.png")}
+              alt="Kakao Login"
+            />
           </KakaoButton>
           <GoogleButton>
-            <img src={require("../../assets/images/google-logo.png")} alt="Google Login" />
+            <img
+              src={require("../../assets/images/google-logo.png")}
+              alt="Google Login"
+            />
           </GoogleButton>
         </SocialLoginContainer>
 
         <FooterButtons>
           <button onClick={() => onSwitch("signup")}>회원가입</button>
           <button onClick={() => onSwitch("findId")}>아이디 찾기</button>
-          <button onClick={() => onSwitch("findPassword")}>비밀번호 찾기</button>
+          <button onClick={() => onSwitch("findPassword")}>
+            비밀번호 찾기
+          </button>
         </FooterButtons>
       </ModalContainer>
     </ModalBackground>
