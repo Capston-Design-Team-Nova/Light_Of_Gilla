@@ -356,6 +356,31 @@ Authorization: Bearer {토큰값}
 요청 예시: `PUT https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123/password`
 - http://3.37.188.91:8080/images/파일이름.png
 
+## 12. 닉네임 변경
+- **PATCH** `/api/users/{userId}/nickname`
+
+요청 예시:
+
+```json
+{
+  "nickname": "새로운닉네임"
+}
+```
+
+## 13. 프로필 이미지 변경
+- **PATCH** `/api/users/{userId}/profile-image`
+- `Content-Type: multipart/form-data` **중요**
+
+요청 예시:
+
+```
+key: profileImage
+type: File
+value: [업로드할 이미지 파일]
+```
+이미지 접근 방법
+- http://3.37.188.91:8080/images/파일이름.png
+
 ## 14. 닉네임으로 유저 검색
 - **GET** `/api/users/search?nickname=닉네임`
   
