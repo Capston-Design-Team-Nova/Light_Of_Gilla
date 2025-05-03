@@ -1,4 +1,4 @@
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   PageHeader,
@@ -7,9 +7,9 @@ import {
   Button,
   ImageButton1,
   ImageButton2,
-  DropdownWrapper, 
-  DropdownMenu,     
-  DropdownItem,     
+  DropdownWrapper,
+  DropdownMenu,
+  DropdownItem,
 } from "../styles/HeaderStyles";
 import AuthModalManager from "../pages/Login_Singup_Modal/AuthModalManager";
 
@@ -18,7 +18,7 @@ function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // ✅ 드롭다운 열림 여부
   const location = useLocation();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -30,7 +30,7 @@ function Header() {
     localStorage.removeItem("nickname");
     setIsLoggedIn(false);
     alert("로그아웃 되었습니다.");
-
+    window.location.href = "/"; // 메인화면으로 강제 이동
     if (location.pathname === "/mypage") {
       navigate("/");
     }
@@ -46,10 +46,27 @@ function Header() {
             </ImageButton1>
           </Link>
           <NavRight>
-            <Link to="/HospitalMap">
+            <Link
+              to={isLoggedIn ? "/HospitalMap" : "#"}
+              onClick={(e) => {
+                if (!isLoggedIn) {
+                  e.preventDefault();
+                  setShowModal(true);
+                }
+              }}
+            >
               <Button>병원&약국 찾기</Button>
             </Link>
-            <Link to="/Community">
+
+            <Link
+              to={isLoggedIn ? "/Community" : "#"}
+              onClick={(e) => {
+                if (!isLoggedIn) {
+                  e.preventDefault();
+                  setShowModal(true);
+                }
+              }}
+            >
               <Button>Q&A</Button>
             </Link>
 
@@ -73,7 +90,9 @@ function Header() {
                 </ImageButton2>
                 {isDropdownOpen && (
                   <DropdownMenu>
-                    <DropdownItem as={Link} to="/mypage">마이페이지</DropdownItem>
+                    <DropdownItem as={Link} to="/mypage">
+                      마이페이지
+                    </DropdownItem>
                     <DropdownItem onClick={handleLogout}>로그아웃</DropdownItem>
                   </DropdownMenu>
                 )}
