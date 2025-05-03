@@ -354,7 +354,6 @@ Authorization: Bearer {토큰값}
 - **PUT** `/api/users/{userId}/password`
   
 요청 예시: `PUT https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123/password`
-- http://3.37.188.91:8080/images/파일이름.png
 
 ## 12. 닉네임 변경
 - **PATCH** `/api/users/{userId}/nickname`
