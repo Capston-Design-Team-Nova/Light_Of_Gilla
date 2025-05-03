@@ -30,8 +30,8 @@ export const Main = styled.main`
 // CommunityStyles.js
 
 export const TopRow = styled.div`
-  width: ${({ isSidebarOpen }) => (isSidebarOpen ? "calc(97% - 250px)" : "80%")};
-  margin-left: ${({ isSidebarOpen }) => (isSidebarOpen ? "250px" : "0")};
+    width: calc(97% - 250px);
+    margin-left: 250px;
   transition: margin-left 0.3s ease;
   display: flex;
   align-items: center;
@@ -50,8 +50,8 @@ export const TopRow = styled.div`
 
 export const Content = styled.div`
   position: relative; // 기준이 되는 부모
-  width: ${({ isSidebarOpen }) => (isSidebarOpen ? "calc(97% - 250px)" : "80%")};
-  margin-left: ${({ isSidebarOpen }) => (isSidebarOpen ? "250px" : "0")};
+  width: calc(97% - 250px);
+    margin-left: 250px;
   transition: margin-left 0.3s ease;
   height: 83vh; // 전체 높이 고정
   background-color: white;

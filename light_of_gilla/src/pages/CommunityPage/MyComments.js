@@ -10,7 +10,7 @@ import Pagination from "../../components/Pagination";
 
 function MyComments() {
     const token = localStorage.getItem("token");
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const [posts, setPosts] = useState([]);
     const [myCommentedPostIds, setMyCommentedPostIds] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
@@ -25,7 +25,7 @@ function MyComments() {
       const fetchPosts = async () => {
         const name = encodeURIComponent(NickName);
       try {
-        const response = await axios.get(`http://localhost:8082/comment/myComment?value=${name}`);
+        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/myComment?value=${name}`);
         console.log("댓글글 데이터를 불러오는 중");
         setPosts(response.data);
       } catch (error) {
@@ -57,8 +57,12 @@ function MyComments() {
             <Header />
             {/* Sidebar */}
             <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-            <ToggleButton onClick={toggleSidebar}><img src={require("../../assets/images/햄버거버튼.png")} alt=" " /></ToggleButton>
-            <Center>
+            {window.innerWidth <= 480 && !isSidebarOpen && (
+              <ToggleButton onClick={toggleSidebar}>
+                <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
+              </ToggleButton>
+              )}
+              <Center>
                 <TopRow isSidebarOpen={isSidebarOpen}>
                     <SearchField />
                     <div style={{ flex: 1 }} /> {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}

@@ -20,7 +20,7 @@ import SearchField from "../../components/SearchField";
 
 function Community() {
   const Email = localStorage.getItem("Email");
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480);
   const [posts, setPosts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,7 +32,7 @@ function Community() {
     console.log("Email:",Email);
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`http://localhost:8082/post/view`);
+        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/view`);
         console.log("게시글 데이터를 불러오는 중");
         setPosts(response.data);
       } catch (error) {
@@ -46,7 +46,7 @@ function Community() {
     const category = encodeURIComponent(value);
     try {
       const response = await axios.get(
-        `http://localhost:8082/post/category/${category}`
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/category/${category}`
       );
       setPosts(response.data);
     } catch (error) {
@@ -60,7 +60,7 @@ function Community() {
       try {
        
         const response = await axios.get(
-          `http://localhost:8082/post/search/${searchString}`
+          `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/search/${searchString}`
         );
         setPosts(response.data);
       } catch (error) {
@@ -68,7 +68,7 @@ function Community() {
       }
     } else {
       try {
-        const response = await axios.get(`http://localhost:8082/post/`);
+        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/`);
         console.log("게시글 데이터를 불러오는 중");
         setPosts(response.data);
       } catch (error) {
@@ -100,14 +100,12 @@ function Community() {
       <Center>
         <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
         {/* 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
-        {!isSidebarOpen && (
+        {window.innerWidth <= 480 && !isSidebarOpen && (
           <ToggleButton onClick={toggleSidebar}>
-            <img
-              src={require("../../assets/images/햄버거버튼.png")}
-              alt="메뉴"
-            />
+            <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
           </ToggleButton>
         )}
+
 
         <TopRow isSidebarOpen={isSidebarOpen}>
           {/* 검색 필드 */}

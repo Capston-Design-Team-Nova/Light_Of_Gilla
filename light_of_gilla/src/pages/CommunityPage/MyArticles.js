@@ -10,7 +10,7 @@ import axios from "axios";
 
 function MyArticles() {
     
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const [posts, setPosts] = useState([]);
     const NickName=localStorage.getItem("nickname");
     // Toggle sidebar visibility
@@ -22,7 +22,7 @@ function MyArticles() {
       const fetchPosts = async () => {
         const name = encodeURIComponent(NickName);
       try {
-        const response = await axios.get(`http://localhost:8082/post/myPost?value=${name}`);
+        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/myPost?value=${name}`);
         console.log("게시글 데이터를 불러오는 중");
         setPosts(response.data);
       } catch (error) {
@@ -54,7 +54,11 @@ function MyArticles() {
             <Header />
             {/* Sidebar */}
             <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-            <ToggleButton onClick={toggleSidebar}><img src={require("../../assets/images/햄버거버튼.png")} alt=" " /></ToggleButton>
+            {window.innerWidth <= 480 && !isSidebarOpen && (
+              <ToggleButton onClick={toggleSidebar}>
+                <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
+              </ToggleButton>
+            )}
             <Center>
                 <TopRow isSidebarOpen={isSidebarOpen}>
                     <SearchField />

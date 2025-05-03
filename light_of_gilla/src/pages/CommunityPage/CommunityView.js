@@ -177,7 +177,7 @@ const ProfileImg = styled.img`
 `;
 
 const CommunityView = () => {
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const [postData, setPostData] = useState(null); 
     const [comments, setComments] = useState([]);
     const name=localStorage.getItem("nickname");
@@ -221,14 +221,14 @@ const CommunityView = () => {
   };
   console.log(likeData.post_id,likeData.nickName);
     try {
-      await axios.post(`http://localhost:8082/post/savelike`,likeData);//백틱으로 선언해야함함
+      await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/savelike`,likeData);//백틱으로 선언해야함함
     
   } catch (error) {
       console.error('좋아요 업데이트 중 오류 발생:', error);
   }
 
     try {
-        await axios.post(`http://localhost:8082/post/like?post_id=${id}`);//백틱으로 선언해야함함
+        await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like?post_id=${id}`);//백틱으로 선언해야함함
       
     } catch (error) {
         console.error('좋아요 업데이트 중 오류 발생:', error);
@@ -252,7 +252,7 @@ const CommunityView = () => {
   };
   console.log("NickName:", newCommentObj.nickName);
   // 1. 백엔드로 댓글 전송 (POST 요청 예시)
-  axios.post(`http://localhost:8082/comment/save`, newCommentObj)
+  axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/save`, newCommentObj)
     .then((response) => {
       // 2. 댓글 추가 후 댓글 목록만 업데이트
       setComments([...comments, newCommentObj]); // 새 댓글 추가
@@ -263,6 +263,20 @@ const CommunityView = () => {
       console.error("댓글 추가 오류:", error);
     });
   };
+  const handleDelete = async (postId) => {
+    const confirmDelete = window.confirm("정말 이 글을 삭제하시겠습니까?");
+    if (!confirmDelete) return;
+  
+    try {
+      await axios.delete(`http://localhost:8082/post/delete/${postId}`);
+      alert("글이 삭제되었습니다.");
+      navigate("/Community"); // 삭제 후 커뮤니티 목록으로 이동
+    } catch (err) {
+      console.error("글 삭제 오류:", err);
+      alert("글 삭제 중 오류가 발생했습니다.");
+    }
+  };
+  
 
   return (
     <Main>
@@ -271,16 +285,20 @@ const CommunityView = () => {
             <Center>
                 <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />    
                 {/* ✅ 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
-                {!isSidebarOpen && (
+                {window.innerWidth <= 480 && !isSidebarOpen && (
                   <ToggleButton onClick={toggleSidebar}>
-                    <img
-                      src={require("../../assets/images/햄버거버튼.png")}
-                      alt="메뉴"
-                    />
+                    <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
                   </ToggleButton>
                 )}
                 
                 <Content isSidebarOpen={isSidebarOpen}>
+                {postData.nickName === name && ( // 닉네임이 같을 경우에만 수정, 삭제 버튼 보여줌
+                  <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+                  <Button onClick={() => navigate(`/edit/${postData.id}`)}>수정</Button>
+                  <Button onClick={() => handleDelete(postData.id)}>삭제</Button>
+                  </div>
+                )}
+
                 <Wrapper>
                     <Title>{postData.title}</Title>
                     <Meta>

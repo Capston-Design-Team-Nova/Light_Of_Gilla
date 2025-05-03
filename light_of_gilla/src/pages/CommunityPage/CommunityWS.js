@@ -10,7 +10,7 @@ function CommunityWS() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [selectedOption, setSelectedOption] = useState('');
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const name=localStorage.getItem("nickname");
     const navigate=useNavigate();
     const handleSubmit = async () => {
@@ -22,7 +22,7 @@ function CommunityWS() {
         };
         console.log(selectedOption)
         try {
-            await axios.post('http://localhost:8082/post/save', postData);
+            await axios.post('https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/save', postData);
             alert('글을 정상적으로 올렸습니다!');
             // setTitle('');
             // setContent('');
@@ -47,10 +47,10 @@ function CommunityWS() {
             <Center>
                 <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />    
                 {/* ✅ 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
-                {!isSidebarOpen && (
-                <ToggleButton onClick={toggleSidebar}>
-                    <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
-                </ToggleButton>
+                {window.innerWidth <= 480 && !isSidebarOpen && (
+                    <ToggleButton onClick={toggleSidebar}>
+                        <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
+                    </ToggleButton>
                 )}
                            
                 <Content isSidebarOpen={isSidebarOpen}>

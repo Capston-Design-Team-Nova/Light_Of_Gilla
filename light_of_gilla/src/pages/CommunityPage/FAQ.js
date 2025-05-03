@@ -1,14 +1,13 @@
 import React,{useState} from 'react';
 import Header from '../../components/Header';
 import { Main, Center, Content, Button,TopRow,ToggleButton,CommunityListWrapper } from '../../styles/CommunityStyles';
-//import CommunityList from './CommunityList';
+import FAQList from './FAQList';
 import Sidebar from '../../components/Sidebar';
 import SearchField from '../../components/SearchField';
 //import Pagination from "../../components/Pagination";
 
 function FAQ() {
-    const [isSidebarOpen, setSidebarOpen] = useState(false);
-
+    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480);
     // Toggle sidebar visibility
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
@@ -69,9 +68,10 @@ function FAQ() {
                 </TopRow>
                 
                 <Content isSidebarOpen={isSidebarOpen}>
-                    {/*<CommunityListWrapper>
-                        <CommunityList posts={currentPosts} />
-                    </CommunityListWrapper>
+                  <CommunityListWrapper>
+                    <FAQList />
+                  </CommunityListWrapper>
+                    
                     
                     {/* 페이지네이션 */}
                     {/*{totalPages > 0 && (
