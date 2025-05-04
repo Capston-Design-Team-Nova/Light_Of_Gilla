@@ -44,7 +44,7 @@ export const Title = styled.h2`
 `;
 
 export const InputField = styled.input`
-  width: 100%;
+  width: 90%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -75,6 +75,7 @@ export const InputWithButtonWrapper = styled.div`
 `;
 
 export const SideButton = styled.button`
+  min-width: 75px;
   padding: 10px 14px;
   background-color: #f9d8a1;
   border: none;
