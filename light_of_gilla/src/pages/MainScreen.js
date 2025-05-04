@@ -47,14 +47,16 @@ function MainScreen() {
             <LastSection data-aos="fade-up">
                 <P data-aos="fade-up" data-aos-delay="0">GILLA의 모든 서비스를 이용하고 싶다면?</P>
                 <P2 data-aos="fade-up" data-aos-delay="600">로그인하세요</P2>
-                <P3 
-                    data-aos="fade-up" 
-                    data-aos-delay="800" 
-                    style={{ cursor: 'pointer', textDecoration: 'underline' }}
-                    onClick={() => setShowModal(true)} // ✅ 클릭 시 모달 열기
-                >
-                    로그인 & 회원가입 하러가기 {'>'}
-                </P3>
+                <P3 data-aos="fade-up" data-aos-delay="800" style={{ cursor: 'pointer', textDecoration: 'underline' }}
+                    onClick={() => {
+                    const token = localStorage.getItem("token");
+                    if (!token) {
+                        setShowModal(true); // ✅ 로그인 안 되어 있으면 모달 열기
+                    } else {
+                        alert("이미 로그인하셨습니다. 서비스를 자유롭게 이용해보세요!"); // ✅ 로그인 상태면 안내
+                        }
+                    }}>  로그인 & 회원가입 하러가기 {'>'}</P3>
+
             </LastSection>
 
             <Footer> ©2025 LIGHT OF GILLA ALL RIGHTS RESERVED. </Footer>

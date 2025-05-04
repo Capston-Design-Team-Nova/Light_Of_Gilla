@@ -29,7 +29,7 @@ function Header() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-
+  
     if (token) {
       axios
         .get("https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/me", {
@@ -39,10 +39,12 @@ function Header() {
         })
         .then((res) => {
           const imageUrl = res.data.profileImage;
+          const baseImageUrl = "http://3.37.188.91:8080"; // ✅ 서버 이미지 주소
+  
           if (imageUrl && imageUrl !== "null" && imageUrl !== "") {
-            setProfileImage(imageUrl);
+            setProfileImage(`${baseImageUrl}${imageUrl}`); // ✅ 서버에서 바로 가져온 경로 사용
           } else {
-            setProfileImage(defaultProfileImage);
+            setProfileImage(defaultProfileImage); // 기본 이미지
           }
         })
         .catch((err) => {
@@ -50,10 +52,10 @@ function Header() {
           setProfileImage(defaultProfileImage);
         });
     } else {
-      setProfileImage(defaultProfileImage);
+      setProfileImage(defaultProfileImage); // 로그인 안 된 경우
     }
   }, [showModal]);
-
+  
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("nickname");

@@ -13,7 +13,7 @@ export const Center = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 90px;
+  padding-top: 50px;
   background-color: white;
   
   ${mobile} {
@@ -123,6 +123,53 @@ export const Button = styled.button`
 
 
 export const SaveButton = styled.button`
+  margin-top: 10px;
+  margin-bottom: 50px;
+  padding: 7px 20px;
+  background-color: white;
+  color: black;
+  font-family: 'OurFont2';
+  font-size: 18px;
+  cursor: pointer;
+  border: solid black 0.1rem;
+  border-radius: 8px;
+  
+  ${mobile} {
+    width: 90%;
+  }
+`;
+export const ReviewButton = styled.button`
+    padding: 8px 16px;
+  font-size: 14px;
+  background-color:rgb(255, 221, 161);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  ${mobile} {
+    width: 100%;
+    margin-top: 5px;
+  }
+`;
+export const TitleRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: left;
+  width: 100%;
+  margin-bottom: 0.3rem;
+  margin-left: 2.5rem;
+`;
+
+export const ReviewButtonRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -3px;
+  margin-bottom: 10px;
+  margin-right: 1.5rem;
+`;
+
+export const WithdrawButton = styled.button`
   margin-top: 10px;
   margin-bottom: 50px;
   padding: 7px 20px;
