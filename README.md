@@ -125,7 +125,8 @@ API Gateway 엔드포인트
         "content": "정말 친절한 병원이었어요!",
         "likes": 0,
         "rating": 5,
-        "likedByCurrentUser": false
+        "likedByCurrentUser": false,
+        "createdAt": "2025-05-01T08:10:15"
     },
     {
         "id": 2,
@@ -133,7 +134,8 @@ API Gateway 엔드포인트
         "content": "와 간호사 ㄹㅇ 싹퉁바가지없더라\n어떻게 그런 응대로 아직도 근무하는지 의문점이 들정도임 ㅋㅋㅋㅋㅋㅋ",
         "likes": 1,
         "rating": 1,
-        "likedByCurrentUser": true // 변경된 부분. X-User-Name의 like 여부를 저장함.
+        "likedByCurrentUser": true,
+        "createdAt": "2025-03-16T00:00:00"
     },
     {
         "id": 3,
@@ -141,7 +143,8 @@ API Gateway 엔드포인트
         "content": "정신과상담 진짜 가지마세요\n사람 약으로 돈버느거밖에 몰라요\n받고 약 처방받았는데\n부작용 나서 가만히 못... 더보기",
         "likes": 7,
         "rating": 1,
-        "likedByCurrentUser": false
+        "likedByCurrentUser": false,
+        "createdAt": "2025-01-07T00:00:00"
     },
     {
         "id": 4,
@@ -149,7 +152,8 @@ API Gateway 엔드포인트
         "content": "치료받다가 교수님 말투가 너무 버럭버럭, 혼내듯이 말해서 뭘 물어보지도못하겠고 진료를 너무 급하게 보는느낌이라 있던 병 더심해질까봐 옮겼습니다. 더 큰병원 가려고 소견서 부탁드렸는데 자기 못믿어서 그런거 아... 더보기",
         "likes": 4,
         "rating": 1,
-        "likedByCurrentUser": false
+        "likedByCurrentUser": false,
+        "createdAt": "2024-12-26T00:00:00"
     }
 ]
 ```
@@ -189,6 +193,16 @@ API Gateway 엔드포인트
 요청 예시:
 `GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/favorites`
 `X-User-Name: hyunseo`
+
+## 🟢 9. 리뷰 평균 점수 조회
+
+- **GET** `/api/reviews/hospital/{hospitalId}/average-rating`
+
+요청 예시:
+`GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/1/average-rating`
+
+응답 예시:
+`3.000`
 
 ---
 
