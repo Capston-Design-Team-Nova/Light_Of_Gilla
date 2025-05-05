@@ -9,6 +9,7 @@ import MyComments from "../pages/CommunityPage/MyComments";
 import MyLikes from "../pages/CommunityPage/MyLikes";
 import CommunityView from "../pages/CommunityPage/CommunityView";
 import MyPage from "../pages/MyPage";
+import EditPost from '../pages/CommunityPage/EditPost'; // 작성한 수정 컴포넌트
 
 import FAQ from "../pages/CommunityPage/FAQ";
 import FAQView from "../pages/CommunityPage/FAQView";
@@ -42,6 +43,7 @@ function Router() {
         <Route path="/MyLikes" element={<MyLikes />} />
         {/*<Route path="/View" element={<View />}/>*/}
         <Route path="/post/:id" element={<CommunityView />} />
+        <Route path="/edit/:id" element={<EditPost />} />
         <Route path="/mypage" element={<MyPage />} />
         
         <Route path="/faq" element={<FAQ/>}/>

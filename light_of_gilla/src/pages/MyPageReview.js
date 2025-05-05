@@ -4,7 +4,11 @@ import {
     Main, Center, Title, Button,ReviewButton,ReviewButtonRow,
     TitleRow
 } from "../styles/MyPageStyles";
+import {CommunityListWrapper} from "../styles/CommunityStyles"
 import { useNavigate } from "react-router-dom";
+import ReviewList from "./ReviewList"
+
+
 
 
 function MyPageReview() {
@@ -23,7 +27,10 @@ function MyPageReview() {
           <ReviewButtonRow>
             <ReviewButton onClick={() => navigate("/mypage")}>회원정보수정</ReviewButton>
           </ReviewButtonRow>
-          
+          <CommunityListWrapper>
+            <ReviewList />
+          </CommunityListWrapper>
+
         </Center>
       </Main>
     );
