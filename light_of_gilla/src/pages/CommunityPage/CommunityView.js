@@ -294,8 +294,8 @@ const CommunityView = () => {
                 <Content isSidebarOpen={isSidebarOpen}>
                 {postData.nickName === name && ( // 닉네임이 같을 경우에만 수정, 삭제 버튼 보여줌
                   <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-                  <Button onClick={() => navigate(`/edit/${postData.id}`)}>수정</Button>
-                  <Button onClick={() => handleDelete(postData.id)}>삭제</Button>
+                  <Button onClick={() => navigate(`/edit/${postData.post_Id}`)}>수정</Button>
+                  <Button onClick={() => handleDelete(postData.post_Id)}>삭제</Button>
                   </div>
                 )}
 
