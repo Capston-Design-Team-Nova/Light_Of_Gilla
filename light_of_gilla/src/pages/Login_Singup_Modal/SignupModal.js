@@ -37,6 +37,16 @@ const SignupModal = ({ onClose, onSwitch }) => {
     residentNumber: "",
   });
 
+  const [formDataState, setFormDataState] = useState({
+    userId: "",
+    password: "",
+    confirmPassword: "",
+    email: "",
+    nickname: "",
+    profileImage: "", // 사용 안함
+    residentNumber: "",
+  });
+
   const [profileImageFile, setProfileImageFile] = useState(null);
   const [profilePreview, setProfilePreview] = useState("");
 
@@ -181,8 +191,7 @@ const SignupModal = ({ onClose, onSwitch }) => {
         email: formData.email,
         phone: "01000000000",
         nickname: formData.nickname,
-        profileImage:
-          profilePreview || "https://example.com/default-profile.jpg",
+        profileImage: "https://example.com/default-profile.jpg", // 디폴트
         residentNumber: formData.residentNumber
           .replace(/[^0-9]/g, "")
           .slice(2, 8),
@@ -190,16 +199,47 @@ const SignupModal = ({ onClose, onSwitch }) => {
 
       await axios.post(
         "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/signup",
-        payload
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
       );
 
-      alert("회원가입이 완료되었습니다!");
+      const loginRes = await axios.post(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/login",
+        {
+          emailOrUserId: formData.userId,
+          password: formData.password,
+        }
+      );
+      const token = loginRes.data.token;
+      localStorage.setItem("token", token);
+
+      if (profileImageFile) {
+        const formDataImage = new FormData();
+        formDataImage.append("profileImage", profileImageFile);
+
+        await axios.patch(
+          `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/${formData.userId}/profile-image`,
+          formDataImage,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      }
+
+      alert("회원가입 및 프로필 사진 등록이 완료되었습니다!");
       onClose();
     } catch (error) {
-      console.error("회원가입 오류:", error.response || error);
+      console.error(
+        "회원가입 또는 프로필 업데이트 오류:",
+        error.response || error
+      );
       alert(
         error.response?.data?.message ||
-          "회원가입에 실패했습니다. 다시 시도해주세요."
+          "회원가입 또는 프로필 설정 중 오류가 발생했습니다."
       );
     }
   };

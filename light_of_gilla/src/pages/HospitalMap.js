@@ -1005,15 +1005,7 @@ function HospitalMap() {
               "이비인후과",
               "마치통증의학과",
               "비뇨기과",
-              "신경외과",
-              "병리과",
               "가정의학과",
-              "정신건강의학과",
-              "심장내과",
-              "소화기내과",
-              "혈액종양내과",
-              "재활의학과",
-              "영상의학과",
             ].map((cat) => (
               <button key={cat} onClick={() => handleCategoryClick(cat)}>
                 #{cat}
