@@ -114,7 +114,7 @@ export const DropdownWrapper = styled.div`
 
 export const DropdownMenu = styled.div`
   position: absolute;
-  top: 100%; /* 버튼 바로 아래 */
+  top: 100%;
   right: 0;
   width: 85px;
   background-color: #444;
@@ -132,8 +132,16 @@ export const DropdownMenu = styled.div`
     pointer-events: auto;
   }
 
-  
+  /* ✅ 모바일에서는 위로 열리게 수정 */
+  @media screen and (max-width: 480px) {
+    top: auto;
+    bottom: 100%;              // 버튼 위쪽에 위치
+    transform: translateY(10px); // 아래서 위로 올라오게
+    right: 0;
+    left: auto;
+  }
 `;
+
 
 export const DropdownItem = styled.div`
   padding: 5px 10px 5px;
