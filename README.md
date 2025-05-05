@@ -490,7 +490,7 @@ window.location.href = KAKAO_AUTH_URL;  // 이 코드로 로그인 창 열림
 - 카카오 로그인을 위해 위 URL로 리디렉션.
 - 로그인 후 redirect_uri로 JWT 토큰이 바로 응답됨.
 
-## 20. 카카오 로그인 연동 (JWT 토큰 발급)
+## 20. 구글 로그인 연동 (JWT 토큰 발급)
 
 ```js
 const GOOGLE_AUTH_URL =
