@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.example.Community.Dto.LikeDTO;
 import com.example.Community.Dto.UserDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -120,6 +121,16 @@ public class PostController {
 
         postService.likesave(likeDTO);
 
+    }
+    @DeleteMapping("/delete/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
+        try {
+            postService.deletePostById(postId);  // 서비스에서 삭제 로직 수행
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패");
+        }
+        return null;
     }
     @GetMapping("/mylike")
     public ResponseEntity<List<PostDTO>> findMyLike(@RequestParam("value") String value) {
