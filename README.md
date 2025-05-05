@@ -482,34 +482,9 @@ const KAKAO_AUTH_URL =
 window.location.href = KAKAO_AUTH_URL;  // 이 코드로 로그인 창 열림
 ```
 
-- `https://kauth.kakao.com/oauth/authorize
-  ?client_id=b4f2f64fa5705f9a4016afc88010195d
-  &redirect_uri=http://3.37.188.91:8080/api/users/kakao-login
-  &response_type=code`
+- `https://kauth.kakao.com/oauth/authorize?client_id=b4f2f64fa5705f9a4016afc88010195d&redirect_uri=http://3.37.188.91:8080/api/users/kakao-login&response_type=code`
 
 - 카카오 로그인을 위해 위 URL로 리디렉션.
-- 로그인 후 redirect_uri로 JWT 토큰이 바로 응답됨.
-
-## 20. 구글 로그인 연동 (JWT 토큰 발급) (미완성)
-
-```js
-const GOOGLE_AUTH_URL =
-  "https://accounts.google.com/o/oauth2/v2/auth
-  ?client_id=YOUR_CLIENT_ID
-  &redirect_uri=http://https://www.thegilla.com/api/users/google-login
-  &response_type=code
-  &scope=openid%20email%20profile";
-
-window.location.href = GOOGLE_AUTH_URL;  // 이 코드로 로그인 창 열림
-```
-
-- `https://accounts.google.com/o/oauth2/v2/auth
-  ?client_id=331843439682-2q7egrha26f5jpefuajcq0rph6tjrctb.apps.googleusercontent.com
-  &redirect_uri=http://https://www.thegilla.com/api/users/google-login
-  &response_type=code
-  &scope=openid%20email%20profile`
-
-- 구글 로그인을 위해 위 URL로 리디렉션.
 - 로그인 후 redirect_uri로 JWT 토큰이 바로 응답됨.
 
 # 🧩 검색기록 API 명세서 (JWT 토큰 기반)
