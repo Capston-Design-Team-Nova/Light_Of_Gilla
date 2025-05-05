@@ -306,7 +306,7 @@ const CommunityView = () => {
                     {/*<div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         </div><AuthorImg src={postData.authorImg} alt="작성자 이미지" />
 */}
-                        {postData.userid} | {postData.created_time}
+                        {postData.userid} | {postData.postCreated_date}
                     </Meta>
                     <Content1>{postData.content}</Content1>
                      <Category>#{postData.category}</Category>

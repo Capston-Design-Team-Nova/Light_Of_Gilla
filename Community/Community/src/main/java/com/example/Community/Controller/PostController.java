@@ -96,17 +96,9 @@ public class PostController {
 
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/update/{post_id}")
-    public ResponseEntity UpdateForm(@PathVariable("post_id") Long post_id) {
-        PostDTO postDTO= postService.findByPostId(post_id);
-        /*댓글 목록 가져오기*/
-        return ResponseEntity.ok(postDTO);
-    }
-    @Transactional
-    @PostMapping("/update")
-    public ResponseEntity Update(@ModelAttribute PostDTO post) {
-        PostDTO postDTO=postService.update(post);
-        return ResponseEntity.ok(postDTO);
+    @GetMapping("/update")
+    public void UpdateForm(@RequestBody PostDTO postDTO) {
+        postService.update(postDTO);
     }
     @GetMapping("/myPost")
     public ResponseEntity<List<PostDTO>> findMyPost(@RequestParam("value") String value) {
