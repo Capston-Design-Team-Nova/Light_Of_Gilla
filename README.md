@@ -473,20 +473,6 @@ value: [업로드할 이미지 파일]
 }
 ```
 
-## 19. 카카오 로그인 연동 (JWT 토큰 발급)
-
-```js
-const KAKAO_AUTH_URL =
-  "https://kauth.kakao.com/oauth/authorize?client_id=YOUR_REST_API_KEY&redirect_uri=YOUR_REDIRECT_URI&response_type=code";
-
-window.location.href = KAKAO_AUTH_URL;  // 이 코드로 로그인 창 열림
-```
-
-- `https://kauth.kakao.com/oauth/authorize?client_id=b4f2f64fa5705f9a4016afc88010195d&redirect_uri=http://3.37.188.91:8080/api/users/kakao-login&response_type=code`
-
-- 카카오 로그인을 위해 위 URL로 리디렉션.
-- 로그인 후 redirect_uri로 JWT 토큰이 바로 응답됨.
-
 # 🧩 검색기록 API 명세서 (JWT 토큰 기반)
 
 API Gateway 엔드포인트
