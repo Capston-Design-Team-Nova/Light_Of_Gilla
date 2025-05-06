@@ -59,7 +59,7 @@ function MainScreen() {
 
             </LastSection>
 
-            <Footer> ©2025 LIGHT OF GILLA ALL RIGHTS RESERVED. </Footer>
+            <Footer> LIGHT OF GILLA(길라의 빛) <br />한성대학교 컴퓨터공학부 캡스톤 디자인 Team Nova <br />©2025 LIGHT OF GILLA ALL RIGHTS RESERVED.  </Footer>
 
             {showModal && <AuthModalManager onCloseAll={() => setShowModal(false)} />} {/* ✅ 모달 렌더 */}
         </Main>

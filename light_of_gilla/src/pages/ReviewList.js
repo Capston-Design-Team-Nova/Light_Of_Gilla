@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const mobile = "@media screen and (max-width: 480px)";
 const BASE_URL = "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api";
 
+// 스타일 정의
 const PostList = styled.div`
-  width: 95%;
-  margin: 10px auto;
+  width: 85%;
+  margin: 8px auto;
 `;
 
 const PostItem = styled.div`
   padding: 1rem;
-  border-bottom: 1px solid #A09F9F;
+  border: 1px solid #A09F9F;
+  border-radius: 20px;
   cursor: pointer;
+  margin-bottom: 0.5rem;
 
   &:hover {
     background-color: #f9f9f9;
@@ -35,40 +36,30 @@ const PostTitle = styled.h2`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-
-  ${mobile} {
-    font-size: 13px;
-  }
 `;
 
 const PostTime = styled.div`
   font-size: 14px;
   color: #555;
   flex: 1;
-
-  ${mobile} {
-    font-size: 12px;
-  }
 `;
 
 const PostRating = styled.div`
   font-size: 14px;
   color: #000;
   flex: 1;
-
-  ${mobile} {
-    font-size: 12px;
-  }
 `;
 
 const PostContent = styled.p`
   font-size: 15px;
   color: #333;
-  margin-top: 8px;
+  margin-top: 15px;
+`;
 
-  ${mobile} {
-    font-size: 13px;
-  }
+const HospitalInfo = styled.div`
+  font-size: 13px;
+  color: #666;
+  margin-top: 0.5rem;
 `;
 
 const EmptyMessage = styled.div`
@@ -79,50 +70,91 @@ const EmptyMessage = styled.div`
 
 function ReviewList() {
   const [reviews, setReviews] = useState([]);
-  const navigate = useNavigate();
+  const [hospitalMap, setHospitalMap] = useState({});
+  
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      console.error("토큰이 없습니다. 로그인 필요.");
+    const userName = localStorage.getItem("emailOrUserId");
+    if (!userName) {
+      console.error("유저 이름이 없습니다. 로그인 필요.");
       return;
     }
 
     const fetchMyReviews = async () => {
       try {
-        const res = await axios.get(`${BASE_URL}/reviews/me`, {
+        // 1. 리뷰 가져오기
+        const res = await axios.get(`${BASE_URL}/reviews/my`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            "X-User-Name": userName,
           },
         });
-        setReviews(res.data);
+        const reviewData = res.data;
+        setReviews(reviewData);
+
+        // 2. 병원 ID 목록 뽑기
+        const uniqueHospitalIds = [...new Set(reviewData.map(r => r.hospitalId))];
+
+        // 3. 병원 정보 요청
+        const hospitalDataMap = {};
+        await Promise.all(
+          uniqueHospitalIds.map(async (id) => {
+            try {
+              const response = await axios.get(`${BASE_URL}/hospitals/${id}`, {
+                headers: {
+                  "X-User-Name": userName,
+                },
+              });
+              const { name, department, address } = response.data;
+              hospitalDataMap[id] = { name, department, address };
+            } catch (err) {
+              console.error(`병원 ID ${id} 정보 요청 실패`, err);
+              hospitalDataMap[id] = {
+                name: "병원 이름 없음",
+                department: "-",
+                address: "-",
+              };
+            }
+          })
+        );
+
+        setHospitalMap(hospitalDataMap);
+
       } catch (err) {
-        console.error("내 리뷰 불러오기 실패:", err);
+        console.error("리뷰 불러오기 실패:", err);
       }
     };
 
     fetchMyReviews();
   }, []);
 
-  const goToDetail = (reviewId) => {
-    navigate(`/reviews/${reviewId}`);
-  };
+  
 
   return (
+
     <PostList>
       {reviews.length === 0 ? (
         <EmptyMessage>작성한 리뷰가 없습니다.</EmptyMessage>
       ) : (
-        reviews.map((review) => (
-          <PostItem key={review.id} onClick={() => goToDetail(review.id)}>
-            <PostRow>
-              <PostTitle>{review.hospital?.name || "병원 정보 없음"}</PostTitle>
-              <PostTime>{new Date(review.createdAt).toLocaleDateString()}</PostTime>
-              <PostRating>⭐ {review.rating}</PostRating>
-            </PostRow>
-            <PostContent>{review.content}</PostContent>
-          </PostItem>
-        ))
+        reviews.map((review) => {
+          const hospital = hospitalMap[review.hospitalId];
+          return (
+            <PostItem key={review.id} >
+              <PostRow>
+                <PostTitle>{hospital ? hospital.name : "병원 이름 불러오는 중..."}</PostTitle>
+                <PostRating>내 별점:⭐{review.rating}</PostRating>
+                <PostTime>작성일: {new Date(review.createdAt).toLocaleDateString()}</PostTime>
+                
+              </PostRow>
+              
+              {hospital && (
+                <HospitalInfo>
+                  🏥  {hospital.address}
+                </HospitalInfo>
+              )}
+              <PostContent>"{review.content}"</PostContent>
+            </PostItem>
+          );
+        })
       )}
     </PostList>
   );

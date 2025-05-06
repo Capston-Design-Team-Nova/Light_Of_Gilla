@@ -24,6 +24,7 @@ function MyPageReview() {
           <ReviewButtonRow>
             <ReviewButton onClick={() => navigate("/mypage")}>회원정보수정</ReviewButton>
           </ReviewButtonRow>
+          
           <CommunityListWrapper>
             <ReviewList />
           </CommunityListWrapper>
