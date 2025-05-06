@@ -539,7 +539,7 @@ API Gateway 엔드포인트
 
 요청 예시: `DELETE https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history`
 
-## 3. 검색기록 한 개 삭제
+## 4. 검색기록 한 개 삭제
 - **DELETE** `/api/search/history/{historyId}`
 - Bearer Token에 JWT 토큰 기입 필수
 
