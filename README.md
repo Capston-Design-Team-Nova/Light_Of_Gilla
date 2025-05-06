@@ -110,7 +110,7 @@ API Gateway 엔드포인트
 ## 🔵 4. 병원 리뷰 목록 조회
 
 - **GET** `/api/reviews/hospital/{hospitalId}`
-- 요청 헤더 주의. User-name을 보내야함.
+- 요청 헤더 주의. 유저 아이디를 보내야함.
 
 요청 예시:
 `GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/1`
@@ -170,7 +170,7 @@ API Gateway 엔드포인트
 ## 🟢 6. 즐겨찾기 등록
 
 - **POST** `/api/favorites/{hospitalId}`
-- 요청 헤더 주의. User-name을 보내야함. User테이블의 nickname에 해당.
+- 요청 헤더 주의. User-name을 보내야함. User테이블의 아이디에 해당.
 
 요청 예시:
 `POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/favorites/1`
@@ -179,7 +179,7 @@ API Gateway 엔드포인트
 ## 🟡 7. 즐겨찾기 삭제
 
 - **DELETE** `/api/favorites/{hospitalId}`
-- 요청 헤더 주의. User-name을 보내야함. User테이블의 nickname에 해당.
+- 요청 헤더 주의. User-name을 보내야함. User테이블의 아이디에 해당.
 
 요청 예시:
 `DEELTE https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/favorites/1`
@@ -188,7 +188,7 @@ API Gateway 엔드포인트
 ## 🔵 8. 즐겨찾기 목록 조회
 
 - **GET** `/api/favorites`
-- 요청 헤더 주의. User-name을 보내야함. User테이블의 nickname에 해당.
+- 요청 헤더 주의. User-name을 보내야함. User테이블의 아이디에 해당.
 
 요청 예시:
 `GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/favorites`
@@ -204,6 +204,42 @@ API Gateway 엔드포인트
 응답 예시:
 `3.000`
 
+## 🟡 10. 유저 아이디로 리뷰 목록 조회
+
+- **GET** `/api/reviews/my`
+- 요청 헤더 주의. User-name을 보내야함. User테이블의 아이디에 해당.
+  
+요청 예시:
+`GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/my`
+`X-User-Name: hyunseo12`
+
+응답 예시:
+```json
+[
+    {
+        "id": 580456,
+        "author": "hyunseo12",
+        "content": "정말 친절한 병원이었어요!",
+        "likes": 0,
+        "rating": 5,
+        "likedByCurrentUser": false,
+        "createdAt": "2025-05-06T17:35:10",
+        "hospitalId": 2
+    },
+    {
+        "id": 580455,
+        "author": "hyunseo12",
+        "content": "정말 친절한 병원이었어요!",
+        "likes": 0,
+        "rating": 5,
+        "likedByCurrentUser": false,
+        "createdAt": "2025-05-06T17:34:30",
+        "hospitalId": 1
+    }
+]
+```
+
+  
 ---
 
 # 🧩 유저 서비스 API 명세서
