@@ -228,7 +228,6 @@ export const RowItem = styled.div`
   max-width: 800px; // ✅ 너무 넓어지는 것 방지
   padding: 0.3rem;
   border: none;
-  cursor: pointer;
   margin-bottom: 0.1rem;
 `;
 
