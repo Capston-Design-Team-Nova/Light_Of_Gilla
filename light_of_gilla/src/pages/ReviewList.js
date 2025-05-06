@@ -76,7 +76,7 @@ function ReviewList() {
   
 
   useEffect(() => {
-    const userName = localStorage.getItem("emailOrUserId");
+    const userName = localStorage.getItem("nickname");
     if (!userName) {
       console.error("유저 이름이 없습니다. 로그인 필요.");
       return;
