@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const mobile = "@media screen and (max-width: 480px)";
+const BASE_URL = "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api";
 
-// 스타일 컴포넌트
 const PostList = styled.div`
   width: 95%;
   margin: 10px auto;
@@ -13,7 +13,6 @@ const PostList = styled.div`
 
 const PostItem = styled.div`
   padding: 1rem;
-  margin-bottom: 1px;
   border-bottom: 1px solid #A09F9F;
   cursor: pointer;
 
@@ -72,43 +71,59 @@ const PostContent = styled.p`
   }
 `;
 
-// 메인 컴포넌트
+const EmptyMessage = styled.div`
+  text-align: center;
+  color: #888;
+  margin-top: 2rem;
+`;
+
 function ReviewList() {
   const [reviews, setReviews] = useState([]);
   const navigate = useNavigate();
-  const userName = "hyunseo"; // 로그인 사용자 이름 (임시)
 
   useEffect(() => {
-    axios
-      .get("https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/user", {
-        headers: {
-          "X-User-Name": userName,
-        },
-      })
-      .then((res) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("토큰이 없습니다. 로그인 필요.");
+      return;
+    }
+
+    const fetchMyReviews = async () => {
+      try {
+        const res = await axios.get(`${BASE_URL}/reviews/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setReviews(res.data);
-      })
-      .catch((err) => {
-        console.error("리뷰 불러오기 실패:", err);
-      });
+      } catch (err) {
+        console.error("내 리뷰 불러오기 실패:", err);
+      }
+    };
+
+    fetchMyReviews();
   }, []);
 
-  const handleClick = (reviewId) => {
-    navigate(`/reviews/${reviewId}`); // 상세 페이지로 이동
+  const goToDetail = (reviewId) => {
+    navigate(`/reviews/${reviewId}`);
   };
 
   return (
     <PostList>
-      {reviews.map((review) => (
-        <PostItem key={review.id} onClick={() => handleClick(review.id)}>
-          <PostRow>
-            <PostTitle>{review.hospital?.name || "알 수 없음"}</PostTitle>
-            <PostTime>{new Date(review.createdAt).toLocaleDateString()}</PostTime>
-            <PostRating>⭐ {review.rating}</PostRating>
-          </PostRow>
-          <PostContent>{review.content}</PostContent>
-        </PostItem>
-      ))}
+      {reviews.length === 0 ? (
+        <EmptyMessage>작성한 리뷰가 없습니다.</EmptyMessage>
+      ) : (
+        reviews.map((review) => (
+          <PostItem key={review.id} onClick={() => goToDetail(review.id)}>
+            <PostRow>
+              <PostTitle>{review.hospital?.name || "병원 정보 없음"}</PostTitle>
+              <PostTime>{new Date(review.createdAt).toLocaleDateString()}</PostTime>
+              <PostRating>⭐ {review.rating}</PostRating>
+            </PostRow>
+            <PostContent>{review.content}</PostContent>
+          </PostItem>
+        ))
+      )}
     </PostList>
   );
 }

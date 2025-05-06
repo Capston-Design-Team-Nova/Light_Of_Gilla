@@ -8,12 +8,18 @@ import { useNavigate } from "react-router-dom";
 const mobile = '@media screen and (max-width: 480px)';
 
 
-const PostList = styled.div`
-  width: 95%;
-  margin: 1px;
-  padding: 0 0px;
+const PostListInner = styled.div`
+width: 95%;
 
 `;
+
+const PostList = styled.div`
+
+width: 100%;
+display: flex;
+justify-content: center; // 가운데 정렬
+`;
+
 
 const PostItem = styled.div`
   display: block;
@@ -79,6 +85,7 @@ function FAQList(){
   
   return(
     <PostList>
+      <PostListInner>
         <PostItem onClick={handleClick}>
           <PostRow>
             <FAQTitle>질문</FAQTitle>
@@ -87,6 +94,8 @@ function FAQList(){
           </PostRow>
           
         </PostItem>
+      </PostListInner>
+        
     
     </PostList>
     

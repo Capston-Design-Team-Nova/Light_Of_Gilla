@@ -9,13 +9,10 @@ import { useNavigate } from "react-router-dom";
 import ReviewList from "./ReviewList"
 
 
-
-
 function MyPageReview() {
 
     const navigate = useNavigate();
-     
-  
+       
     return (
       <Main>
         <Header />

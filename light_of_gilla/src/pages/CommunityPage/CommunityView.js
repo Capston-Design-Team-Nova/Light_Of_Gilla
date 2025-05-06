@@ -73,8 +73,10 @@ const CommentSection = styled.div`
 
   ${mobile} {
     max-height: calc(100vh - 220px);
+    
   }
 `;
+//padding-bottom: 70px;
 
 const CommentItem = styled.div`
   padding: 0.5rem 0;
@@ -203,8 +205,6 @@ const CommunityView = () => {
 }, [id]);
 
   
-  
-
   // const [likes, setLikes] = useState(postData.likes);
   const [newComment, setNewComment] = useState({ writer: "", text: "" });
   const [commentCount, setCommentCount] = useState(0);
@@ -249,6 +249,7 @@ const CommunityView = () => {
     comment: newComment.text,
     post_id: id,
     nickName: name
+    
   };
   console.log("NickName:", newCommentObj.nickName);
   // 1. 백엔드로 댓글 전송 (POST 요청 예시)
@@ -305,7 +306,6 @@ const CommunityView = () => {
                     {/*글 작성자 이미지 추가*/}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       </div><AuthorImg src={postData.authorImg} alt="작성자 이미지" />
-
                         {postData.userid} | {postData.postCreated_date}
                     </Meta>
                     <Content1>{postData.content}</Content1>
@@ -321,9 +321,7 @@ const CommunityView = () => {
                             <ProfileImg src={c.profileImg} alt="댓글 작성자 이미지" />
                             <strong>{c.nickName}</strong>: {c.comment}
                         </CommentItem>
-                        ))}
-
-                        
+                        ))}                        
                     </CommentSection>
                     <CommentForm onSubmit={handleCommentSubmit}>
                             <textarea
