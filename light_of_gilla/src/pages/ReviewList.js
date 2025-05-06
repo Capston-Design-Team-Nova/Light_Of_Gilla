@@ -19,7 +19,6 @@ const PostItem = styled.div`
   padding: 1rem;
   border: 1px solid #A09F9F;
   border-radius: 20px;
-  cursor: pointer;
   margin-bottom: 0.5rem;
 
  
