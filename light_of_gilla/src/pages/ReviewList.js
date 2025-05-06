@@ -22,9 +22,7 @@ const PostItem = styled.div`
   cursor: pointer;
   margin-bottom: 0.5rem;
 
-  &:hover {
-    background-color: #f9f9f9;
-  }
+ 
 `;
 
 const PostRow = styled.div`

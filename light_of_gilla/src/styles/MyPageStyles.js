@@ -230,10 +230,6 @@ export const RowItem = styled.div`
   border: none;
   cursor: pointer;
   margin-bottom: 0.1rem;
-
-  &:hover {
-    background-color: #f9f9f9;
-  }
 `;
 
 export const ReviewHeaderRow = styled.div`
