@@ -29,7 +29,7 @@ function MyPageReview() {
             <RowItem>
             <ReviewHeaderRow>
   <div style={{ flex: 2}}>병원정보</div>
-  <div style={{ flex: 1, textAlign: "center" }}>별점</div>
+  <div style={{ flex: 1, textAlign: "center" }}>내 별점</div>
   <div style={{ flex: 1, textAlign: "right" }}>작성일</div>
 </ReviewHeaderRow>
             </RowItem>
