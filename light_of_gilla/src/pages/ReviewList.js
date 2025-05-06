@@ -6,11 +6,16 @@ const BASE_URL = "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/ap
 
 // 스타일 정의
 const PostList = styled.div`
-  width: 85%;
+  width: 100%;
+   display: flex;
+  flex-direction: column;
+  align-items: center; // ✅ 아이템들을 수직 방향으로 가운데 정렬
   margin: 8px auto;
 `;
 
 const PostItem = styled.div`
+  width: 85%; // ✅ 카드 너비 고정
+  max-width: 800px; // ✅ 너무 넓어지는 것 방지
   padding: 1rem;
   border: 1px solid #A09F9F;
   border-radius: 20px;
@@ -140,11 +145,10 @@ function ReviewList() {
           return (
             <PostItem key={review.id} >
               <PostRow>
-                <PostTitle>{hospital ? hospital.name : "병원 이름 불러오는 중..."}</PostTitle>
-                <PostRating>내 별점:⭐{review.rating}</PostRating>
-                <PostTime>작성일: {new Date(review.createdAt).toLocaleDateString()}</PostTime>
-                
-              </PostRow>
+  <PostTitle style={{ flex: 2 }}>{hospital ? hospital.name : "병원 이름 불러오는 중..."}</PostTitle>
+  <PostRating style={{ flex: 1, textAlign: "center" }}>⭐{review.rating}</PostRating>
+  <PostTime style={{ flex: 1, textAlign: "right" }}>{new Date(review.createdAt).toLocaleDateString()}</PostTime>
+</PostRow>
               
               {hospital && (
                 <HospitalInfo>

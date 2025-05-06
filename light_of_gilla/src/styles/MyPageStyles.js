@@ -208,3 +208,36 @@ export const ErrorMessage = styled.div`
 export const SuccessMessage = styled(ErrorMessage)`
   color: green;
 `;
+
+export const P = styled.h3`
+  color: rgb(69, 62, 62) ;
+  font-size:25px;
+`;
+
+
+export const RowList = styled.div`
+  width: 100%;
+   display: flex;
+  flex-direction: column;
+  align-items: center; // ✅ 아이템들을 수직 방향으로 가운데 정렬
+  
+`;
+
+export const RowItem = styled.div`
+  width: 85%; // ✅ 카드 너비 고정
+  max-width: 800px; // ✅ 너무 넓어지는 것 방지
+  padding: 0.3rem;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 0.1rem;
+
+  &:hover {
+    background-color: #f9f9f9;
+  }
+`;
+
+export const ReviewHeaderRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+`;
