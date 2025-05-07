@@ -16,7 +16,12 @@ const Wrapper = styled.div`
   width: 90%;
   margin: 0.5rem auto;
 `;
-
+const CommentsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh -  /* header, post 내용 등 빼고 남은 높이 */ 300px);
+  /* 위 300px 은 예시, 실제 화면 요소 높이에 맞춰 조절하세요 */
+`;
 const Title = styled.h1`
     color: #000;
     font-family: Ourfont5;
@@ -177,7 +182,7 @@ const ProfileImg = styled.img`
   object-fit: cover;
   margin-right: 7px;
 `;
-
+const defaultProfileImage = require("../../assets/images/ProfileImage.png");
 const CommunityView = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const [postData, setPostData] = useState(null); 
@@ -188,6 +193,10 @@ const CommunityView = () => {
     };
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const [userMap, setUserMap] = useState({});  // <- 여기에 추가
+
+
   useEffect(() => {
     // API 호출
     axios
@@ -204,6 +213,28 @@ const CommunityView = () => {
         });
 }, [id]);
 
+
+  // 2) **전체 유저 목록**을 한 번만 불러와서 nickname→이미지 URL 맵 만들기
+  useEffect(() => {
+    axios
+      .get("https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users")
+      .then(res => {
+        const map = {};
+        res.data.forEach(user => {
+          // profileImage가 절대 경로인지, 상대 경로인지 처리
+          const raw = user.profileImage;
+          const url = raw
+          ? (raw.startsWith("http")
+          ? raw
+          : `http://3.37.188.91:8080${raw}`)
+      : defaultProfileImage;
+
+    map[user.nickname] = url;
+        });
+        setUserMap(map);
+      })
+      .catch(err => console.error("Error fetching users:", err));
+  }, []);  // 빈 deps → 컴포넌트 마운트 시 한 번만 실행
   
   // const [likes, setLikes] = useState(postData.likes);
   const [newComment, setNewComment] = useState({ writer: "", text: "" });
@@ -303,10 +334,12 @@ const CommunityView = () => {
                 <Wrapper>
                     <Title>{postData.title}</Title>
                     <Meta>
-                    {/*글 작성자 이미지 추가*/}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      </div><AuthorImg src={postData.authorImg} alt="작성자 이미지" />
-                        {postData.userid} | {postData.postCreated_date}
+                        <AuthorImg src={userMap[postData.nickName] || defaultProfileImage}
+                                    onError={e => { e.currentTarget.src = defaultProfileImage; }}
+                                    alt="작성자 이미지"/>
+                        <span>{postData.nickName} | {postData.postCreated_date}</span>
+                      </div>
                     </Meta>
                     <Content1>{postData.content}</Content1>
                      <Category>#{postData.category}</Category>
@@ -315,13 +348,16 @@ const CommunityView = () => {
                         <H3>💬 댓글 ({commentCount})</H3>
                     </MiddleRow>
 
-                    <CommentSection>        
-                        {comments.map((c) => (
-                        <CommentItem key={c.id}>
-                            <ProfileImg src={c.profileImg} alt="댓글 작성자 이미지" />
-                            <strong>{c.nickName}</strong>: {c.comment}
-                        </CommentItem>
-                        ))}                        
+                    <CommentSection>
+                      {comments.map((c) => (
+                      <CommentItem key={c.id}>
+                        <ProfileImg
+                          src={userMap[c.nickName] || defaultProfileImage}
+                          onError={e => { e.currentTarget.src = defaultProfileImage; }}
+                          alt="댓글 작성자 이미지"/>
+                        <strong>{c.nickName}</strong>: {c.comment}
+                      </CommentItem>
+                      ))}
                     </CommentSection>
                     <CommentForm onSubmit={handleCommentSubmit}>
                             <textarea
