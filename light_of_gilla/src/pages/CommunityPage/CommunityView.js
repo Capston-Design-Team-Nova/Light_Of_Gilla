@@ -330,7 +330,7 @@ const handleCommentDelete = async (commentId) => {
   try {
     // 백엔드에 맞게 endpoint URL 수정하세요
     await axios.delete(
-      `http://localhost:8082/comment/delete/${commentId}`
+      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/delete/${commentId}`
     );
     // 삭제 후 state에서 제거
     setComments((prev) => prev.filter((c) => c.id !== commentId));
