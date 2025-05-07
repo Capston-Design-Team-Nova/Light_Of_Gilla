@@ -106,4 +106,9 @@ public class CommentService {
         return postDTOList;
 
     }
+
+    public void deleteCommentById(Long commentId) {
+        Optional<CommentEntity> optionalCommentEntity=commentRepository.findById(commentId);
+        commentRepository.delete(optionalCommentEntity.get());
+    }
 }

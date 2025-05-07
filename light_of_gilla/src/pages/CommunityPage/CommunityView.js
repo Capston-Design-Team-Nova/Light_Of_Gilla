@@ -294,15 +294,21 @@ const CommunityView = () => {
   console.log("NickName:", newCommentObj.nickName);
   // 1. 백엔드로 댓글 전송 (POST 요청 예시)
   axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/save`, newCommentObj)
-    .then((response) => {
-      // 2. 댓글 추가 후 댓글 목록만 업데이트
-      setComments([...comments, newCommentObj]); // 새 댓글 추가
-      setNewComment({ writer: "", text: "" }); // 입력 폼 초기화
-  
-    })
-    .catch((error) => {
-      console.error("댓글 추가 오류:", error);
-    });
+  .then(() => {
+    // 댓글 저장 후 해당 게시글의 전체 데이터를 다시 요청
+    return axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/${id}`);
+  })
+  .then((response) => {
+    const { post, comments } = response.data;
+    setPostData(post);
+    setComments(comments); // 댓글 목록 최신화
+    setLikes(post.likes);
+    setCommentCount(post.commentCounts); // 댓글 수도 최신화
+    setNewComment({ writer: "", text: "" }); // 입력 폼 초기화
+  })
+  .catch((error) => {
+    console.error("댓글 추가 오류 또는 새로고침 오류:", error);
+  });
   };
   const handleDelete = async (postId) => {
     const confirmDelete = window.confirm("정말 이 글을 삭제하시겠습니까?");
@@ -317,14 +323,14 @@ const CommunityView = () => {
       alert("글 삭제 중 오류가 발생했습니다.");
     }
   };
-  // CommunityView 컴포넌트 안, handleCommentSubmit 바로 아래에 넣어주세요
+ 
 const handleCommentDelete = async (commentId) => {
   if (!window.confirm("정말 이 댓글을 삭제하시겠습니까?")) return;
 
   try {
     // 백엔드에 맞게 endpoint URL 수정하세요
     await axios.delete(
-      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/delete/${commentId}`
+      `http://localhost:8082/comment/delete/${commentId}`
     );
     // 삭제 후 state에서 제거
     setComments((prev) => prev.filter((c) => c.id !== commentId));

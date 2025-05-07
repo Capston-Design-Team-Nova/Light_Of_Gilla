@@ -50,5 +50,15 @@ public class CommentController {
         List<PostDTO> posts = commentService.findByMyComment(name);
         return ResponseEntity.ok(posts);
     }
+    @DeleteMapping("/delete/{commentId}")
+    public ResponseEntity<?> deletePost(@PathVariable Long commentId) {
+        try {
+           commentService.deleteCommentById(commentId);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패");
+        }
+        return null;
+    }
 
 }
