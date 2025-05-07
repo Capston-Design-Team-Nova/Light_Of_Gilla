@@ -257,7 +257,7 @@ function MyPage() {
 
         <FormGroup>
           <Label>아이디</Label>
-          <Input type="text" value={email.split("@")[0]} disabled />
+          <Input type="text" value={userId} disabled />
         </FormGroup>
 
         <FormGroup>
