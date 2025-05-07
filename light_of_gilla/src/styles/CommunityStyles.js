@@ -78,6 +78,7 @@ export const CommunityListWrapper = styled.div`
   padding: 10px 5px 60px; /* 아래 패딩으로 페이지네이션 안 가려지게 */
 
   ${mobile} {
+    
     padding-bottom: 70px;
   }
 `;

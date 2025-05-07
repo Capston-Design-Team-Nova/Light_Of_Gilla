@@ -17,6 +17,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 />
       )}
             <SidebarContent>
+                <Link to="/Community">
+                    <SidebarButton onClick={toggleSidebar} isActive={location.pathname.startsWith("/Community")}>전체 글 목록</SidebarButton>
+                </Link>
                 <Link to="/MyArticles">
                     <SidebarButton onClick={toggleSidebar} isActive={location.pathname.startsWith("/MyArticles")}>내가 쓴 글</SidebarButton>
                 </Link>

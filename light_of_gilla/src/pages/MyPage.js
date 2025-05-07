@@ -257,7 +257,7 @@ function MyPage() {
 
         <FormGroup>
           <Label>아이디</Label>
-          <Input type="text" value={email.split("@")[0]} disabled />
+          <Input type="text" value={userId} disabled />
         </FormGroup>
 
         <FormGroup>
@@ -267,7 +267,9 @@ function MyPage() {
 
         <FormGroup>
           <Label>새 비밀번호 확인</Label>
-          <Input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+          <Input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />  
+          {/*style={{ height: "36px" }} // ✅ 직접 높이 지정 (선택 사항)*/}
+          
         </FormGroup>
 
         <SaveButton onClick={handleSave}>저장</SaveButton>

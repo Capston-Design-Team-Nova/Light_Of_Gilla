@@ -14,7 +14,7 @@ export const Main = styled.main`
 /* 지도 컨테이너*/
 export const MapContainer = styled.div`
   position: absolute;
-  top: 240px;
+  top: 220px;
   left: 350px; /* 사이드바(300px) + 여백(20px) 만큼 이동 */
   width: calc(100% - 370px); /* 전체 너비에서 사이드바 + 여백 제외 */
   height: 100%;
@@ -35,10 +35,10 @@ export const MapContainer = styled.div`
 /* 사이드바 */
 export const Sidebar = styled.div`
   position: absolute;
-  top: 90px;
+  top: 220px;
   left: 0;
   width: 300px;
-  height: 110%;
+  height: 96%;
   background: #f8f9fa;
   padding: 20px;
   overflow-y: auto;
@@ -87,8 +87,8 @@ export const Sidebar = styled.div`
 export const SearchContainer = styled.div`
   position: absolute;
   top: 90px;
-  left: calc(360px + 5%);
-  width: calc(90% - 360px);
+  left: 30px;
+  width: calc(100% - 100px);
   padding: 15px;
   border-radius: 8px;
   z-index: 4;
