@@ -17,10 +17,13 @@ const Wrapper = styled.div`
   margin: 0.5rem auto;
 `;
 const CommentsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh -  /* header, post 내용 등 빼고 남은 높이 */ 300px);
-  /* 위 300px 은 예시, 실제 화면 요소 높이에 맞춰 조절하세요 */
+  max-height: calc(100vh - 400px); // 💡 헤더, 제목 등 제외한 높이
+  overflow-y: auto;
+  margin-bottom: 1rem;
+
+  ${mobile} {
+    max-height: calc(100vh - 460px); // 모바일에서 더 작게
+  }
 `;
 const Title = styled.h1`
     color: #000;
@@ -72,18 +75,20 @@ const LikeButton = styled.button`
 `;
 
 const CommentSection = styled.div`
-  max-height: calc(100vh - 150px);  // 전체 높이에서 입력창 공간 제외
-  overflow-y: auto;                 // 댓글 목록 스크롤 가능
-  padding-bottom: 1rem;             // 아래 공간 여유
+  overflow-y: auto;
+  flex: 1;
+  padding: 1rem 0;
 
   ${mobile} {
     max-height: calc(100vh - 220px);
-    
   }
 `;
+
 //padding-bottom: 70px;
 
 const CommentItem = styled.div`
+  
+  position:relative;
   padding: 0.5rem 0;
   border-bottom: 1px solid #eee;
 `;
@@ -92,49 +97,40 @@ const CommentForm = styled.form`
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 95%;
+  width: 90%;
   display: flex;
   align-items: center;
   padding: 0.5rem 1rem;
   gap: 0.5rem;
-  padding-bottom: 1rem;
+  background: white;
 
   textarea {
-    flex: 1;  // 남은 공간 전부 사용
-    padding: 0.5rem;
-    height: 30px;
-    font-size: 14px;
+    flex: 1;
+    height: 45px;
+    font-size: 15px;
     resize: none;
-
-    background-color: #DDDDDD;  /*배경색*/
-    color: #000000;             /* ✅ 글자색: 검정 */
-    border: 1px solid #DDDDDD;     /* ✅ 테두리: 같은색 */
-    border-radius: 28px;         /* ✅ 테두리 둥글게 */
+    border-radius: 10px;
+    background-color: #DDDDDD;
+    border: 1px solid #DDDDDD;
   }
 
   button {
-    padding: 0.1rem 1rem;
-    white-space: nowrap;
-    font-size: 20px;
+    font-size: 15px;
   }
 
   ${mobile} {
-    bottom: -90px;           
-    height: 50%;
-    font-size: 11px;
-    
-
+    bottom: 0;
+    height: auto;
     textarea {
       height: 32px;
       font-size: 13px;
     }
     button {
       font-size: 18px;
-      padding: 0.1rem 0.8rem;
     }
   }
-
 `;
+
 
 const MiddleRow = styled.div`
     display: flex;
@@ -182,6 +178,19 @@ const ProfileImg = styled.img`
   object-fit: cover;
   margin-right: 7px;
 `;
+const DeleteButton = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #ff5555;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 0.5rem;
+`;
+
 const defaultProfileImage = require("../../assets/images/ProfileImage.png");
 const CommunityView = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
@@ -308,7 +317,26 @@ const CommunityView = () => {
       alert("글 삭제 중 오류가 발생했습니다.");
     }
   };
-  
+  // CommunityView 컴포넌트 안, handleCommentSubmit 바로 아래에 넣어주세요
+const handleCommentDelete = async (commentId) => {
+  if (!window.confirm("정말 이 댓글을 삭제하시겠습니까?")) return;
+
+  try {
+    // 백엔드에 맞게 endpoint URL 수정하세요
+    await axios.delete(
+      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/delete/${commentId}`
+    );
+    // 삭제 후 state에서 제거
+    setComments((prev) => prev.filter((c) => c.id !== commentId));
+    setCommentCount((prev) => prev - 1);
+  } catch (error) {
+    console.error("댓글 삭제 중 오류 발생:", error);
+    alert("댓글 삭제에 실패했습니다.");
+  }
+};
+
+
+
 
   return (
     <Main>
@@ -348,17 +376,26 @@ const CommunityView = () => {
                         <H3>💬 댓글 ({commentCount})</H3>
                     </MiddleRow>
 
-                    <CommentSection>
-                      {comments.map((c) => (
-                      <CommentItem key={c.id}>
-                        <ProfileImg
-                          src={userMap[c.nickName] || defaultProfileImage}
-                          onError={e => { e.currentTarget.src = defaultProfileImage; }}
-                          alt="댓글 작성자 이미지"/>
-                        <strong>{c.nickName}</strong>: {c.comment}
-                      </CommentItem>
-                      ))}
-                    </CommentSection>
+                    <CommentsWrapper>
+                      <CommentSection>
+                        {comments.map((c) => (
+                        <CommentItem key={c.id}>
+                          <ProfileImg
+                            src={userMap[c.nickName] || defaultProfileImage}
+                            onError={e => { e.currentTarget.src = defaultProfileImage; }}
+                            alt="댓글 작성자 이미지"/>
+                          <strong>{c.nickName}</strong>: {c.comment}
+                          {/* 본인 댓글일 때만 삭제 버튼 */}
+                          {/* 오른쪽: 본인 댓글일 때만 삭제 */}
+                          {c.nickName === name && (
+                          <DeleteButton onClick={() => handleCommentDelete(c.id)}>
+                            삭제
+                          </DeleteButton>
+                          )}
+                        </CommentItem>
+                        ))}
+                      </CommentSection>
+                    </CommentsWrapper>
                     <CommentForm onSubmit={handleCommentSubmit}>
                             <textarea
                                 placeholder="댓글 쓰기"
@@ -370,6 +407,9 @@ const CommunityView = () => {
                             />
                             <Button type="submit">⬆</Button>
                     </CommentForm>
+                    
+
+                    
                     
                 </Wrapper>
                 </Content>
