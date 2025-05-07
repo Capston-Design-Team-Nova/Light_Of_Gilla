@@ -64,7 +64,7 @@ export const Content = styled.div`
 
   ${mobile} {
     width: 95%;
-    height: 65vh;
+    height: auto;
     margin-top: 5px;
     margin-left: 0;
   }
