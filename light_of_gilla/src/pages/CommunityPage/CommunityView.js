@@ -268,7 +268,7 @@ const CommunityView = () => {
     if (!confirmDelete) return;
   
     try {
-      await axios.delete(`http://localhost:8082/post/delete/${postId}`);
+      await axios.delete(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/delete/${postId}`);
       alert("글이 삭제되었습니다.");
       navigate("/Community"); // 삭제 후 커뮤니티 목록으로 이동
     } catch (err) {
