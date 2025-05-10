@@ -8,7 +8,9 @@ import {
   Button,
   ImageButton1,
   ImageButton2,
-  LogoutButton
+  DropdownWrapper,
+  DropdownMenu,
+  DropdownItem,
 } from "../styles/HeaderStyles";
 import AuthModalManager from "../pages/Login_Singup_Modal/AuthModalManager";
 
@@ -18,7 +20,7 @@ const defaultProfileImage = require("../assets/images/login2.png");
 function Header() {
   const [showModal, setShowModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [profileImage, setProfileImage] = useState(defaultProfileImage); // ✅ 추가
 
   const location = useLocation();
@@ -101,23 +103,14 @@ function Header() {
             </Link>
 
             {!isLoggedIn ? (
-              
-              
               <ImageButton2 onClick={() => setShowModal(true)}>
                 <img src={defaultProfileImage} alt="로그인" />
               </ImageButton2>
             ) : (
-              <>
-              <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
-              <Link
-                to={isLoggedIn ? "/mypage" : "#"}
-                onClick={(e) => {
-                if (!isLoggedIn) {
-                  e.preventDefault();
-                  setShowModal(true);
-                }
-              }}
-              > 
+              <DropdownWrapper
+                onMouseEnter={() => setIsDropdownOpen(true)}
+                onMouseLeave={() => setIsDropdownOpen(false)}
+              >
                 <ImageButton2>
                   <img
                     src={profileImage}
@@ -125,8 +118,15 @@ function Header() {
                     style={{ borderRadius: "50%", width: "36px", height: "36px" }} // 원형
                   />
                 </ImageButton2>
-              </Link>
-              </>
+                {isDropdownOpen && (
+                  <DropdownMenu>
+                    <DropdownItem as={Link} to="/mypage">
+                      마이페이지
+                    </DropdownItem>
+                    <DropdownItem onClick={handleLogout}>로그아웃</DropdownItem>
+                  </DropdownMenu>
+                )}
+              </DropdownWrapper>
             )}
           </NavRight>
         </Nav>
