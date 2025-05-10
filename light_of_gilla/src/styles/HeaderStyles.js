@@ -41,7 +41,7 @@ export const NavRight = styled.nav`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 10px;
+  gap: 2rem;
   box-sizing: border-box;
 
   ${mobile} {
