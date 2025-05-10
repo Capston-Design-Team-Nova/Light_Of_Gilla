@@ -226,9 +226,9 @@ export const RowList = styled.div`
 export const RowItem = styled.div`
   width: 85%; // ✅ 카드 너비 고정
   max-width: 800px; // ✅ 너무 넓어지는 것 방지
-  padding: 0.3rem;
+  padding: 0.05rem;
   border: none;
-  margin-bottom: 0.1rem;
+  
 `;
 
 export const ReviewHeaderRow = styled.div`
