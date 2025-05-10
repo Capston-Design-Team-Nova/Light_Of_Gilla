@@ -66,8 +66,7 @@ export const Button = styled.button`
   box-sizing: border-box;
 
   ${mobile} {
-    height:36px;
-    font-size: 0.69rem;
+    font-size: 0.7rem;
     padding: 6px;
   }
 `;
@@ -113,7 +112,7 @@ export const ImageButton2 = styled.button`
   }
 
   ${mobile} {
-    margin-right: 2px;
+    margin-right: 3px;
     img {
       width: 36px;
       height: 36px;
