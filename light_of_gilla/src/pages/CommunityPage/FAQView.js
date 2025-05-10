@@ -24,6 +24,7 @@ const Title = styled.h1`
     font-size: 23px;
     
   margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
 
   white-space: normal;       // ✅ 줄바꿈 허용
   overflow: visible;         // ✅ 잘리지 않도록
@@ -33,7 +34,7 @@ const Title = styled.h1`
 
 const Meta = styled.div`
   color: #00000080;
-  font-size: 12px;
+  font-size: 13px;
   margin-bottom: 1rem;
 `;
 
@@ -71,11 +72,11 @@ const FAQView = () => {
                 
 
                 <Wrapper>
-                    <Title>질문</Title>
+                    <Title>Q. 질문 </Title>
                     <Meta>                   
-                        ㅇㅇㅇ과 의사
+                        ㅇㅇㅇ과 의사의 답변이에요.
                     </Meta>
-                    <Content1>글 내용</Content1>
+                    <Content1>A. 답변</Content1>
                      
                   
                 </Wrapper>
