@@ -85,21 +85,6 @@ const LoginModal = ({ onClose, onSwitch }) => {
           {loading ? "로그인 중..." : "로그인"}
         </LoginButton>
 
-        <SocialLoginContainer>
-          <KakaoButton>
-            <img
-              src={require("../../assets/images/kakao-logo.png")}
-              alt="Kakao Login"
-            />
-          </KakaoButton>
-          <GoogleButton>
-            <img
-              src={require("../../assets/images/google-logo.png")}
-              alt="Google Login"
-            />
-          </GoogleButton>
-        </SocialLoginContainer>
-
         <FooterButtons>
           <button onClick={() => onSwitch("signup")}>회원가입</button>
           <button onClick={() => onSwitch("findId")}>아이디 찾기</button>

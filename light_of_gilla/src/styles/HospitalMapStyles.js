@@ -14,16 +14,16 @@ export const Main = styled.main`
 /* 지도 컨테이너*/
 export const MapContainer = styled.div`
   position: absolute;
-  top: 220px;
+  top: 290px;
   left: 350px; /* 사이드바(300px) + 여백(20px) 만큼 이동 */
   width: calc(100% - 370px); /* 전체 너비에서 사이드바 + 여백 제외 */
-  height: 100%;
+  height: 95%;
   border: 1px solid #ddd;
   border-radius: 8px;
   z-index: 3;
 
   ${mobile} {
-    top: 0;
+    top: 0px;
     left: 0;
     width: 100%;
     height: 100vh;
@@ -35,15 +35,15 @@ export const MapContainer = styled.div`
 /* 사이드바 */
 export const Sidebar = styled.div`
   position: absolute;
-  top: 220px;
+  top: 290px;
   left: 0;
   width: 300px;
-  height: 96%;
+  height: 91%;
   background: #f8f9fa;
   padding: 20px;
   overflow-y: auto;
   border-right: 1px solid #ddd;
-  z-index: 4;
+  z-index: 3;
 
   h2 {
     font-size: 18px;
@@ -71,7 +71,7 @@ export const Sidebar = styled.div`
   }
 
   ${mobile} {
-    position:fixed;
+    position: fixed;
     width: 90%;
     height: auto;
     bottom: 42px; /* 헤더 높이만큼 위로 */
@@ -87,8 +87,8 @@ export const Sidebar = styled.div`
 export const SearchContainer = styled.div`
   position: absolute;
   top: 90px;
-  left: 30px;
-  width: calc(100% - 100px);
+  left: 10px;
+  width: calc(100% - 60px);
   padding: 15px;
   border-radius: 8px;
   z-index: 4;
@@ -106,7 +106,6 @@ export const SearchContainer = styled.div`
     z-index: 4;
   }
 `;
-
 
 export const SearchBox = styled.div`
   display: flex;
@@ -164,69 +163,172 @@ export const SearchInput = styled.input`
   margin-bottom: 10px;
 `;
 
-export const CategoryButtons = styled.div`
+export const DropdownWrapper = styled.div`
   display: flex;
-  align-items: center;
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-  right: 0px;
-  z-index: 4;
-  
-  .scroll-btn {
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:hover {
-      background: #eee;
-    }
+  flex-direction: row;
+  gap: 20px;
+  padding: 10px;
+  ${mobile} {
+    flex-direction: column;
   }
+`;
 
-  .category-scroll {
-    display: flex;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    scroll-behavior: smooth;
+export const Column = styled.div`
+  flex: 1;
+`;
+
+export const TabSwitcher = styled.div`
+  display: flex;
+  justify-content: space-around;
+  background: #eee;
+  border-radius: 10px;
+  margin: 10px;
+  button {
     flex: 1;
-    gap: 8px;
-    margin: 0 8px;
-  }
-
-  .category-scroll::-webkit-scrollbar {
-    display: none;
-  }
-
-  .category-scroll button {
-    flex: 0 0 auto;
-    padding: 5px 20px;
-    font-size: 20px;
+    padding: 8px;
     border: none;
-    border-radius: 15px;
-    background: #ff6b6b;
-    color: white;
+    border-radius: 10px;
+    font-size: 14px;
     cursor: pointer;
-    transition: 0.2s ease-in-out;
+  }
+`;
 
-    &:hover {
-      background: #ff4757;
+export const GpsButton = styled.button`
+  position: absolute;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, background-color 0.2s;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  ${mobile} {
+    position: fixed;
+    left: 16px;
+    z-index: 1000;
+  }
+`;
+
+
+export const CategoryGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 32px;
+  flex: 1;
+
+  ${mobile} {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+`;
+
+export const CategoryModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+export const CategoryModalContent = styled.div`
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  max-height: 80vh;
+  overflow-y: auto;
+
+  ${mobile} {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`;
+export const CategoryItem = styled.div`
+  flex: 1 1 120px;
+  max-width: 160px;
+  min-width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  border-radius: 12px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+
+  img {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 8px;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  span {
+    font-size: 14px;
+    text-align: center;
+    color: #333;
+  }
+
+  &:hover {
+    background: #f2f2f2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    img {
+      transform: scale(1.08);
     }
   }
 
   ${mobile} {
-    z-index: 4;
-    .scroll-btn {
+    max-width: 60px;
+    min-width: 50px; // 기존보다 더 줄임
+    padding: 6px;
+
+    img {
       width: 28px;
       height: 28px;
-      font-size: 14px;
     }
+
+    span {
+      font-size: 11px;
+    }
+  }
+`;
+
+export const CategoryButtonsWrapper = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0px 30px 0 10px; /* 사이드바 고려 */
+  gap: 40px;
+  flex-wrap: nowrap;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  ${mobile} {
+    padding: 0px 8px;
+    gap: 8px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: #ffffff;
+    border-radius: 12px;
+  }
+`;
+
+export const CategoryAllButton = styled(CategoryItem)`
+  max-width: 80px;
+  flex: 0 0 auto; /* 항상 보이게 */
+  span {
+    color: #666;
   }
 `;

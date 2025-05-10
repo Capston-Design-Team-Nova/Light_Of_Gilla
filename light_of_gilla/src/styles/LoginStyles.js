@@ -70,53 +70,6 @@ export const LoginButton = styled.button`
   }
 `;
 
-export const SocialLoginContainer = styled.div`
-  width: 90%;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 15px;
-  margin-left: 20px;
-`;
-
-export const KakaoButton = styled.button`
-  width: 48%;
-  height: 50px;
-  border: none;
-  background-color: #fae100;
-  cursor: pointer;
-  margin-right: 5px;
-  border-radius: 5px;
-  img {
-    width: 30%;
-    height: 90%;
-  }
-
-  &:hover {
-  background-color: #f7d600;
-}
-
-}
-
-`;
-
-export const GoogleButton = styled.button`
-  width: 45%;
-  height: 50px;
-  border: none;
-  background-color: rgb(233, 233, 233);
-  cursor: pointer;
-  margin-left: 7px;
-  border-radius: 5px;
-  img {
-    width: 30%;
-    height: 90%;
-  }
-
-  &:hover {
-    background-color: #d5d5d5;
-  }
-`;
-
 export const FooterButtons = styled.div`
   justify-content: space-between;
   margin-top: 15px;
@@ -132,9 +85,7 @@ export const FooterButtons = styled.div`
     font-size: 14px;
     margin-left: 10px;
     &:hover {
-    background: #f0c98b;
+      background: #f0c98b;
+    }
   }
-  }
-
-  
 `;
