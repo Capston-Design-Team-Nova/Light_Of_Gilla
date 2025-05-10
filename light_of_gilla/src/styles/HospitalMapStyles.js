@@ -202,6 +202,7 @@ export const GpsButton = styled.button`
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s, background-color 0.2s;
+  z-index: 10;
 
   &:hover {
     transform: scale(1.1);
@@ -213,7 +214,6 @@ export const GpsButton = styled.button`
     z-index: 1000;
   }
 `;
-
 
 export const CategoryGrid = styled.div`
   display: grid;
@@ -307,12 +307,13 @@ export const CategoryButtonsWrapper = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 0px 30px 0 10px; /* 사이드바 고려 */
+  padding: 0px 30px 0 10px;
   gap: 40px;
   flex-wrap: nowrap;
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-x: auto; /* ✅ 데스크탑에서도 스크롤 가능하게 */
+  -webkit-overflow-scrolling: touch;
 
   ${mobile} {
     padding: 0px 8px;
@@ -326,9 +327,23 @@ export const CategoryButtonsWrapper = styled.div`
 `;
 
 export const CategoryAllButton = styled(CategoryItem)`
-  max-width: 80px;
-  flex: 0 0 auto; /* 항상 보이게 */
+  flex: 0 0 auto; /* ✅ 줄어들지 않게 설정 */
+  min-width: fit-content; /* ✅ 너무 작아지지 않게 */
+  max-width: 100px;
+  padding: 12px;
+
   span {
     color: #666;
+    font-size: 13px;
+  }
+
+  ${mobile} {
+    min-width: 60px;
+    max-width: 60px;
+    padding: 6px;
+
+    span {
+      font-size: 11px;
+    }
   }
 `;
