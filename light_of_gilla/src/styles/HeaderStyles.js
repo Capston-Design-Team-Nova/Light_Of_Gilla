@@ -1,3 +1,4 @@
+// HeaderStyles.js
 import styled from "styled-components";
 
 const mobile = "@media screen and (max-width: 480px)";
@@ -5,17 +6,18 @@ const mobile = "@media screen and (max-width: 480px)";
 export const PageHeader = styled.header`
   width: 100%;
   background-color: #ffc86a;
-  display: flex; /* Flexbox 활성화 */
-  justify-content: center; /* 가로 정렬: 중앙 */
-  align-items: center; /* 세로 정렬: 중앙 */
-  position: fixed; /* 상단에 고정 */
-  top: 0; /* 화면 상단에 위치 */
-  left: 0; /* 화면 왼쪽에 위치 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
   z-index: 1000;
+  box-sizing: border-box;
 
   ${mobile} {
     top: auto;
-    bottom: 0; /* ✅ 모바일에서 하단 고정 */
+    bottom: 0;
     height: 42px;
   }
 `;
@@ -25,10 +27,12 @@ export const Nav = styled.nav`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  box-sizing: border-box;
 
-  @media screen and (max-width: 480px) {
-    justify-content: center;
-    gap: 10px; /* 간격 균일하게 */
+  ${mobile} {
+    width: 100%;
+    justify-content: center; /* ✅ 모바일에서 가운데 정렬 */
+    gap: 1rem;               /* ✅ 버튼 간 일정한 간격 */
   }
 `;
 
@@ -38,16 +42,13 @@ export const NavRight = styled.nav`
   justify-content: flex-end;
   align-items: center;
   gap: 10px;
+  box-sizing: border-box;
 
-  @media screen and (max-width: 480px) {
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-
-    button, a {
-      margin: 0;
-    }
+  ${mobile} {
+    width: 100%;
+    justify-content: center; /* ✅ 모바일에서 가운데 정렬 */
+    gap: 1rem;               /* ✅ 버튼 간 일정한 간격 */
+    padding: 0;
   }
 `;
 
@@ -62,11 +63,16 @@ export const Button = styled.button`
   border: none;
   width: auto;
   height: auto;
-  /* ✅ margin 제거 */
+  box-sizing: border-box;
+
+  ${mobile} {
+    font-size: 0.7rem;
+    padding: 6px;
+  }
 `;
 
 export const LogoutButton = styled(Button)`
-  /* ✅ Button 스타일 상속받으므로 따로 margin 필요 없음 */
+  /* Button 스타일 상속 */
 `;
 
 export const ImageButton1 = styled.button`
@@ -82,7 +88,7 @@ export const ImageButton1 = styled.button`
     height: 55px;
   }
 
-  @media screen and (max-width: 480px) {
+  ${mobile} {
     margin: 0;
     img {
       margin-left: 10px;
@@ -99,15 +105,14 @@ export const ImageButton2 = styled.button`
   cursor: pointer;
   margin-top: 2px;
   position: relative;
-  /* ✅ margin-left 제거 */
 
   img {
     width: 45px;
     height: 40px;
   }
 
-  @media screen and (max-width: 480px) {
-    margin: 0;
+  ${mobile} {
+    margin-right: 3px;
     img {
       width: 36px;
       height: 36px;
