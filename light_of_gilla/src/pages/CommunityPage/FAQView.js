@@ -6,6 +6,8 @@ import styled from "styled-components";
 import { Main,Center,ToggleButton,Content } from "../../styles/CommunityStyles";
 import Header from "../../components/Header";
 import Sidebar from '../../components/Sidebar';
+import {faqs} from './data';
+
 
 // 모바일 기준 (갤럭시 S24)
 const mobile = '@media screen and (max-width: 480px)';
@@ -48,10 +50,13 @@ const Content1 = styled.p`
 const FAQView = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const { id } = useParams();
+    
+  const navigate = useNavigate();
+  const faqData = faqs.find((p) => p.id === Number(id));
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
     };
-
+if (!faqData) return <div>해당 FAQ를 찾을 수 없습니다.</div>;
   //const navigate = useNavigate();
   
 
@@ -72,11 +77,11 @@ const FAQView = () => {
                 
 
                 <Wrapper>
-                    <Title>Q. 질문 </Title>
+                    <Title>Q. {faqData.question} </Title>
                     <Meta>                   
-                        ㅇㅇㅇ과 의사의 답변이에요.
+                        {faqData.author}ㅇㅇㅇ과 의사의 답변이에요.
                     </Meta>
-                    <Content1>A. 답변</Content1>
+                    <Content1>A. {faqData.answer} </Content1>
                      
                   
                 </Wrapper>

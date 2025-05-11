@@ -48,6 +48,7 @@ function Router() {
         
         <Route path="/faq" element={<FAQ/>}/>
         <Route path="/faq/:id" element={<FAQView />} />
+        
         <Route path="/mypagereview" element={<MyPageReview/>}/>
       </Routes>
     </BrowserRouter>

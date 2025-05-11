@@ -9,8 +9,7 @@ import Sidebar from '../../components/Sidebar';
 
 // 모바일 기준 (갤럭시 S24)
 const mobile = '@media screen and (max-width: 480px)';
-// 태블릿 ~ 작은 데스크탑
-const tablet = '@media screen and (max-width: 1024px)';
+
 
 const Wrapper = styled.div`
   width: 90%;
@@ -87,8 +86,10 @@ const CommentSection = styled.div`
 //padding-bottom: 70px;
 
 const CommentItem = styled.div`
-  
-  position:relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  position: relative;
   padding: 0.5rem 0;
   border-bottom: 1px solid #eee;
 `;
@@ -189,6 +190,20 @@ const DeleteButton = styled.button`
   cursor: pointer;
   font-size: 12px;
   padding: 0 0.5rem;
+`;
+const CommentContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Nickname = styled.strong`
+  font-weight: bold;
+  margin-bottom: 2px;
+`;
+
+const CommentText = styled.div`
+  font-size: 14px;
+  line-height: 1.4;
 `;
 
 const defaultProfileImage = require("../../assets/images/ProfileImage.png");
@@ -359,7 +374,8 @@ const handleCommentDelete = async (commentId) => {
                 
                 <Content isSidebarOpen={isSidebarOpen}>
                 {postData.nickName === name && ( // 닉네임이 같을 경우에만 수정, 삭제 버튼 보여줌
-                  <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+                  <div style={{ display: "flex", gap: "10px", marginTop: "10px", justifyContent: "flex-end",  // 오른쪽 정렬
+  alignItems: "center" }}>
                   <Button onClick={() => navigate(`/edit/${postData.post_Id}`)}>수정</Button>
                   <Button onClick={() => handleDelete(postData.post_Id)}>삭제</Button>
                   </div>
@@ -385,12 +401,15 @@ const handleCommentDelete = async (commentId) => {
                     <CommentsWrapper>
                       <CommentSection>
                         {comments.map((c) => (
-                        <CommentItem key={c.id}>
+                        <CommentItem key={c.id} >
                           <ProfileImg
                             src={userMap[c.nickName] || defaultProfileImage}
                             onError={e => { e.currentTarget.src = defaultProfileImage; }}
                             alt="댓글 작성자 이미지"/>
-                          <strong>{c.nickName}</strong>: {c.comment}
+                          <CommentContent>
+                            <Nickname>{c.nickName}</Nickname>
+                            <CommentText>{c.comment}</CommentText>
+                          </CommentContent>
                           {/* 본인 댓글일 때만 삭제 버튼 */}
                           {/* 오른쪽: 본인 댓글일 때만 삭제 */}
                           {c.nickName === name && (
