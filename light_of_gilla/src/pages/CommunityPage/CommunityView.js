@@ -77,7 +77,7 @@ const CommentSection = styled.div`
   overflow-y: auto;
   flex: 1;
   padding: 1rem 0;
-
+margin-bottom: 1.1rem;
   ${mobile} {
     max-height: calc(100vh - 220px);
   }
@@ -374,8 +374,8 @@ const handleCommentDelete = async (commentId) => {
                 
                 <Content isSidebarOpen={isSidebarOpen}>
                 {postData.nickName === name && ( // 닉네임이 같을 경우에만 수정, 삭제 버튼 보여줌
-                  <div style={{ display: "flex", gap: "10px", marginTop: "10px", justifyContent: "flex-end",  // 오른쪽 정렬
-  alignItems: "center" }}>
+                  <div style={{ display: "flex", gap: "10px", marginTop: "10px",marginRight: "30px", justifyContent: "flex-end",  // 오른쪽 정렬
+  alignItems: "center",width: "100%" }}>
                   <Button onClick={() => navigate(`/edit/${postData.post_Id}`)}>수정</Button>
                   <Button onClick={() => handleDelete(postData.post_Id)}>삭제</Button>
                   </div>
