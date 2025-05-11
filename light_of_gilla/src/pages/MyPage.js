@@ -3,11 +3,15 @@ import axios from "axios";
 import Header from "../components/Header";
 import {
   Main, Center, Title, ProfileImageWrapper, ProfileImage, UserEmail,
-  FormGroup, Label, Input, Button, SaveButton, ErrorMessage,
-  UserInfoWrapper, HiddenFileInput, SuccessMessage, Birthday
+  FormGroup, Label, Input, Button, SaveButton, ErrorMessage,TitleRow,
+  UserInfoWrapper, HiddenFileInput, SuccessMessage, Birthday,WithdrawButton, 
+  ReviewButton,ReviewButtonRow
 } from "../styles/MyPageStyles";
+import { useNavigate } from "react-router-dom";
 
 function MyPage() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [userId, setUserId] = useState("");
   const [nickname, setNickname] = useState("");
@@ -50,8 +54,14 @@ function MyPage() {
           setEmail(data.email);
           setNickname(data.nickname);
           console.log("👉 서버에서 받은 프로필 이미지:", data.profileImage);
-          setProfileImage(data.profileImage && data.profileImage !== "null" ? data.profileImage : defaultProfileImage);
-          if (data.residentNumber) {
+          const baseImageUrl = "http://3.37.188.91:8080";
+
+          setProfileImage(
+          data.profileImage && data.profileImage !== "null"
+          ? `${baseImageUrl}${data.profileImage}`
+          : defaultProfileImage
+          );
+        if (data.residentNumber) {
             setBirthday(formatBirth(data.residentNumber));
           }
         })
@@ -129,10 +139,18 @@ function MyPage() {
       }
 
       if (profileImageFile) {
+        const formData = new FormData();
+        formData.append("profileImage", profileImageFile);
+      
         await axios.patch(
           `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/${userId}/profile-image`,
-          { profileImage: profileImage },
-          config
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              // Content-Type 생략 (자동 설정)
+            },
+          }
         );
       }
 
@@ -143,20 +161,70 @@ function MyPage() {
           config
         );
       }
-
+      // ✅ 유저 정보 다시 가져오기
+      const res = await axios.get(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/me",
+        config
+      );
+      const data = res.data;
+      const baseImageUrl = "http://3.37.188.91:8080";
+      
+      setProfileImage(
+        data.profileImage && data.profileImage !== "null"
+          ? `${baseImageUrl}${data.profileImage}`
+          : defaultProfileImage
+      );
+      
       alert("회원 정보가 성공적으로 변경되었습니다!");
     } catch (err) {
       console.error("저장 실패", err);
       alert("회원 정보 변경 중 오류가 발생했습니다.");
     }
   };
-
+  const handleWithdraw = async () => {
+    const confirmWithdraw = window.confirm(
+      "탈퇴하시겠습니까?\n\n탈퇴 시 회원정보는 모두 삭제되며, 서비스를 이용하실 수 없습니다.\n\n탈퇴 후 서비스 이용을 원할 시 다시 가입하시기 바랍니다."
+    );
+  
+    if (!confirmWithdraw) return;
+  
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+  
+      await axios.delete(
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/${userId}`,
+        config
+      );
+  
+      alert("회원 탈퇴가 완료되었습니다. 그동안 이용해주셔서 감사합니다 🥲");
+  
+      // 로컬 스토리지 정리 후 홈으로 이동
+      localStorage.removeItem("token");
+      localStorage.removeItem("nickname");
+      navigate("/");
+    } catch (err) {
+      console.error("회원 탈퇴 실패:", err);
+      alert("회원 탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
+  };
+  
+  
+  
   return (
     <Main>
       <Header />
       <Center>
-        <Title>마이페이지</Title>
-
+        <TitleRow>
+          <Title>마이페이지</Title>
+        </TitleRow>       
+        <ReviewButtonRow>
+          <ReviewButton onClick={() => navigate("/mypagereview")}>나의 리뷰</ReviewButton>
+        </ReviewButtonRow>
+        
         <ProfileImageWrapper onClick={handleProfileClick}>
           <ProfileImage src={profileImage} onError={(e) => { e.target.src = defaultProfileImage; }} alt="프로필사진" />
         </ProfileImageWrapper>
@@ -189,7 +257,7 @@ function MyPage() {
 
         <FormGroup>
           <Label>아이디</Label>
-          <Input type="text" value={email.split("@")[0]} disabled />
+          <Input type="text" value={userId} disabled />
         </FormGroup>
 
         <FormGroup>
@@ -199,10 +267,14 @@ function MyPage() {
 
         <FormGroup>
           <Label>새 비밀번호 확인</Label>
-          <Input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+          <Input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />  
+          {/*style={{ height: "36px" }} // ✅ 직접 높이 지정 (선택 사항)*/}
+          
         </FormGroup>
 
         <SaveButton onClick={handleSave}>저장</SaveButton>
+        <WithdrawButton onClick={handleWithdraw}>회원탈퇴</WithdrawButton>
+        
       </Center>
     </Main>
   );

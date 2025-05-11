@@ -16,10 +16,14 @@ const mobile = '@media screen and (max-width: 480px)';
 
 
 const PostList = styled.div`
-  width: 95%;
-  margin: 1px;
-  padding: 0 0px;
+  width: 100%;
+  display: flex;
+  justify-content: center; // 가운데 정렬
+`;
 
+const PostListInner = styled.div`
+  width: 95%;
+ 
 `;
 
 const PostItem = styled.div`
@@ -108,17 +112,20 @@ function CommunityList({posts}){
   const navigate = useNavigate();
   return(
     <PostList>
-      {posts.map((post) => (
-        <PostItem key={post.post_Id} onClick={() => navigate(`/post/${post.post_Id}`)}>
-          <PostRow>
-            <PostTitle>{post.title}({post.commentCounts})</PostTitle>
-            <PostAuthor>{post.nickName}</PostAuthor>
-            <PostTime>{post.postCreated_date}</PostTime>
-            <PostLikes>♡{post.likes}</PostLikes>
-          </PostRow>
+      <PostListInner>
+        {posts.map((post) => (
+          <PostItem key={post.post_Id} onClick={() => navigate(`/post/${post.post_Id}`)}>
+            <PostRow>
+              <PostTitle>{post.title}({post.commentCounts})</PostTitle>
+              <PostAuthor>{post.nickName}</PostAuthor>
+              <PostTime>{post.postCreated_date}</PostTime>
+              <PostLikes>♡{post.likes}</PostLikes>
+            </PostRow>
           
-        </PostItem>
-      ))}
+          </PostItem>
+        ))}
+      </PostListInner>
+      
     </PostList>
     
     

@@ -72,19 +72,32 @@ function MyComments() {
                     </Link>
                 </TopRow>
                 <Content isSidebarOpen={isSidebarOpen}>
-                    <CommunityListWrapper>
-                        <CommunityList posts={currentPosts} />
-                    </CommunityListWrapper>
-                     
-                    {/* 페이지네이션 */}
-                    {totalPages > 0 && (
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={handlePageChange}
-                        />
-                    )}          
-                </Content>              
+  {posts.length === 0 ? (
+    <div style={{
+      textAlign: "center",
+      marginTop: "2rem",
+      fontSize: "1.1rem",
+      fontFamily: "Ourfont5"
+    }}>
+      아직 댓글을 남기지 않았습니다. 댓글을 남겨 보세요!
+    </div>
+  ) : (
+    <>
+      <CommunityListWrapper>
+        <CommunityList posts={currentPosts} />
+      </CommunityListWrapper>
+
+      {totalPages > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
+    </>
+  )}
+</Content>
+              
                 
             </Center>
         </Main>

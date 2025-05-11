@@ -59,10 +59,11 @@ public class PostEntity extends BaseEntity{
         PostEntity postEntity = new PostEntity();
         postEntity.setPost_id(postDTO.getPost_Id());
         postEntity.setTitle(postDTO.getTitle());
+        postEntity.setNickName(postDTO.getNickName());
         postEntity.setContent(postDTO.getContent());
         postEntity.setUserid(postDTO.getUser_id());
-        postEntity.setLikes(postEntity.getLikes());
-        postEntity.setCategory(postEntity.getCategory());
+        postEntity.setLikes(postDTO.getLikes());
+        postEntity.setCategory(postDTO.getCategory());
         postEntity.setPostHits(postDTO.getPostHits());
         postEntity.setCommentCounts(postDTO.getCommentCounts());
         return postEntity;

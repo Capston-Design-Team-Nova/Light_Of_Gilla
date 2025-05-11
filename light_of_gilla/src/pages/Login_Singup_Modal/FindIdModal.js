@@ -11,6 +11,7 @@ import {
   TimerText,
   ConfirmButton,
 } from "../../styles/FindIdStyles";
+import backIcon from "../../assets/images/뒤로가기.png";
 
 const FindIdModal = ({ onClose, onSwitch }) => {
   const [step, setStep] = useState(1);
@@ -20,8 +21,11 @@ const FindIdModal = ({ onClose, onSwitch }) => {
   const [timerActive, setTimerActive] = useState(false);
   const [verified, setVerified] = useState(false);
   const [foundUserId, setFoundUserId] = useState("");
+  const [isSending, setIsSending] = useState(false);
 
   const sendEmailVerification = async () => {
+    if (isSending) return;
+    setIsSending(true);
     try {
       await fetch(
         "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/send-verification-email",
@@ -31,12 +35,17 @@ const FindIdModal = ({ onClose, onSwitch }) => {
           body: JSON.stringify({ email }),
         }
       );
+
       setTimerActive(true);
-      setTimeLeft(300); // 5분
+      setTimeLeft(300);
       setVerified(false);
       setCode("");
+
+      alert("인증 메일이 전송되었습니다. 메일함을 확인하세요.");
     } catch (error) {
       alert("인증 메일 발송 실패");
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -69,7 +78,7 @@ const FindIdModal = ({ onClose, onSwitch }) => {
       );
       const data = await res.json();
       setFoundUserId(data.userId);
-      setStep(2); // 다음 화면으로 전환
+      setStep(2);
     } catch (error) {
       alert("사용자 정보를 불러올 수 없습니다.");
     }
@@ -99,6 +108,26 @@ const FindIdModal = ({ onClose, onSwitch }) => {
     <ModalBackground>
       <ModalContainer>
         <CloseButton onClick={onClose}>×</CloseButton>
+        <img
+          src={backIcon}
+          alt="뒤로가기"
+          onClick={() => onSwitch("login")}
+          style={{
+            position: "absolute",
+            top: "18px",
+            left: "18px",
+            width: "24px",
+            height: "24px",
+            cursor: "pointer",
+            transition: "transform 0.2s ease",
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = "scale(1.2)";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = "scale(1)";
+          }}
+        />
         {step === 1 && (
           <>
             <Title>이메일로 가입한 아이디 찾기</Title>
@@ -110,7 +139,9 @@ const FindIdModal = ({ onClose, onSwitch }) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <SideButton onClick={sendEmailVerification}>인증</SideButton>
+              <SideButton onClick={sendEmailVerification} disabled={isSending}>
+                {isSending ? "전송 중" : "인증"}
+              </SideButton>
             </InputWithButtonWrapper>
 
             <InputWithButtonWrapper>

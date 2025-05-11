@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Header from "../components/Header";
 import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
 import {
@@ -8,8 +8,21 @@ import {
   SearchContainer,
   SearchBox,
   SearchInput,
-  CategoryButtons,
   HospitalItem,
+  DropdownWrapper,
+  Column,
+  TabSwitcher,
+  GpsButton,
+  CategoryItem,
+  CategoryModalContent,
+  CategoryModalOverlay,
+  CategoryButtonsWrapper,
+  CategoryAllButton,
+  CategoryGrid,
+  ShimmerOverlay,
+  SortingButton,
+  SortingButtonWrapper,
+  SearchIcon,
 } from "../styles/HospitalMapStyles";
 import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
 
@@ -25,7 +38,7 @@ function HospitalMap() {
   const [selectedHospital, setSelectedHospital] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState(() => {
-    return localStorage.getItem("sortOption") || "distance";
+    return localStorage.getItem("sortOption") || "recommend";
   });
   const [selectedPosition, setSelectedPosition] = useState(null);
   const [likedReviews, setLikedReviews] = useState({});
@@ -33,15 +46,22 @@ function HospitalMap() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [reviewContent, setReviewContent] = useState("");
   const [reviewRating, setReviewRating] = useState(5);
-  const [editingReviewId, setEditingReviewId] = useState(null); // null이면 신규 작성, 값이 있으면 수정 중
+  const [editingReviewId, setEditingReviewId] = useState(null);
   const [hospitalReviews, setHospitalReviews] = useState([]);
   const [editingReviewIndex, setEditingReviewIndex] = useState(null);
   const [editedReviewContent, setEditedReviewContent] = useState("");
   const [editedReviewRating, setEditedReviewRating] = useState(5);
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
+  const [searchHistory, setSearchHistory] = useState([]);
+  const [activeTab, setActiveTab] = useState("favorites");
+  const mapRef = useRef(null);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [maxVisible, setMaxVisible] = useState(5);
+  const [highlightedHospitalName, setHighlightedHospitalName] = useState(null);
+  const [selectedHospitalLoading, setSelectedHospitalLoading] = useState(false);
 
   // 좋아요 토글
-  const toggleLike = async (reviewId, index) => {
+  const toggleLike = async (reviewId) => {
     const userNickname = localStorage.getItem("nickname");
     if (!userNickname || !reviewId) return;
 
@@ -57,30 +77,21 @@ function HospitalMap() {
         }
       );
 
-      if (res.ok) {
-        // UI에서 상태 업데이트
-        setLikedReviews((prev) => ({
-          ...prev,
-          [index]: !prev[index],
-        }));
-
-        // 서버에서 최신 좋아요 수를 받아오지는 않으므로 수동 반영
-        setHospitalReviews((prev) => {
-          const updated = [...prev];
-          const current = updated[index];
-          if (!current) return prev;
-
-          updated[index] = {
-            ...current,
-            likes: (current.likes || 0) + (likedReviews[index] ? -1 : 1),
-          };
-          return updated;
-        });
-      } else {
-        console.warn("좋아요 요청 실패", await res.text());
+      if (res.ok && selectedHospital?.id) {
+        const updatedRes = await fetch(
+          `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/${selectedHospital.id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-User-Name": userNickname,
+            },
+          }
+        );
+        const updated = await updatedRes.json();
+        setHospitalReviews(updated);
       }
     } catch (e) {
-      console.error("좋아요 토글 중 오류:", e);
+      console.error("좋아요 토글 실패:", e);
     }
   };
 
@@ -228,12 +239,13 @@ function HospitalMap() {
     }
   }, []);
 
+  // 병원 패치 호출
   useEffect(() => {
-    if (sortOption === "rating") {
-      fetchRatingsForHospitals();
+    if (hospitals.length > 0) {
+      fetchRatingsForHospitals(hospitals); // 병원 리스트가 변경될 때 자동 호출
     }
-  }, [hospitals, sortOption]);
-
+  }, [hospitals]);
+  // 지도 현재 위치 호출
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -259,10 +271,14 @@ function HospitalMap() {
     }
   }, []);
 
-  const fetchRatingsForHospitals = async () => {
+  // 병원 평점 패치
+  const fetchRatingsForHospitals = async (hospitalList = []) => {
+    setState((prev) => ({ ...prev, isLoading: true })); // 로딩 시작
+
     const newDetails = {};
+
     await Promise.all(
-      hospitals.map(async (h) => {
+      hospitalList.map(async (h) => {
         try {
           const res = await fetch(
             `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/hospitals/search?name=${encodeURIComponent(
@@ -270,36 +286,78 @@ function HospitalMap() {
             )}`
           );
           const [details] = await res.json();
-          if (details && details.name && details.id) {
+
+          let reviewCount = 0;
+          let avgScore = 0;
+
+          if (details?.id) {
+            // 리뷰 목록 조회
+            const reviewRes = await fetch(
+              `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/${details.id}`,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-User-Name": localStorage.getItem("nickname") || "",
+                },
+              }
+            );
+            const reviews = await reviewRes.json();
+            reviewCount = Array.isArray(reviews) ? reviews.length : 0;
+
+            // 평균 평점 조회
+            const avgRes = await fetch(
+              `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/${details.id}/average-rating`
+            );
+            const avg = await avgRes.text();
+            avgScore = parseFloat(avg);
+          }
+
+          if (details?.id && details?.name) {
             newDetails[h.place_name] = {
               ...details,
               id: details.id,
+              reviewCount,
+              score: isNaN(avgScore) ? 0 : avgScore,
             };
           }
-        } catch (e) {
-          newDetails[h.place_name] = { score: 0 };
+        } catch {
+          newDetails[h.place_name] = { score: 0, reviewCount: 0 };
         }
-      }),
-      console.log(newDetails)
+      })
     );
+
     setHospitalDetails(newDetails);
+    setState((prev) => ({ ...prev, isLoading: false })); // 로딩 종료
   };
 
   const fetchHospitals = (lat, lng, category = "HP8") => {
     const ps = new window.kakao.maps.services.Places();
+    setState((prev) => ({ ...prev, isLoading: true })); // 로딩 시작
+
     ps.categorySearch(
       category,
-      (data, status) => {
+      async (data, status) => {
         if (status === window.kakao.maps.services.Status.OK) {
           setHospitals(data);
+
+          // 병원 데이터 저장 후 평점까지 받아오고 로딩 종료
+          await fetchRatingsForHospitals(data);
+          setState((prev) => ({ ...prev, isLoading: false }));
+        } else {
+          setHospitals([]);
+          setState((prev) => ({ ...prev, isLoading: false }));
         }
       },
-      { location: new window.kakao.maps.LatLng(lat, lng) }
+      {
+        location: new window.kakao.maps.LatLng(lat, lng),
+        radius: 3000,
+      }
     );
   };
 
   const getHospitalDetails = (name) => hospitalDetails[name] || { score: 0 };
 
+  // 거리 계산 함수
   const getDistance = (lat1, lng1, lat2, lng2) => {
     const R = 6371e3;
     const toRad = (deg) => (deg * Math.PI) / 180;
@@ -314,6 +372,7 @@ function HospitalMap() {
     return R * c;
   };
 
+  // 병원 정렬
   const getSortedHospitals = () => {
     const sorted = [...hospitals];
     if (sortOption === "rating") {
@@ -321,6 +380,27 @@ function HospitalMap() {
         const aScore = parseFloat(getHospitalDetails(a.place_name).score || 0);
         const bScore = parseFloat(getHospitalDetails(b.place_name).score || 0);
         return bScore - aScore;
+      });
+    } else if (sortOption === "recommend") {
+      sorted.sort((a, b) => {
+        const aScore = parseFloat(getHospitalDetails(a.place_name).score || 0);
+        const bScore = parseFloat(getHospitalDetails(b.place_name).score || 0);
+        const aDist = getDistance(
+          state.center.lat,
+          state.center.lng,
+          parseFloat(a.y),
+          parseFloat(a.x)
+        );
+        const bDist = getDistance(
+          state.center.lat,
+          state.center.lng,
+          parseFloat(b.y),
+          parseFloat(b.x)
+        );
+        // 거리: 낮을수록 좋음 → 역수 사용
+        const aWeighted = 8 * (1 / (aDist + 1)) + 2 * aScore;
+        const bWeighted = 8 * (1 / (bDist + 1)) + 2 * bScore;
+        return bWeighted - aWeighted;
       });
     } else {
       sorted.sort((a, b) => {
@@ -342,24 +422,41 @@ function HospitalMap() {
     return sorted;
   };
 
-  const handleSortChange = (e) => {
-    const value = e.target.value;
+  // 정렬 옵션 설정
+  const handleSortChange = (value) => {
     setSortOption(value);
     localStorage.setItem("sortOption", value);
   };
 
+  // 진료 시간
   const formatOpenHours = (openHours) => {
-    if (!openHours) return <p>정보가 등록되지 않았어요.</p>;
+    if (
+      !openHours ||
+      (typeof openHours === "string" && openHours.trim() === "{}")
+    ) {
+      return <p style={{ color: "#888" }}>운영시간 정보가 없어요</p>;
+    }
+
     try {
-      const hours = JSON.parse(openHours.replace(/'/g, '"'));
-      return Object.entries(hours).map(([day, time]) => (
-        <p key={day}>{day === "휴무일" ? "휴무일" : `${day}: ${time}`}</p>
-      ));
-    } catch {
-      return <p>진료 시간 정보를 불러올 수 없습니다.</p>;
+      const parsed =
+        typeof openHours === "string"
+          ? JSON.parse(openHours.replace(/'/g, '"'))
+          : openHours;
+
+      if (!parsed || Object.keys(parsed).length === 0) {
+        return <p style={{ color: "#888" }}>운영시간 정보가 없어요</p>;
+      }
+
+      return Object.entries(parsed)
+        .filter(([day]) => day !== "휴무일")
+        .map(([day, time]) => <p key={day}>{`${day}: ${time}`}</p>);
+    } catch (e) {
+      console.error("openHour 파싱 오류:", e);
+      return <p style={{ color: "#888" }}>운영시간 정보가 없어요</p>;
     }
   };
 
+  // 리뷰 수정
   const handleEditSubmit = async (reviewId, index) => {
     const userNickname = localStorage.getItem("nickname");
     if (!userNickname || !reviewId || !editedReviewContent) return;
@@ -391,6 +488,7 @@ function HospitalMap() {
     }
   };
 
+  // 리뷰 랜더링
   const renderReviews = () => {
     if (!Array.isArray(hospitalReviews) || hospitalReviews.length === 0)
       return <p>리뷰가 없습니다.</p>;
@@ -406,9 +504,7 @@ function HospitalMap() {
           r.rating > 0
       )
       .map((r, i) => {
-        const liked = likedReviews[i] || false;
         const isMine = r.author === localStorage.getItem("nickname");
-        const displayedLikes = liked ? r.likes + 1 : r.likes;
 
         return (
           <div
@@ -465,129 +561,135 @@ function HospitalMap() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                position: "relative", // 드롭다운 기준 anchor
+                marginTop: "8px",
               }}
             >
+              {/* 작성일 */}
               <p style={{ fontSize: "13px", color: "#666" }}>
-                {new Date(r.createdAt).toLocaleDateString("ko-KR")}
+                {r.createdAt
+                  ? new Date(r.createdAt).toLocaleDateString("ko-KR")
+                  : "작성일 미상"}
               </p>
 
-              {/* 좋아요 버튼*/}
-              <button
-                onClick={() => toggleLike(r.id, i)}
-                style={{
-                  border: "none",
-                  background: "transparent",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                }}
+              {/* 좋아요 + ... 버튼 */}
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "8px" }}
               >
-                <img
-                  src={
-                    liked
-                      ? require("../assets/images/채운 하트.png")
-                      : require("../assets/images/빈 하트.png")
-                  }
-                  alt="좋아요"
-                  style={{ width: "16px", height: "16px" }}
-                />
-                <span style={{ fontSize: "13px", color: "#666" }}>
-                  {displayedLikes}
-                </span>
-              </button>
-
-              {isMine && (
-                <div style={{ position: "relative" }}>
-                  <button
-                    onClick={() =>
-                      setOpenMenuIndex(openMenuIndex === i ? null : i)
+                <button
+                  onClick={() => toggleLike(r.id)}
+                  style={{
+                    border: "none",
+                    background: "transparent",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                  }}
+                >
+                  <img
+                    src={
+                      r.likedByCurrentUser
+                        ? require("../assets/images/채운 하트.png")
+                        : require("../assets/images/빈 하트.png")
                     }
-                    style={{
-                      border: "none",
-                      background: "transparent",
-                      fontSize: "18px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    ...
-                  </button>
+                    alt="좋아요"
+                    style={{ width: "16px", height: "16px" }}
+                  />
+                  <span style={{ fontSize: "13px", color: "#666" }}>
+                    {r.likes}
+                  </span>
+                </button>
 
-                  {openMenuIndex === i && (
-                    <div
+                {isMine && (
+                  <div style={{ position: "relative" }}>
+                    <button
+                      onClick={() =>
+                        setOpenMenuIndex(openMenuIndex === i ? null : i)
+                      }
                       style={{
-                        position: "absolute",
-                        top: "100%",
-                        right: "0",
-                        transform: "translateY(8px)",
-                        background: "#fff",
-                        border: "1px solid #ddd",
-                        borderRadius: "10px",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                        zIndex: 100,
-                        display: "flex",
-                        flexDirection: "column",
-                        minWidth: "70px",
-                        overflow: "hidden",
+                        border: "none",
+                        background: "transparent",
+                        fontSize: "18px",
+                        cursor: "pointer",
                       }}
                     >
-                      <button
-                        onClick={() => {
-                          setEditingReviewIndex(i);
-                          setEditedReviewContent(r.content);
-                          setEditedReviewRating(r.rating);
-                          setOpenMenuIndex(null);
-                        }}
+                      ...
+                    </button>
+
+                    {openMenuIndex === i && (
+                      <div
                         style={{
-                          padding: "8px 12px",
-                          fontSize: "14px",
-                          textAlign: "left",
-                          border: "none",
-                          background: "white",
-                          cursor: "pointer",
+                          position: "absolute",
+                          top: "100%",
+                          right: "0",
+                          transform: "translateY(8px)",
+                          background: "#fff",
+                          border: "1px solid #ddd",
+                          borderRadius: "10px",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                          zIndex: 100,
+                          display: "flex",
+                          flexDirection: "column",
+                          minWidth: "70px",
+                          overflow: "hidden",
                         }}
-                        onMouseOver={(e) =>
-                          (e.currentTarget.style.background =
-                            "rgb(226,226,226)")
-                        }
-                        onMouseOut={(e) =>
-                          (e.currentTarget.style.background = "white")
-                        }
                       >
-                        수정
-                      </button>
-                      <button
-                        onClick={() => handleDeleteReview(r.id)}
-                        style={{
-                          padding: "8px 12px",
-                          fontSize: "14px",
-                          textAlign: "left",
-                          border: "none",
-                          background: "white",
-                          cursor: "pointer",
-                          color: "red",
-                        }}
-                        onMouseOver={(e) =>
-                          (e.currentTarget.style.background =
-                            "rgb(226,226,226)")
-                        }
-                        onMouseOut={(e) =>
-                          (e.currentTarget.style.background = "white")
-                        }
-                      >
-                        삭제
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
+                        <button
+                          onClick={() => {
+                            setEditingReviewIndex(i);
+                            setEditedReviewContent(r.content);
+                            setEditedReviewRating(r.rating);
+                            setOpenMenuIndex(null);
+                          }}
+                          style={{
+                            padding: "8px 12px",
+                            fontSize: "14px",
+                            textAlign: "left",
+                            border: "none",
+                            background: "white",
+                            cursor: "pointer",
+                          }}
+                          onMouseOver={(e) =>
+                            (e.currentTarget.style.background = "#eee")
+                          }
+                          onMouseOut={(e) =>
+                            (e.currentTarget.style.background = "white")
+                          }
+                        >
+                          수정
+                        </button>
+                        <button
+                          onClick={() => handleDeleteReview(r.id)}
+                          style={{
+                            padding: "8px 12px",
+                            fontSize: "14px",
+                            textAlign: "left",
+                            border: "none",
+                            background: "white",
+                            cursor: "pointer",
+                            color: "red",
+                          }}
+                          onMouseOver={(e) =>
+                            (e.currentTarget.style.background = "#eee")
+                          }
+                          onMouseOut={(e) =>
+                            (e.currentTarget.style.background = "white")
+                          }
+                        >
+                          삭제
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         );
       });
   };
 
+  // 평점 별 표시
   const renderRating = (score) => {
     score = isNaN(score) ? 0 : score;
     const full = Math.floor(score);
@@ -610,40 +712,85 @@ function HospitalMap() {
     );
   };
 
+  // 리뷰 좋아요
+  const initializeLikedReviews = (reviews) => {
+    const liked = {};
+    reviews.forEach((r) => {
+      liked[r.id] = r.likedByCurrentUser;
+    });
+    setLikedReviews(liked);
+  };
+
+  // 병원 정보 및 리뷰 api
   const handleHospitalClick = async (h) => {
+    setSelectedHospitalLoading(true);
     try {
+      // 병원 정보 조회
       const res = await fetch(
         `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/hospitals/search?name=${encodeURIComponent(
           h.place_name
         )}`
       );
       const [details] = await res.json();
+
+      // 평균 평점 조회
+      const avgRatingRes = await fetch(
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/${details.id}/average-rating`
+      );
+      const avgScore = await avgRatingRes.text();
+      const parsedScore = parseFloat(avgScore);
+
+      // 선택 병원 상태 업데이트
       setSelectedHospital({
-        name: details.name,
-        address: details.address,
-        score: details.score,
-        openHour: details.openHour,
-        imgUrl: details.imgUrl,
+        ...details,
+        score: isNaN(parsedScore) ? 0 : parsedScore,
         id: details.id,
       });
+
       setSelectedPosition({ lat: parseFloat(h.y), lng: parseFloat(h.x) });
 
-      // 리뷰 요청
+      // 병원 목록용 상태도 반영
+      setHospitalDetails((prev) => ({
+        ...prev,
+        [details.name]: {
+          ...prev[details.name],
+          ...details,
+          score: isNaN(parsedScore) ? 0 : parsedScore,
+        },
+      }));
+
+      // 리뷰 목록 조회
       const reviewRes = await fetch(
-        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/${details.id}`
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/${details.id}`,
+        {
+          headers: {
+            "X-User-Name": localStorage.getItem("nickname"),
+          },
+        }
       );
       const reviewList = await reviewRes.json();
       setHospitalReviews(Array.isArray(reviewList) ? reviewList : []);
+      initializeLikedReviews(reviewList);
+
+      // 지도를 선택 병원 위치로 이동
+      const mapInstance = mapRef.current;
+      if (mapInstance && mapInstance.panTo) {
+        mapInstance.panTo(new window.kakao.maps.LatLng(h.y, h.x));
+      }
     } catch (err) {
       console.error("병원 상세 또는 리뷰 데이터 요청 실패", err);
       setHospitalReviews([]);
+    } finally {
+      setSelectedHospitalLoading(false); // ✅ 로딩 종료
     }
   };
 
+  // 증상 검색어 매핑
   const symptomToCategory = {
     두통: "신경과",
     치통: "치과",
     소화불량: "내과",
+    목감기: "이비인후과",
     "피부 가려움": "피부과",
     "눈 충혈": "안과",
     충혈: "안과",
@@ -676,44 +823,78 @@ function HospitalMap() {
     설사: "소화기내과",
   };
 
-  const handleSearch = () => {
-    const trimmedTerm = searchTerm.trim();
+  // 검색 로직
+  const handleSearch = (customTerm) => {
+    const rawTerm = customTerm ?? searchTerm;
+    const trimmedTerm =
+      typeof rawTerm === "string"
+        ? rawTerm.trim()
+        : typeof rawTerm === "number"
+        ? String(rawTerm).trim()
+        : "";
+
     if (!trimmedTerm) return;
+
+    saveSearchKeyword(trimmedTerm);
 
     const matchedCategory = symptomToCategory[trimmedTerm];
     if (matchedCategory) {
-      // 진료과에 해당하는 검색어일 경우 해당 카테고리(들)로 검색
-      matchedCategory.split(",").forEach((cat) => {
-        handleCategoryClick(cat.trim());
-      });
+      matchedCategory
+        .split(",")
+        .forEach((cat) => handleCategoryClick(cat.trim()));
     } else {
-      // 일반 키워드 검색 수행
       const ps = new window.kakao.maps.services.Places();
-      ps.keywordSearch(
-        trimmedTerm,
+      ps.categorySearch(
+        "HP8",
         (data, status) => {
-          setHospitals(
-            status === window.kakao.maps.services.Status.OK ? data : []
-          );
+          if (status === window.kakao.maps.services.Status.OK) {
+            const filtered = data.filter(
+              (item) =>
+                item.place_name.includes(trimmedTerm) ||
+                item.road_address_name?.includes(trimmedTerm) ||
+                item.address_name?.includes(trimmedTerm)
+            );
+            const nearby = filterHospitalsWithin2km(filtered);
+            setHospitals(nearby);
+
+            // ✅ 지도 중심 이동
+            if (mapRef.current && nearby.length > 0) {
+              const lat = parseFloat(nearby[0].y);
+              const lng = parseFloat(nearby[0].x);
+              mapRef.current.panTo(new window.kakao.maps.LatLng(lat, lng));
+            }
+          } else {
+            setHospitals([]);
+          }
         },
         {
           location: new window.kakao.maps.LatLng(
             state.center.lat,
             state.center.lng
           ),
+          radius: 3000,
         }
       );
     }
   };
 
+  // 카테고리 버튼
   const handleCategoryClick = (category) => {
     const ps = new window.kakao.maps.services.Places();
+    setState((prev) => ({ ...prev, isLoading: true }));
+
     ps.keywordSearch(
       category,
-      (data, status) => {
-        setHospitals(
-          status === window.kakao.maps.services.Status.OK ? data : []
-        );
+      async (data, status) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          const nearby = filterHospitalsWithin2km(data);
+          setHospitals(nearby);
+          await fetchRatingsForHospitals(nearby);
+          setState((prev) => ({ ...prev, isLoading: false }));
+        } else {
+          setHospitals([]);
+          setState((prev) => ({ ...prev, isLoading: false }));
+        }
       },
       {
         location: new window.kakao.maps.LatLng(
@@ -728,19 +909,9 @@ function HospitalMap() {
     if (e.key === "Enter") handleSearch();
   };
 
-  const handleGoBack = () => setSelectedHospital(null);
-
-  const scrollCategory = (direction) => {
-    const scrollContainer = document.getElementById("category-scroll");
-    const scrollAmount = 150;
-
-    if (!scrollContainer) return;
-
-    if (direction === "left") {
-      scrollContainer.scrollBy({ left: -scrollAmount, behavior: "smooth" });
-    } else {
-      scrollContainer.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
+  const handleGoBack = () => {
+    setSelectedHospital(null);
+    setSelectedPosition(null);
   };
 
   const handleSearchInputClick = () => {
@@ -757,6 +928,7 @@ function HospitalMap() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  // 즐겨찾기 삭제
   const handleRemoveFavorite = async (hospitalId) => {
     const userNickname = localStorage.getItem("nickname");
     const hospitalInfo = favoriteHospitals[String(hospitalId)];
@@ -784,6 +956,7 @@ function HospitalMap() {
     }
   };
 
+  // 리뷰 등록 및 수정
   const handleReviewSubmit = async () => {
     const userNickname = localStorage.getItem("nickname");
     const hospitalId = getHospitalDetails(selectedHospital.name)?.id;
@@ -815,16 +988,31 @@ function HospitalMap() {
         result
       );
 
-      await refreshSelectedHospital(); // 최신 리뷰 불러오기
+      await refreshSelectedHospital();
 
       setReviewContent("");
       setReviewRating(5);
       setEditingReviewId(null);
+
+      // ✅ 등록 성공 후 reviewCount 증가
+      if (!editingReviewId) {
+        setHospitalDetails((prev) => {
+          const current = prev[selectedHospital.name];
+          return {
+            ...prev,
+            [selectedHospital.name]: {
+              ...current,
+              reviewCount: (current?.reviewCount || 0) + 1,
+            },
+          };
+        });
+      }
     } catch (e) {
       console.error("❌ 리뷰 저장 실패:", e);
     }
   };
 
+  // 리뷰 삭제
   const handleDeleteReview = async (reviewId) => {
     const userNickname = localStorage.getItem("nickname");
     if (!userNickname || !reviewId) return;
@@ -841,15 +1029,44 @@ function HospitalMap() {
         }
       );
       console.log("🗑️ 리뷰 삭제 완료");
+
+      // 🔁 최신 리뷰 및 평균 평점 다시 반영
       await refreshSelectedHospital();
+
+      // ✅ hospitalDetails 내 reviewCount 업데이트
+      const hospitalId = selectedHospital.id;
+      const updatedReviewRes = await fetch(
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/${hospitalId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-User-Name": userNickname,
+          },
+        }
+      );
+      const updatedReviews = await updatedReviewRes.json();
+      const updatedCount = Array.isArray(updatedReviews)
+        ? updatedReviews.length
+        : 0;
+
+      setHospitalDetails((prev) => ({
+        ...prev,
+        [selectedHospital.name]: {
+          ...prev[selectedHospital.name],
+          reviewCount: updatedCount,
+        },
+      }));
     } catch (e) {
       console.error("❌ 리뷰 삭제 실패:", e);
     }
   };
 
+  // 선택 병원 정보 갱신
   const refreshSelectedHospital = async () => {
     if (!selectedHospital?.name) return;
+
     try {
+      // 병원 정보 가져오기
       const res = await fetch(
         `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/hospitals/search?name=${encodeURIComponent(
           selectedHospital.name
@@ -857,11 +1074,39 @@ function HospitalMap() {
       );
       const [details] = await res.json();
 
-      setSelectedHospital(details);
-      console.log("📥 병원 상세 데이터 재로딩 완료", details);
+      // 평균 평점 API 호출
+      const avgRatingRes = await fetch(
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/${details.id}/average-rating`
+      );
+      const avgScore = await avgRatingRes.text(); // 예: "4.2"
+      const parsedScore = parseFloat(avgScore);
 
+      // 병원 상태 업데이트
+      setSelectedHospital((prev) => ({
+        ...prev,
+        ...details,
+        score: isNaN(parsedScore) ? 0 : parsedScore,
+      }));
+
+      // 병원 목록용 평점 정보도 업데이트
+      setHospitalDetails((prev) => ({
+        ...prev,
+        [details.name]: {
+          ...prev[details.name],
+          ...details,
+          score: isNaN(parsedScore) ? 0 : parsedScore,
+        },
+      }));
+
+      // 리뷰 목록 갱신
       const reviewRes = await fetch(
-        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/${details.id}`
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/${details.id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-User-Name": localStorage.getItem("nickname") || "",
+          },
+        }
       );
       const reviewList = await reviewRes.json();
       setHospitalReviews(Array.isArray(reviewList) ? reviewList : []);
@@ -874,29 +1119,483 @@ function HospitalMap() {
     setReviewRating(value);
   };
 
+  // 검색기록 API 호출
+  useEffect(() => {
+    const fetchSearchHistory = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const res = await fetch(
+          "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        if (res.ok) {
+          const history = await res.json();
+          setSearchHistory(history);
+        }
+      } catch (e) {
+        console.error("검색기록 불러오기 실패", e);
+      }
+    };
+
+    fetchSearchHistory();
+  }, []);
+
+  // 검색기록 삭제
+  const handleDeleteSearchHistory = async (historyId) => {
+    const token = localStorage.getItem("token");
+    if (!token || !historyId) return;
+
+    try {
+      await fetch(
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history/${historyId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setSearchHistory((prev) => prev.filter((item) => item.id !== historyId));
+    } catch (e) {
+      console.error("검색기록 삭제 실패", e);
+    }
+  };
+
+  // 검색기록 전체 삭제
+  const handleClearSearchHistory = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      await fetch(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history",
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setSearchHistory([]);
+    } catch (e) {
+      console.error("검색기록 전체 삭제 실패", e);
+    }
+  };
+
+  // 즐겨찾기 전체 삭제
+  const handleClearFavorites = () => {
+    const userNickname = localStorage.getItem("nickname");
+    if (!userNickname) return;
+
+    Promise.all(
+      Object.values(favoriteHospitals).map((h) =>
+        fetch(
+          `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/favorites/${h.id}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              "X-User-Name": userNickname,
+            },
+          }
+        )
+      )
+    )
+      .then(() => setFavoriteHospitals({}))
+      .catch((e) => console.error("전체 즐겨찾기 삭제 실패", e));
+  };
+
+  // ✅ 4. 즐겨찾기 렌더링 함수
+  const renderFavorites = () => (
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "5px",
+        }}
+      >
+        <h4 style={{ margin: 0 }}>⭐ 즐겨찾기 병원</h4>
+        <button
+          onClick={handleClearFavorites}
+          style={{
+            fontSize: "12px",
+            color: "red",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          전체 삭제
+        </button>
+      </div>
+      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        {Object.values(favoriteHospitals).map((hospital) => (
+          <li
+            key={hospital.id}
+            style={{
+              padding: "10px",
+              borderBottom: "1px solid #eee",
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+            onClick={() => {
+              setSelectedHospitalLoading(true); // ✅ 로딩 시작
+
+              const ps = new window.kakao.maps.services.Places();
+              ps.categorySearch(
+                "HP8",
+                (data, status) => {
+                  if (status === window.kakao.maps.services.Status.OK) {
+                    const matched = data.find(
+                      (item) => item.place_name === hospital.name
+                    );
+                    if (matched) {
+                      handleHospitalClick(matched); // 안에서 다시 로딩 시작 → 중복 OK
+                    } else {
+                      alert("위치 정보를 불러올 수 없습니다.");
+                      setSelectedHospitalLoading(false); // 실패 시 종료
+                    }
+                  } else {
+                    setSelectedHospitalLoading(false); // 실패 시 종료
+                  }
+                },
+                {
+                  location: new window.kakao.maps.LatLng(
+                    state.center.lat,
+                    state.center.lng
+                  ),
+                  radius: 3000,
+                }
+              );
+
+              setIsDropdownOpen(false);
+            }}
+          >
+            <span>{hospital.name}</span>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemoveFavorite(hospital.id);
+              }}
+              style={{
+                background: "none",
+                border: "none",
+                color: "red",
+                cursor: "pointer",
+              }}
+            >
+              ✕
+            </button>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+
+  // 검색 기록 랜더링
+  const renderSearchHistory = () => (
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "5px",
+        }}
+      >
+        <h4 style={{ margin: 0 }}>🔍 최근 검색 기록</h4>
+        <button
+          onClick={handleClearSearchHistory}
+          style={{
+            fontSize: "12px",
+            color: "red",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
+          전체 삭제
+        </button>
+      </div>
+      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+        {searchHistory.map((item) => (
+          <li
+            key={item.id}
+            style={{
+              padding: "10px",
+              borderBottom: "1px solid #eee",
+              cursor: "pointer",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+            onClick={() => {
+              setSearchTerm(item.keyword);
+              handleSearch(item.keyword);
+              setIsDropdownOpen(false);
+            }}
+          >
+            <span>{item.keyword}</span>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteSearchHistory(item.id);
+              }}
+              style={{
+                background: "none",
+                border: "none",
+                color: "red",
+                cursor: "pointer",
+              }}
+            >
+              ✕
+            </button>
+          </li>
+        ))}
+      </ul>
+    </>
+  );
+
+  // 검색 기록 저장
+  const saveSearchKeyword = (keyword) => {
+    const token = localStorage.getItem("token");
+    if (!token || !keyword) return;
+
+    // 중복 기록이 있으면 삭제하고 다시 추가
+    fetch(
+      "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+      .then((res) => res.json())
+      .then(async (history) => {
+        const duplicate = history.find((item) => item.keyword === keyword);
+
+        if (duplicate) {
+          // 기존 기록 삭제
+          await fetch(
+            `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history/${duplicate.id}`,
+            {
+              method: "DELETE",
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+        }
+
+        // 새로 추가
+        await fetch(
+          "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/log",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ keyword }),
+          }
+        );
+
+        refreshSearchHistory(); // 최신 기록 다시 가져오기
+      })
+      .catch((e) => {
+        console.error("검색 기록 중복 확인/처리 실패", e);
+      });
+  };
+
+  // ✅ 2. 검색기록 API 호출
+  useEffect(() => {
+    refreshSearchHistory();
+  }, []);
+
+  const refreshSearchHistory = () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    fetch(
+      "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
+      .then((res) => res.json())
+      .then((history) => {
+        if (Array.isArray(history)) {
+          setSearchHistory(history);
+        } else {
+          setSearchHistory([]); // fallback
+          console.warn("searchHistory 응답이 배열이 아님:", history);
+        }
+      })
+      .catch((e) => {
+        console.error("검색기록 갱신 실패", e);
+        setSearchHistory([]); // 실패 시에도 fallback
+      });
+  };
+
+  // 영업 정보 파싱
+  const parseOpenHourString = (raw) => {
+    if (!raw || typeof raw !== "string") return null;
+
+    try {
+      const normalized = raw.replace(/'/g, '"');
+      return JSON.parse(normalized);
+    } catch (e) {
+      console.warn("openHour 파싱 실패:", raw);
+      return null;
+    }
+  };
+
+  // 영업 여부 판단함수
+  const isHospitalOpen = (openHourString) => {
+    if (!openHourString || openHourString === "{}") return "none";
+
+    try {
+      const hours = parseOpenHourString(openHourString);
+      if (!hours || typeof hours !== "object") return "none";
+
+      const now = new Date();
+      const today = ["일", "월", "화", "수", "목", "금", "토"][now.getDay()];
+      const timeStr = hours[today];
+
+      if (
+        !timeStr ||
+        typeof timeStr !== "string" ||
+        timeStr === "휴무" ||
+        !timeStr.includes("~")
+      ) {
+        return "closed";
+      }
+
+      const [start, end] = timeStr.split("~").map((t) => t.trim());
+      const nowTime = now.getHours() * 60 + now.getMinutes();
+      const [sH, sM] = start.split(":").map(Number);
+      const [eH, eM] = end.split(":").map(Number);
+
+      return nowTime >= sH * 60 + sM && nowTime <= eH * 60 + eM
+        ? "open"
+        : "closed";
+    } catch (e) {
+      console.error("isHospitalOpen 오류:", e);
+      return "none";
+    }
+  };
+
+  const categoryList = [
+    { label: "응급실", icon: require("../assets/icons/응급실.png") },
+    { label: "약국", icon: require("../assets/icons/약국.png") },
+    { label: "내과", icon: require("../assets/icons/내과.png") },
+    { label: "가정의학과", icon: require("../assets/icons/가정의학과.png") },
+    { label: "치과", icon: require("../assets/icons/치과.png") },
+    { label: "이비인후과", icon: require("../assets/icons/이비인후과.png") },
+    { label: "소아과", icon: require("../assets/icons/소아과.png") },
+    { label: "피부과", icon: require("../assets/icons/피부과.png") },
+    { label: "산부인과", icon: require("../assets/icons/산부인과.png") },
+    { label: "안과", icon: require("../assets/icons/안과.png") },
+    { label: "정형외과", icon: require("../assets/icons/정형외과.png") },
+    { label: "비뇨기과", icon: require("../assets/icons/비뇨기과.png") },
+    { label: "신경외과", icon: require("../assets/icons/신경외과.png") },
+    { label: "외과", icon: require("../assets/icons/외과.png") },
+    { label: "성형외과", icon: require("../assets/icons/성형외과.png") },
+    {
+      label: "정신건강의학과",
+      icon: require("../assets/icons/정신건강의학과.png"),
+    },
+    {
+      label: "마취통증의학과",
+      icon: require("../assets/icons/마취통증의학과.png"),
+    },
+  ];
+
+  useEffect(() => {
+    const updateVisible = () => {
+      const width = window.innerWidth;
+      if (width > 1200) setMaxVisible(13);
+      else if (width > 1000) setMaxVisible(10);
+      else if (width > 800) setMaxVisible(9);
+      else if (width > 600) setMaxVisible(8);
+      else if (width > 500) setMaxVisible(7);
+      else setMaxVisible(4);
+    };
+    updateVisible();
+    window.addEventListener("resize", updateVisible);
+    return () => window.removeEventListener("resize", updateVisible);
+  }, []);
+
+  const [gpsTop, setGpsTop] = useState(0);
+
+  useEffect(() => {
+    const updateGpsPosition = () => {
+      if (window.innerWidth <= 480) {
+        const sidebar = document.querySelector(".sidebar");
+        if (sidebar) {
+          const rect = sidebar.getBoundingClientRect();
+          setGpsTop(rect.top - 65); // 사이드바 바로 위 50px 위치
+        }
+      } else {
+        setGpsTop(0); // 데스크탑 초기화
+      }
+    };
+
+    updateGpsPosition();
+    window.addEventListener("resize", updateGpsPosition);
+    return () => window.removeEventListener("resize", updateGpsPosition);
+  }, []);
+
+  const categoryWrapperRef = useRef(null);
+
+  useEffect(() => {
+    const el = categoryWrapperRef.current;
+    if (!el) return;
+
+    const handleWheel = (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        el.scrollLeft += e.deltaY; // 수직 스크롤을 좌우로 전환
+      }
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, []);
+
+  const filterHospitalsWithin2km = (list) =>
+    list.filter((h) => {
+      const distance = getDistance(
+        state.center.lat,
+        state.center.lng,
+        parseFloat(h.y),
+        parseFloat(h.x)
+      );
+      return distance <= 2000;
+    });
+
   return (
     <Main>
       <Header />
       <SearchContainer className="search-container">
         <SearchBox style={{ position: "relative", width: "100%" }}>
           <SearchInput
-            type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="병원 검색..."
             onClick={handleSearchInputClick}
           />
-          <img
+          <SearchIcon
             src={require("../assets/images/돋보기.png")}
             alt="검색"
-            onClick={handleSearch}
-            style={{
-              position: "absolute",
-              right: "0px",
-              top: "50%",
-              transform: "translateY(-50%)",
-              cursor: "pointer",
+            onClick={() => {
+              if (!searchTerm.trim()) {
+                alert("검색어를 입력해주세요.");
+                return;
+              }
+              handleSearch();
             }}
           />
 
@@ -905,8 +1604,8 @@ function HospitalMap() {
               className="search-dropdown"
               style={{
                 position: "absolute",
-                top: "100%", // 바로 아래에 위치
-                left: 0,
+                top: "100%",
+                left: "0",
                 width: "100%",
                 background: "#fff",
                 border: "1px solid #ccc",
@@ -915,159 +1614,285 @@ function HospitalMap() {
                 zIndex: 5,
               }}
             >
-              <h4 style={{ margin: "10px" }}>⭐ 즐겨찾기 병원</h4>
-              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                {Object.values(favoriteHospitals).map((hospital, index) => (
-                  <li
-                    key={index}
-                    onClick={() => {
-                      const matched = hospitals.find(
-                        (h) => h.place_name === hospital.name
-                      );
-                      if (matched) handleHospitalClick(matched);
-                      setIsDropdownOpen(false);
-                    }}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      padding: "10px",
-                      borderBottom: "1px solid #eee",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {hospital.name}
+              {window.innerWidth >= 768 ? (
+                <DropdownWrapper>
+                  <Column>{renderFavorites()}</Column>
+                  <Column>{renderSearchHistory()}</Column>
+                </DropdownWrapper>
+              ) : (
+                <div style={{ padding: "10px" }}>
+                  <TabSwitcher>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveFavorite(hospital.id);
-                      }}
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        color: "red",
-                        fontSize: "16px",
-                        cursor: "pointer",
-                      }}
+                      className={activeTab === "favorites" ? "active" : ""}
+                      onClick={() => setActiveTab("favorites")}
                     >
-                      ✕
+                      즐겨찾기
                     </button>
-                  </li>
-                ))}
-              </ul>
+                    <button
+                      className={activeTab === "history" ? "active" : ""}
+                      onClick={() => setActiveTab("history")}
+                    >
+                      검색기록
+                    </button>
+                  </TabSwitcher>
+
+                  {activeTab === "favorites"
+                    ? renderFavorites()
+                    : renderSearchHistory()}
+                </div>
+              )}
             </div>
           )}
         </SearchBox>
 
-        <CategoryButtons>
-          <button
-            className="scroll-btn left-btn"
-            onClick={() => scrollCategory("left")}
-          >
-            ◀
-          </button>
+        <CategoryButtonsWrapper ref={categoryWrapperRef}>
+          {categoryList.slice(0, maxVisible).map((cat) => (
+            <CategoryItem
+              key={cat.label}
+              onClick={() => handleCategoryClick(cat.label)}
+            >
+              <img src={cat.icon} alt={cat.label} />
+              <span>{cat.label}</span>
+            </CategoryItem>
+          ))}
 
-          <div className="category-scroll" id="category-scroll">
-            {[
-              "약국",
-              "내과",
-              "피부과",
-              "치과",
-              "소아과",
-              "산부인과",
-              "정형외과",
-              "안과",
-              "성형외과",
-              "이비인후과",
-              "마치통증의학과",
-              "비뇨기과",
-              "신경과",
-              "병리과",
-              "가정의학과",
-            ].map((cat) => (
-              <button key={cat} onClick={() => handleCategoryClick(cat)}>
-                #{cat}
-              </button>
-            ))}
-          </div>
-
-          <button
-            className="scroll-btn right-btn"
-            onClick={() => scrollCategory("right")}
-          >
-            ▶
-          </button>
-        </CategoryButtons>
+          <CategoryAllButton onClick={() => setIsCategoryModalOpen(true)}>
+            <img src={require("../assets/icons/전체보기.png")} alt="전체보기" />
+            <span>전체보기</span>
+          </CategoryAllButton>
+        </CategoryButtonsWrapper>
       </SearchContainer>
 
-      <Sidebar>
-        <div style={{ padding: "10px" }}>
-          <label>정렬 기준: </label>
-          <select value={sortOption} onChange={handleSortChange}>
-            <option value="distance">거리순</option>
-            <option value="rating">평점순</option>
-          </select>
-        </div>
-        <div>
-          {getSortedHospitals().map((h, i) => {
-            const detail = getHospitalDetails(h.place_name);
-            const isFavorite = !!favoriteHospitals[detail?.id];
-            const hospitalDetail = getHospitalDetails(h.place_name);
-            const score = hospitalDetail?.score
-              ? parseFloat(hospitalDetail.score)
-              : 0;
+      <Sidebar className="sidebar">
+        <SortingButtonWrapper>
+          <SortingButton
+            $active={sortOption === "recommend"}
+            onClick={() => handleSortChange("recommend")}
+          >
+            <span>추천순</span>
+          </SortingButton>
+          <SortingButton
+            $active={sortOption === "distance"}
+            onClick={() => handleSortChange("distance")}
+          >
+            <span>거리순</span>
+          </SortingButton>
+          <SortingButton
+            $active={sortOption === "rating"}
+            onClick={() => handleSortChange("rating")}
+          >
+            <span>평점순</span>
+          </SortingButton>
+        </SortingButtonWrapper>
 
-            return (
-              <HospitalItem key={i} onClick={() => handleHospitalClick(h)}>
-                <div
+        <div>
+          {state.isLoading ? (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "200px",
+              }}
+            >
+              <img
+                src={require("../assets/images/spinner.gif")}
+                alt="로딩 중"
+                style={{ width: "40px", height: "40px" }}
+              />
+            </div>
+          ) : getSortedHospitals().length === 0 ? (
+            <p style={{ padding: "10px", color: "#888" }}>
+              주변에 적절한 병원이 없어요.
+            </p>
+          ) : (
+            getSortedHospitals().map((h, i) => {
+              const detail = getHospitalDetails(h.place_name);
+              const isFavorite = !!favoriteHospitals[detail?.id];
+              const score = parseFloat(detail?.score || 0);
+
+              const distance = getDistance(
+                state.center.lat,
+                state.center.lng,
+                parseFloat(h.y),
+                parseFloat(h.x)
+              );
+              const distanceInMeters = Math.round(distance);
+
+              return (
+                <HospitalItem
+                  key={i}
+                  onClick={() => handleHospitalClick(h)}
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
+                    border:
+                      i === 0
+                        ? "2px solid #FFD700"
+                        : i === 1
+                        ? "2px solid #C0C0C0"
+                        : i === 2
+                        ? "2px solid #CD7F32"
+                        : "1px solid #eee",
+                    boxShadow: i < 3 ? "0 0 6px rgba(0,0,0,0.1)" : "none",
+                    background:
+                      i === 0
+                        ? "linear-gradient(to right, #fff8dc, #fff)"
+                        : i === 1
+                        ? "linear-gradient(to right, #f0f0f0, #fff)"
+                        : i === 2
+                        ? "linear-gradient(to right, #fdf5e6, #fff)"
+                        : "white",
+                    borderRadius: "10px",
+                    margin: "8px 8px",
+                    width: "90%",
                   }}
                 >
-                  <h3>{h.place_name}</h3>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleFavorite(h.place_name);
-                    }}
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: 0,
-                    }}
-                  >
-                    <img
-                      src={
-                        isFavorite
-                          ? require("../assets/images/채운 별.png")
-                          : require("../assets/images/빈 별.png")
-                      }
-                      alt="즐겨찾기"
-                      style={{ width: "20px", height: "20px" }}
-                    />
-                  </button>
-                </div>
+                  {i < 3 && <ShimmerOverlay />}
+                  <div style={{ position: "relative", zIndex: 1 }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        {i < 3 && (
+                          <span
+                            style={{
+                              alignSelf: "flex-start",
+                              backgroundColor:
+                                i === 0
+                                  ? "#FFD700"
+                                  : i === 1
+                                  ? "#C0C0C0"
+                                  : "#CD7F32",
+                              color: "white",
+                              fontSize: "10px",
+                              padding: "2px 6px",
+                              borderRadius: "10px",
+                              marginTop: "4px",
+                            }}
+                          >
+                            TOP {i + 1}
+                          </span>
+                        )}
+                        <h3 style={{ margin: 0, wordBreak: "keep-all" }}>
+                          {h.place_name}
+                        </h3>
+                      </div>
 
-                {/* 평점 표시 추가 */}
-                {score !== null && (
-                  <div style={{ margin: "4px 0" }}>{renderRating(score)}</div>
-                )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(h.place_name);
+                        }}
+                        style={{
+                          background: "transparent",
+                          border: "none",
+                          cursor: "pointer",
+                          padding: 0,
+                        }}
+                      >
+                        <img
+                          src={
+                            isFavorite
+                              ? require("../assets/images/채운 별.png")
+                              : require("../assets/images/빈 별.png")
+                          }
+                          alt="즐겨찾기"
+                          style={{ width: "20px", height: "20px" }}
+                        />
+                      </button>
+                    </div>
 
-                <p>{h.road_address_name || h.address_name}</p>
-              </HospitalItem>
-            );
-          })}
+                    {score !== null && (
+                      <div style={{ margin: "4px 0" }}>
+                        {renderRating(score)}
+                      </div>
+                    )}
+
+                    <p
+                      style={{
+                        display: "flex",
+                        fontSize: "14px",
+                        color: "#555",
+                      }}
+                    >
+                      <span
+                        style={{
+                          color:
+                            isHospitalOpen(detail?.openHour) === "open"
+                              ? "green"
+                              : isHospitalOpen(detail?.openHour) === "closed"
+                              ? "red"
+                              : "#888",
+                          marginRight: "16px",
+                        }}
+                      >
+                        {
+                          {
+                            open: "영업 중",
+                            closed: "영업 종료",
+                            none: "영업 정보 없음",
+                          }[isHospitalOpen(detail?.openHour)]
+                        }
+                      </span>
+
+                      <span style={{ marginRight: "20px" }}>
+                        리뷰 {detail?.reviewCount ?? 0}개
+                      </span>
+
+                      <span>{distanceInMeters}m</span>
+                    </p>
+                  </div>
+                </HospitalItem>
+              );
+            })
+          )}
         </div>
       </Sidebar>
 
-      <MapContainer>
+      <MapContainer style={{ position: "relative" }}>
+        <GpsButton
+          style={
+            window.innerWidth <= 480
+              ? { top: `${gpsTop}px` }
+              : { bottom: "20px", left: "10px" }
+          }
+          onClick={() => {
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition((pos) => {
+                const newCenter = {
+                  lat: pos.coords.latitude,
+                  lng: pos.coords.longitude,
+                };
+                setState((prev) => ({
+                  ...prev,
+                  center: newCenter,
+                }));
+
+                const mapInstance = mapRef.current;
+                if (mapInstance && mapInstance.panTo) {
+                  mapInstance.panTo(
+                    new window.kakao.maps.LatLng(newCenter.lat, newCenter.lng)
+                  );
+                }
+              });
+            }
+          }}
+        >
+          <img
+            src={require("../assets/images/gps버튼.png")}
+            alt="내 위치"
+            style={{ width: "35px", height: "35px" }}
+          />
+        </GpsButton>
+
         <Map
           center={state.center}
           style={{ width: "100%", height: "100%" }}
-          level={3}
+          level={4}
+          ref={mapRef}
         >
           {!state.isLoading && (
             <MapMarker
@@ -1080,26 +1905,50 @@ function HospitalMap() {
             />
           )}
           {getSortedHospitals().map((h, i) => {
-            const markerImage =
-              i < 5
-                ? require("../assets/images/상위 5개 병원 마커.png")
-                : require("../assets/images/병원마커.png");
+            const lat = parseFloat(h.y);
+            const lng = parseFloat(h.x);
+
+            // 겹침 방지를 위한 위치 보정
+            const offset = 0.00004; // 약 4~5m 정도
+            const adjustedLat =
+              lat + (i % 3 === 1 ? offset : i % 3 === 2 ? -offset : 0);
+            const adjustedLng =
+              lng + (i % 3 === 1 ? -offset : i % 3 === 2 ? offset : 0);
+
+            // 마커 이미지 설정
+            let markerSrc;
+            let markerSize = { width: 80, height: 85 };
+            let markerOffset = { x: 20, y: 45 };
+
+            if (i === 0) {
+              markerSrc = require("../assets/images/one.png");
+            } else if (i === 1) {
+              markerSrc = require("../assets/images/two.png");
+            } else if (i === 2) {
+              markerSrc = require("../assets/images/three.png");
+            } else {
+              markerSrc = require("../assets/images/병원마커.png");
+              markerSize = { width: 25, height: 27 };
+              markerOffset = { x: 14, y: 32 };
+            }
 
             return (
               <MapMarker
                 key={i}
-                position={{ lat: h.y, lng: h.x }}
+                position={{ lat: adjustedLat, lng: adjustedLng }}
                 onClick={() => handleHospitalClick(h)}
                 image={{
-                  src: markerImage,
-                  size: { width: 40, height: 45 },
-                  options: { offset: { x: 27, y: 69 } },
+                  src: markerSrc,
+                  size: markerSize,
+                  options: { offset: markerOffset },
                 }}
+                zIndex={5 - i}
               />
             );
           })}
+
           {selectedHospital && selectedPosition && (
-            <CustomOverlayMap position={selectedPosition}>
+            <CustomOverlayMap position={selectedPosition} zIndex={10}>
               <div
                 style={{
                   background: "#fff",
@@ -1154,7 +2003,64 @@ function HospitalMap() {
         </Map>
       </MapContainer>
 
-      {selectedHospital && (
+      {isCategoryModalOpen && (
+        <CategoryModalOverlay onClick={() => setIsCategoryModalOpen(false)}>
+          <CategoryModalContent onClick={(e) => e.stopPropagation()}>
+            <div style={{ gridColumn: "1 / -1", textAlign: "right" }}>
+              <button
+                onClick={() => setIsCategoryModalOpen(false)}
+                onMouseOver={(e) => (e.currentTarget.style.background = "#eee")}
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.background = "transparent")
+                }
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  fontSize: "20px",
+                  cursor: "pointer",
+                  padding: "4px 10px",
+                  borderRadius: "8px",
+                  transition: "background 0.2s",
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {categoryList.map((cat) => (
+              <CategoryItem
+                key={cat.label}
+                onClick={() => {
+                  handleCategoryClick(cat.label);
+                  setIsCategoryModalOpen(false);
+                }}
+              >
+                <img src={cat.icon} alt={cat.label} />
+                <span>{cat.label}</span>
+              </CategoryItem>
+            ))}
+          </CategoryModalContent>
+        </CategoryModalOverlay>
+      )}
+
+      {selectedHospitalLoading ? (
+        <Sidebar>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <img
+              src={require("../assets/images/spinner.gif")}
+              alt="로딩 중"
+              style={{ width: "40px", height: "40px" }}
+            />
+          </div>
+        </Sidebar>
+      ) : selectedHospital ? (
         <Sidebar>
           <div>
             <img
@@ -1192,8 +2098,39 @@ function HospitalMap() {
                 />
               </button>
             </div>
-            <p>{selectedHospital.address}</p>
-            <p>{renderRating(parseFloat(selectedHospital.score))}</p>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                flexWrap: "wrap",
+              }}
+            >
+              <p style={{ margin: 0 }}>{selectedHospital.address}</p>
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "100px",
+                  fontSize: "14px",
+                  color:
+                    isHospitalOpen(selectedHospital.openHour) === "open"
+                      ? "green"
+                      : isHospitalOpen(selectedHospital.openHour) === "closed"
+                      ? "red"
+                      : "#888",
+                }}
+              >
+                {
+                  {
+                    open: "영업 중",
+                    closed: "영업 종료",
+                    none: "영업 정보 없음",
+                  }[isHospitalOpen(selectedHospital.openHour)]
+                }
+              </span>
+            </div>
+
+            <div>{renderRating(parseFloat(selectedHospital.score))}</div>
             {selectedHospital.imgUrl && (
               <img
                 src={selectedHospital.imgUrl}
@@ -1201,8 +2138,10 @@ function HospitalMap() {
                 style={{ width: "100%", height: "auto" }}
               />
             )}
+            <hr style={{ margin: "16px 0", borderColor: "#eee" }} />
             <h3>운영 시간</h3>
             {formatOpenHours(selectedHospital.openHour)}
+            <hr style={{ margin: "16px 0", borderColor: "#eee" }} />
             <h3>리뷰</h3>
             <div
               style={{
@@ -1264,7 +2203,7 @@ function HospitalMap() {
             {renderReviews()}
           </div>
         </Sidebar>
-      )}
+      ) : null}
     </Main>
   );
 }

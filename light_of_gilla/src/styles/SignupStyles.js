@@ -75,8 +75,9 @@ export const EmailRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 86%;
   margin: 8px auto;
+  width: 86%;
+  position: relative;
 `;
 
 export const EmailInput = styled.input`
@@ -89,15 +90,32 @@ export const EmailInput = styled.input`
 `;
 
 export const EmailButton = styled.button`
-  margin-left: 8px;
-  padding: 8px 12px;
-  font-size: 14px;
+  min-width: 79px;
+  padding: 10px 14px;
   background-color: #f9d8a1;
   border: none;
   border-radius: 5px;
+  font-size: 14px;
   cursor: pointer;
+  white-space: nowrap;
+  margin-left: 5px;
+
   &:hover {
     background: #f0c98b;
   }
 `;
 
+export const TimerInput = styled.div`
+  position: relative;
+  flex: 1;
+  display: flex;
+`;
+
+export const TimerText = styled.span`
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  color: #999;
+`;

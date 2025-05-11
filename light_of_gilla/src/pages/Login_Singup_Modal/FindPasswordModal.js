@@ -13,6 +13,7 @@ import {
   ConfirmButton,
   SideButton,
 } from "../../styles/FindPasswordStyles";
+import backIcon from "../../assets/images/뒤로가기.png";
 
 const FindPasswordModal = ({ onClose, onSwitch }) => {
   const [step, setStep] = useState(1);
@@ -23,8 +24,9 @@ const FindPasswordModal = ({ onClose, onSwitch }) => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [error, setError] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
-  // Step 1: 아이디 확인 -> 이메일 조회 + 인증 코드 발송
   const handleIdCheck = async () => {
     setError("");
     if (!userId) {
@@ -38,6 +40,9 @@ const FindPasswordModal = ({ onClose, onSwitch }) => {
       const userEmail = res.data.email;
       setEmail(userEmail);
 
+      if (isSending) return;
+      setIsSending(true);
+
       await axios.post(
         `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/send-verification-email`,
         { email: userEmail }
@@ -48,10 +53,11 @@ const FindPasswordModal = ({ onClose, onSwitch }) => {
       setStep(2);
     } catch {
       setError("존재하지 않는 아이디입니다.");
+    } finally {
+      setIsSending(false);
     }
   };
 
-  // Step 2: 코드 검증
   const handleVerifyCode = async () => {
     setError("");
     if (!code) {
@@ -64,13 +70,12 @@ const FindPasswordModal = ({ onClose, onSwitch }) => {
         { email, code }
       );
 
-      setVerified(true); // 인증 성공만 처리
+      setVerified(true);
     } catch {
       setError("인증 코드가 유효하지 않습니다.");
     }
   };
 
-  // 타이머
   useEffect(() => {
     if (timerActive && timeLeft > 0) {
       const interval = setInterval(() => {
@@ -84,7 +89,26 @@ const FindPasswordModal = ({ onClose, onSwitch }) => {
     <ModalBackground>
       <ModalContainer>
         <CloseButton onClick={onClose}>×</CloseButton>
-
+        <img
+          src={backIcon}
+          alt="뒤로가기"
+          onClick={() => onSwitch("login")}
+          style={{
+            position: "absolute",
+            top: "18px",
+            left: "18px",
+            width: "24px",
+            height: "24px",
+            cursor: "pointer",
+            transition: "transform 0.2s ease",
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.transform = "scale(1.2)";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.transform = "scale(1)";
+          }}
+        />
         {step === 1 && (
           <>
             <Title>아이디를 입력해주세요</Title>
@@ -97,7 +121,9 @@ const FindPasswordModal = ({ onClose, onSwitch }) => {
               />
             </InputWithButtonWrapper>
             {error && <p style={{ color: "red", fontSize: 13 }}>{error}</p>}
-            <ConfirmButton onClick={handleIdCheck}>다음</ConfirmButton>
+            <ConfirmButton onClick={handleIdCheck} disabled={isSending}>
+              {isSending ? "인증코드 메일 전송 중..." : "다음"}
+            </ConfirmButton>
           </>
         )}
 
@@ -141,6 +167,8 @@ const FindPasswordModal = ({ onClose, onSwitch }) => {
 
             <ConfirmButton
               onClick={async () => {
+                if (isResetting) return;
+                setIsResetting(true);
                 try {
                   await axios.post(
                     `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/reset-password`,
@@ -149,11 +177,13 @@ const FindPasswordModal = ({ onClose, onSwitch }) => {
                   setStep(3);
                 } catch {
                   setError("임시 비밀번호 발송 중 오류가 발생했습니다.");
+                } finally {
+                  setIsResetting(false);
                 }
               }}
-              disabled={!verified}
+              disabled={!verified || isResetting}
             >
-              다음
+              {isResetting ? "임시 비밀번호 메일 전송 중..." : "다음"}
             </ConfirmButton>
           </>
         )}
@@ -165,7 +195,9 @@ const FindPasswordModal = ({ onClose, onSwitch }) => {
               <br />
               전송되었습니다.
             </Title>
-            <ConfirmButton onClick={() => onSwitch("login")}>로그인 하기</ConfirmButton>
+            <ConfirmButton onClick={() => onSwitch("login")}>
+              로그인 하기
+            </ConfirmButton>
           </>
         )}
       </ModalContainer>
