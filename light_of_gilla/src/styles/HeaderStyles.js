@@ -12,6 +12,7 @@ export const PageHeader = styled.header`
   top: 0; /* 화면 상단에 위치 */
   left: 0; /* 화면 왼쪽에 위치 */
   z-index: 1000;
+  overflow: visible;
 
   ${mobile} {
     top: auto;
@@ -121,6 +122,7 @@ export const ImageButton2 = styled.button`
 export const DropdownWrapper = styled.div`
   position: relative;
   display: inline-block;
+   z-index: 9998; /* ✅ 다른 요소 위에 위치하도록 명확히 지정 */
 `;
 
 export const DropdownMenu = styled.div`
@@ -136,6 +138,7 @@ export const DropdownMenu = styled.div`
   transform: translateY(-10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
+ z-index: 9999; /* ✅ 다른 요소 위에 위치하도록 명확히 지정 */
 
   ${DropdownWrapper}:hover & {
     opacity: 1;
@@ -150,6 +153,9 @@ export const DropdownMenu = styled.div`
     transform: translateY(10px); // 아래서 위로 올라오게
     right: 0;
     left: auto;
+    ${DropdownWrapper}:hover & {
+      transform: translateY(0);
+    }
   }
 `;
 

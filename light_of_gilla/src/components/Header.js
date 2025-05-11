@@ -107,11 +107,8 @@ function Header() {
                 <img src={defaultProfileImage} alt="로그인" />
               </ImageButton2>
             ) : (
-              <DropdownWrapper
-                onMouseEnter={() => setIsDropdownOpen(true)}
-                onMouseLeave={() => setIsDropdownOpen(false)}
-              >
-                <ImageButton2>
+              <DropdownWrapper>
+                <ImageButton2 onClick={() => setIsDropdownOpen(prev => !prev)}>
                   <img
                     src={profileImage}
                     alt="프로필"
