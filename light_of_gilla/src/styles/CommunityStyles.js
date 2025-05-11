@@ -64,7 +64,7 @@ export const Content = styled.div`
 
   ${mobile} {
     width: 95%;
-    height: 65vh;
+    height: auto;
     margin-top: 5px;
     margin-left: 0;
   }
@@ -78,9 +78,12 @@ export const CommunityListWrapper = styled.div`
   padding: 10px 5px 60px; /* 아래 패딩으로 페이지네이션 안 가려지게 */
 
   ${mobile} {
+    
     padding-bottom: 70px;
   }
 `;
+
+
 
 export const Button = styled.button`
   padding: 2px;
@@ -197,9 +200,13 @@ export const ContentTextArea = styled.textarea`
 
 export const LowRow = styled.div`
     display: flex;  // This makes it a flex container
+    position:relative;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;  // Align vertically in the center
-    gap: 510px;  // Space between the SelectBox and Button
+    gap: 40%;  // Space between the SelectBox and Button
     margin-bottom: 10px;  // Optional: Add space below the row
+    width:90%;
 
     ${mobile} {
       flex-direction: row;

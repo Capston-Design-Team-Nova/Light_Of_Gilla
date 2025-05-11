@@ -14,25 +14,43 @@ function CommunityWS() {
     const name=localStorage.getItem("nickname");
     const navigate=useNavigate();
     const handleSubmit = async () => {
-        const postData = {
-            title: title,
-            content: content,
-            category: selectedOption,
-            nickName: name
-        };
-        console.log(selectedOption)
-        try {
-            await axios.post('https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/save', postData);
-            alert('글을 정상적으로 올렸습니다!');
-            // setTitle('');
-            // setContent('');
-            // setSelectedOption('');
-            navigate('/Community')
-            
-        } catch (error) {
-            console.error('Error posting data:', error);
+        // 제목 검사
+        if (!title.trim()) {
+          alert("제목을 입력해주세요!");
+          return;
         }
-    };
+      
+        // 내용 검사
+        if (!content.trim()) {
+          alert("내용을 입력해주세요!");
+          return;
+        }
+      
+        // 증상(카테고리) 검사
+        if (!selectedOption) {
+          alert("증상을 선택해주세요!");
+          return;
+        }
+      
+        // 모든 항목이 유효하면 글 작성 요청
+        const postData = {
+          title: title,
+          content: content,
+          category: selectedOption,
+          nickName: name
+        };
+      
+        console.log("선택한 증상:", selectedOption);
+      
+        try {
+          await axios.post('https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/save', postData);
+          alert('글을 정상적으로 올렸습니다!');
+          navigate('/Community');
+        } catch (error) {
+          console.error('Error posting data:', error);
+        }
+      };
+      
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
     };

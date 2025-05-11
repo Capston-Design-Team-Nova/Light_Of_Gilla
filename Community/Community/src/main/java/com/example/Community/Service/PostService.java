@@ -145,4 +145,9 @@ public class PostService {
 
         return postDTOList;
     }
+    public void deletePostById(Long post_id) {
+        Optional<PostEntity> optionalPostEntity=postRepository.findById(post_id);
+        postRepository.delete(optionalPostEntity.get());
+
+    }
 }

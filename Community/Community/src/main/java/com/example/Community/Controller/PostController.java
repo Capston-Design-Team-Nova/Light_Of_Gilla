@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.example.Community.Dto.LikeDTO;
 import com.example.Community.Dto.UserDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -95,17 +96,9 @@ public class PostController {
 
         return ResponseEntity.ok(response);
     }
-    @GetMapping("/update/{post_id}")
-    public ResponseEntity UpdateForm(@PathVariable("post_id") Long post_id) {
-        PostDTO postDTO= postService.findByPostId(post_id);
-        /*댓글 목록 가져오기*/
-        return ResponseEntity.ok(postDTO);
-    }
-    @Transactional
     @PostMapping("/update")
-    public ResponseEntity Update(@ModelAttribute PostDTO post) {
-        PostDTO postDTO=postService.update(post);
-        return ResponseEntity.ok(postDTO);
+    public void UpdateForm(@RequestBody PostDTO postDTO) {
+        postService.update(postDTO);
     }
     @GetMapping("/myPost")
     public ResponseEntity<List<PostDTO>> findMyPost(@RequestParam("value") String value) {
@@ -120,6 +113,16 @@ public class PostController {
 
         postService.likesave(likeDTO);
 
+    }
+    @DeleteMapping("/delete/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
+        try {
+            postService.deletePostById(postId);  // 서비스에서 삭제 로직 수행
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패");
+        }
+        return null;
     }
     @GetMapping("/mylike")
     public ResponseEntity<List<PostDTO>> findMyLike(@RequestParam("value") String value) {

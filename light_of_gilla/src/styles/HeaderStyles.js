@@ -12,6 +12,7 @@ export const PageHeader = styled.header`
   top: 0; /* 화면 상단에 위치 */
   left: 0; /* 화면 왼쪽에 위치 */
   z-index: 1000;
+  overflow: visible;
 
   ${mobile} {
     top: auto;
@@ -22,24 +23,33 @@ export const PageHeader = styled.header`
 
 export const Nav = styled.nav`
   width: 99%;
-  display: flex; /* Flexbox 활성화 */
-  justify-content: flex-end; /*우측 정렬*/
-  align-items: center; /* 세로 방향으로 중앙 정렬 */
-`;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 
-export const NavRight = styled.nav`
-  width: 96%;
-  display: flex; /* Flexbox 활성화 */
-  justify-content: flex-end; /* 우측 정렬 */
-  align-items: center; /* 세로 방향으로 중앙 정렬 */
-  gap: 10px;
-
-  /* ✅ 모바일에서만 간격 일정하게 */
   @media screen and (max-width: 480px) {
-    gap: 3px; // 👉 원하는 만큼 조절 (예: 8px, 16px 등)
+    justify-content: center;
+    gap: 10px; /* 간격 균일하게 */
   }
 `;
 
+
+export const NavRight = styled.nav`
+  width: 96%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+
+  @media screen and (max-width: 480px) {
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: nowrap; // 필요 시 wrap으로 바꿔도 돼
+    overflow-x: auto;   // 버튼이 많다면 좌우 스크롤 허용
+
+    
+  }
+`;
 export const Button = styled.button`
   padding: 12px;
   width: 100%;
@@ -55,10 +65,11 @@ export const Button = styled.button`
   margin-right: 20px;
 
   @media screen and (max-width: 480px) {
-    padding: 8px 5px;
-    font-size: 10px;
-    min-width: 90px;
-  }
+  padding: 4px 6px;
+  font-size: 10px;
+  min-width: 70px;
+  margin: 0 4px;
+}
 `;
 
 export const ImageButton1 = styled.button`
@@ -77,11 +88,12 @@ export const ImageButton1 = styled.button`
   }
 
   @media screen and (max-width: 480px) {
-    img {
-      margin-left:35px;
-      width: 36px;
-      height: 36px;  /* ✅ 모바일에서는 살짝 줄임 */
-    }
+  img {
+    margin-left: 10px;
+    width: 36px;
+    height: 36px;
+  }
+}
 `;
 
 export const ImageButton2 = styled.button`
@@ -110,11 +122,12 @@ export const ImageButton2 = styled.button`
 export const DropdownWrapper = styled.div`
   position: relative;
   display: inline-block;
+   z-index: 9998; /* ✅ 다른 요소 위에 위치하도록 명확히 지정 */
 `;
 
 export const DropdownMenu = styled.div`
   position: absolute;
-  top: 100%; /* 버튼 바로 아래 */
+  top: 100%;
   right: 0;
   width: 85px;
   background-color: #444;
@@ -125,6 +138,7 @@ export const DropdownMenu = styled.div`
   transform: translateY(-10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
+ z-index: 9999; /* ✅ 다른 요소 위에 위치하도록 명확히 지정 */
 
   ${DropdownWrapper}:hover & {
     opacity: 1;
@@ -132,8 +146,19 @@ export const DropdownMenu = styled.div`
     pointer-events: auto;
   }
 
-  
+  /* ✅ 모바일에서는 위로 열리게 수정 */
+  @media screen and (max-width: 480px) {
+    top: auto;
+    bottom: 100%;              // 버튼 위쪽에 위치
+    transform: translateY(10px); // 아래서 위로 올라오게
+    right: 0;
+    left: auto;
+    ${DropdownWrapper}:hover & {
+      transform: translateY(0);
+    }
+  }
 `;
+
 
 export const DropdownItem = styled.div`
   padding: 5px 10px 5px;

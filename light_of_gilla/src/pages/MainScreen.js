@@ -39,7 +39,7 @@ function MainScreen() {
                     </FeatureBox1>
                     <FeatureBox2 data-aos="fade-up" data-aos-delay="500">
                         <FeatureImage src={featureImage2} alt="기능2" />
-                        <P4>언제 어디서나 다른 사람들과 함께 증상에 대한 지식을 공유해보세요.</P4>
+                        <P4>언제 어디서나 다른 사람들과 함께 증상에 대한 지식을 공유해보세요. 또한, FAQ에서 전문가의 답변을 확인할 수 있습니다. </P4>
                     </FeatureBox2>
                 </FeaturesContainer>
             </FeaturesSection>
@@ -59,7 +59,7 @@ function MainScreen() {
 
             </LastSection>
 
-            <Footer> ©2025 LIGHT OF GILLA ALL RIGHTS RESERVED. </Footer>
+            <Footer> LIGHT OF GILLA(길라의 빛) <br />한성대학교 컴퓨터공학부 캡스톤 디자인 Team Nova <br />©2025 LIGHT OF GILLA ALL RIGHTS RESERVED.  </Footer>
 
             {showModal && <AuthModalManager onCloseAll={() => setShowModal(false)} />} {/* ✅ 모달 렌더 */}
         </Main>

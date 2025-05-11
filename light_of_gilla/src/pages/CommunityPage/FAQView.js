@@ -6,6 +6,8 @@ import styled from "styled-components";
 import { Main,Center,ToggleButton,Content } from "../../styles/CommunityStyles";
 import Header from "../../components/Header";
 import Sidebar from '../../components/Sidebar';
+import {formattedFaqs as faqs} from './data';
+
 
 // 모바일 기준 (갤럭시 S24)
 const mobile = '@media screen and (max-width: 480px)';
@@ -24,6 +26,7 @@ const Title = styled.h1`
     font-size: 23px;
     
   margin-bottom: 1.5rem;
+  margin-top: 1.5rem;
 
   white-space: normal;       // ✅ 줄바꿈 허용
   overflow: visible;         // ✅ 잘리지 않도록
@@ -33,7 +36,7 @@ const Title = styled.h1`
 
 const Meta = styled.div`
   color: #00000080;
-  font-size: 12px;
+  font-size: 15px;
   margin-bottom: 1rem;
 `;
 
@@ -45,12 +48,26 @@ const Content1 = styled.p`
 
 
 const FAQView = () => {
+  const formatText = (text) =>
+  text.split(/([.?!])\s*/g).reduce((acc, part, i) => {
+    if (!part.trim()) return acc;
+    if (i % 2 === 1) {
+      acc[acc.length - 1] += part;
+      acc.push(<br key={i} />);
+    } else {
+      acc.push(part);
+    }
+    return acc;
+  }, []);
     const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const { id } = useParams();
+    
+  const navigate = useNavigate();
+  const faqData = faqs.find((p) => p.id === Number(id));
     const toggleSidebar = () => {
         setSidebarOpen(!isSidebarOpen);
     };
-
+if (!faqData) return <div>해당 FAQ를 찾을 수 없습니다.</div>;
   //const navigate = useNavigate();
   
 
@@ -71,11 +88,11 @@ const FAQView = () => {
                 
 
                 <Wrapper>
-                    <Title>질문</Title>
+                    <Title>Q. {formatText(faqData.question)} </Title>
                     <Meta>                   
-                        ㅇㅇㅇ과 의사
+                        {formatText(faqData.author)}의 답변이에요.
                     </Meta>
-                    <Content1>글 내용</Content1>
+                    <Content1>A. {formatText(faqData.answer)} </Content1>
                      
                   
                 </Wrapper>
