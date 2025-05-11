@@ -67,19 +67,32 @@ function MyLikes() {
                     </Link>
                 </TopRow>
                 <Content isSidebarOpen={isSidebarOpen}>
-                <CommunityListWrapper>
-                        <CommunityList posts={currentPosts} />
-                    </CommunityListWrapper>
-                    
-                    {/* 페이지네이션 */}
-                    {totalPages > 0 && (
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={handlePageChange}
-                        />
-                    )}         
-                </Content>              
+  {posts.length === 0 ? (
+    <div style={{
+      textAlign: "center",
+      marginTop: "2rem",
+      fontSize: "1.1rem",
+      fontFamily: "Ourfont5"
+    }}>
+      아직 좋아요를 남긴 글이 없습니다. 좋아요를 남겨보세요!
+    </div>
+  ) : (
+    <>
+      <CommunityListWrapper>
+        <CommunityList posts={currentPosts} />
+      </CommunityListWrapper>
+
+      {totalPages > 0 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
+    </>
+  )}
+</Content>
+        
                 
             </Center>
         </Main>
