@@ -28,7 +28,8 @@ public class PostEntity extends BaseEntity{
     @Column
     private String category;
 
-    @Column
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Column

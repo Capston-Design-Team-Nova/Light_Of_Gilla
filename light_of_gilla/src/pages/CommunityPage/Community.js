@@ -46,7 +46,7 @@ function Community() {
     const category = encodeURIComponent(value);
     try {
       const response = await axios.get(
-        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/category/${category}`
+        `https://www.thegilla.com/post/category/${category}`
       );
       setPosts(response.data);
     } catch (error) {
