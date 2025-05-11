@@ -77,7 +77,7 @@ const CommentSection = styled.div`
   overflow-y: auto;
   flex: 1;
   padding: 1rem 0;
-margin-bottom: 1.1rem;
+margin-bottom: 4rem;
   ${mobile} {
     max-height: calc(100vh - 220px);
   }
