@@ -58,6 +58,7 @@ function HospitalMap() {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [maxVisible, setMaxVisible] = useState(5);
   const [highlightedHospitalName, setHighlightedHospitalName] = useState(null);
+  const [selectedHospitalLoading, setSelectedHospitalLoading] = useState(false);
 
   // 좋아요 토글
   const toggleLike = async (reviewId) => {
@@ -722,6 +723,7 @@ function HospitalMap() {
 
   // 병원 정보 및 리뷰 api
   const handleHospitalClick = async (h) => {
+    setSelectedHospitalLoading(true);
     try {
       // 병원 정보 조회
       const res = await fetch(
@@ -778,6 +780,8 @@ function HospitalMap() {
     } catch (err) {
       console.error("병원 상세 또는 리뷰 데이터 요청 실패", err);
       setHospitalReviews([]);
+    } finally {
+      setSelectedHospitalLoading(false); // ✅ 로딩 종료
     }
   };
 
@@ -821,61 +825,58 @@ function HospitalMap() {
 
   // 검색 로직
   const handleSearch = (customTerm) => {
-  const rawTerm = customTerm ?? searchTerm;
-  const trimmedTerm =
-    typeof rawTerm === "string"
-      ? rawTerm.trim()
-      : typeof rawTerm === "number"
-      ? String(rawTerm).trim()
-      : "";
+    const rawTerm = customTerm ?? searchTerm;
+    const trimmedTerm =
+      typeof rawTerm === "string"
+        ? rawTerm.trim()
+        : typeof rawTerm === "number"
+        ? String(rawTerm).trim()
+        : "";
 
-  if (!trimmedTerm) return;
+    if (!trimmedTerm) return;
 
-  saveSearchKeyword(trimmedTerm);
+    saveSearchKeyword(trimmedTerm);
 
-  const matchedCategory = symptomToCategory[trimmedTerm];
-  if (matchedCategory) {
-    matchedCategory
-      .split(",")
-      .forEach((cat) => handleCategoryClick(cat.trim()));
-  } else {
-    const ps = new window.kakao.maps.services.Places();
-    ps.categorySearch(
-      "HP8",
-      (data, status) => {
-        if (status === window.kakao.maps.services.Status.OK) {
-          const filtered = data.filter(
-            (item) =>
-              item.place_name.includes(trimmedTerm) ||
-              item.road_address_name?.includes(trimmedTerm) ||
-              item.address_name?.includes(trimmedTerm)
-          );
-          const nearby = filterHospitalsWithin2km(filtered);
-          setHospitals(nearby);
-
-          // ✅ 지도 중심 이동
-          if (mapRef.current && nearby.length > 0) {
-            const lat = parseFloat(nearby[0].y);
-            const lng = parseFloat(nearby[0].x);
-            mapRef.current.panTo(
-              new window.kakao.maps.LatLng(lat, lng)
+    const matchedCategory = symptomToCategory[trimmedTerm];
+    if (matchedCategory) {
+      matchedCategory
+        .split(",")
+        .forEach((cat) => handleCategoryClick(cat.trim()));
+    } else {
+      const ps = new window.kakao.maps.services.Places();
+      ps.categorySearch(
+        "HP8",
+        (data, status) => {
+          if (status === window.kakao.maps.services.Status.OK) {
+            const filtered = data.filter(
+              (item) =>
+                item.place_name.includes(trimmedTerm) ||
+                item.road_address_name?.includes(trimmedTerm) ||
+                item.address_name?.includes(trimmedTerm)
             );
-          }
-        } else {
-          setHospitals([]);
-        }
-      },
-      {
-        location: new window.kakao.maps.LatLng(
-          state.center.lat,
-          state.center.lng
-        ),
-        radius: 3000,
-      }
-    );
-  }
-};
+            const nearby = filterHospitalsWithin2km(filtered);
+            setHospitals(nearby);
 
+            // ✅ 지도 중심 이동
+            if (mapRef.current && nearby.length > 0) {
+              const lat = parseFloat(nearby[0].y);
+              const lng = parseFloat(nearby[0].x);
+              mapRef.current.panTo(new window.kakao.maps.LatLng(lat, lng));
+            }
+          } else {
+            setHospitals([]);
+          }
+        },
+        {
+          location: new window.kakao.maps.LatLng(
+            state.center.lat,
+            state.center.lng
+          ),
+          radius: 3000,
+        }
+      );
+    }
+  };
 
   // 카테고리 버튼
   const handleCategoryClick = (category) => {
@@ -1242,8 +1243,9 @@ function HospitalMap() {
               alignItems: "center",
             }}
             onClick={() => {
-              const ps = new window.kakao.maps.services.Places();
+              setSelectedHospitalLoading(true); // ✅ 로딩 시작
 
+              const ps = new window.kakao.maps.services.Places();
               ps.categorySearch(
                 "HP8",
                 (data, status) => {
@@ -1252,10 +1254,13 @@ function HospitalMap() {
                       (item) => item.place_name === hospital.name
                     );
                     if (matched) {
-                      handleHospitalClick(matched); // 원본 h 객체로 호출
+                      handleHospitalClick(matched); // 안에서 다시 로딩 시작 → 중복 OK
                     } else {
                       alert("위치 정보를 불러올 수 없습니다.");
+                      setSelectedHospitalLoading(false); // 실패 시 종료
                     }
+                  } else {
+                    setSelectedHospitalLoading(false); // 실패 시 종료
                   }
                 },
                 {
@@ -2038,7 +2043,24 @@ function HospitalMap() {
         </CategoryModalOverlay>
       )}
 
-      {selectedHospital && (
+      {selectedHospitalLoading ? (
+        <Sidebar>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <img
+              src={require("../assets/images/spinner.gif")}
+              alt="로딩 중"
+              style={{ width: "40px", height: "40px" }}
+            />
+          </div>
+        </Sidebar>
+      ) : selectedHospital ? (
         <Sidebar>
           <div>
             <img
@@ -2181,7 +2203,7 @@ function HospitalMap() {
             {renderReviews()}
           </div>
         </Sidebar>
-      )}
+      ) : null}
     </Main>
   );
 }
