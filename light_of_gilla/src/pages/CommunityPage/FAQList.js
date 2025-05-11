@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { faqs } from './data';
+import { formattedFaqs as faqs } from './data';
 
 const mobile = '@media screen and (max-width: 480px)';
 
