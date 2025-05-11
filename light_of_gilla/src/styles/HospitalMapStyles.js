@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 const mobile = "@media screen and (max-width: 480px)";
 
@@ -113,18 +113,6 @@ export const SearchBox = styled.div`
   gap: 10px;
   background: rgba(0, 0, 0, 0);
 
-  img {
-    padding: 5px 1px;
-    width: 50px;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-    &:hover {
-      background: rgb(226, 226, 226);
-    }
-  }
-
   ${mobile} {
     img {
       width: 40px;
@@ -134,13 +122,17 @@ export const SearchBox = styled.div`
 `;
 
 export const HospitalItem = styled.div`
+  position: relative;
+  overflow: hidden;
   padding: 10px;
   border-bottom: 1px solid #ccc;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    background: rgb(226, 226, 226);
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 10; /* 겹침 방지 */
   }
 
   h3 {
@@ -289,7 +281,7 @@ export const CategoryItem = styled.div`
 
   ${mobile} {
     max-width: 60px;
-    min-width: 50px; // 기존보다 더 줄임
+    min-width: 50px;
     padding: 6px;
 
     img {
@@ -312,7 +304,7 @@ export const CategoryButtonsWrapper = styled.div`
   flex-wrap: nowrap;
   width: 100%;
   box-sizing: border-box;
-  overflow-x: auto; /* ✅ 데스크탑에서도 스크롤 가능하게 */
+  overflow-x: auto; /* 데스크탑에서도 스크롤 가능하게 */
   -webkit-overflow-scrolling: touch;
 
   ${mobile} {
@@ -327,8 +319,8 @@ export const CategoryButtonsWrapper = styled.div`
 `;
 
 export const CategoryAllButton = styled(CategoryItem)`
-  flex: 0 0 auto; /* ✅ 줄어들지 않게 설정 */
-  min-width: fit-content; /* ✅ 너무 작아지지 않게 */
+  flex: 0 0 auto;
+  min-width: fit-content;
   max-width: 100px;
   padding: 12px;
 
@@ -345,5 +337,74 @@ export const CategoryAllButton = styled(CategoryItem)`
     span {
       font-size: 11px;
     }
+  }
+`;
+
+export const SortingButtonWrapper = styled.div`
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+`;
+
+export const SortingButton = styled.button`
+  border: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  background: ${(props) => (props.$active ? "#ff6b6b" : "transparent")};
+  color: ${(props) => (props.$active ? "white" : "#333")};
+  font-weight: ${(props) => (props.$active ? "bold" : "normal")};
+  transition: background 0.2s ease;
+
+  span {
+    display: inline-block;
+    transition: transform 0.15s ease;
+  }
+
+  &:hover span {
+    transform: scale(1.08);
+  }
+
+  &:hover {
+    background: ${(props) => (props.$active ? "#ff6b6b" : "#f5f5f5")};
+  }
+`;
+
+
+const shimmer = keyframes`
+  0% { left: -150%; }
+  100% { left: 150%; }
+`;
+
+export const ShimmerOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: ${shimmer} 1.4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+  transform: skewX(-25deg);
+`;
+
+export const SearchIcon = styled.img`
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-60%);
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.2) translateY(-50%);
   }
 `;
