@@ -83,6 +83,8 @@ export const CommunityListWrapper = styled.div`
   }
 `;
 
+
+
 export const Button = styled.button`
   padding: 2px;
   width: 85px;
@@ -198,9 +200,13 @@ export const ContentTextArea = styled.textarea`
 
 export const LowRow = styled.div`
     display: flex;  // This makes it a flex container
+    position:relative;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;  // Align vertically in the center
-    gap: 510px;  // Space between the SelectBox and Button
+    gap: 40%;  // Space between the SelectBox and Button
     margin-bottom: 10px;  // Optional: Add space below the row
+    width:90%;
 
     ${mobile} {
       flex-direction: row;
