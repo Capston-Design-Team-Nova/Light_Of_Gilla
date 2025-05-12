@@ -1,5 +1,5 @@
 ![Image](https://github.com/user-attachments/assets/f9dedda1-7e64-41b4-8e89-cb54267bba1f)
-# 🏃‍♀️ Pacer Fit
+# 🏃‍♀️길라의 빛
 
 **Pacer Fit**은 아이템 기반 협업 필터링(Item-based Collaborative Filtering) 추천 알고리즘을 활용하여, 사용자에게 맞춤형 운동 코스를 추천해주는 **Android 어플리케이션**입니다.  
 언제 어디서나 운동을 기록하고, 다른 사용자들과의 비교를 통해 동기부여까지 받을 수 있는 스마트 피트니스 앱입니다.
