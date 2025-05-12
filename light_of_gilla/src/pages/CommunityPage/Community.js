@@ -119,7 +119,13 @@ function Community() {
         </TopRow>
         <Content isSidebarOpen={isSidebarOpen}>
           <CommunityListWrapper>
-            <CommunityList posts={currentPosts} />
+            {currentPosts.length > 0 ? (
+              <CommunityList posts={currentPosts} />
+            ) : (
+              <p style={{ padding: "20px", fontSize: "16px", textAlign: "center" }}>
+                해당 카테고리의 글이 아직 없습니다!
+              </p>
+            )}
           </CommunityListWrapper>
 
           {/* 페이지네이션 */}
