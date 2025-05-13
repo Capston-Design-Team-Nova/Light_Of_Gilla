@@ -46,9 +46,7 @@
 
 ## 📥 기대 효과
 
-1. Android Studio로 프로젝트 클론
-2. Firebase 연동 설정 (google-services.json 필요)
-3. APK 빌드 후 실행
+
 
 ---
 
