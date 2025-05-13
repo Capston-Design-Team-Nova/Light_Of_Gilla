@@ -204,6 +204,8 @@ const Nickname = styled.strong`
 const CommentText = styled.div`
   font-size: 14px;
   line-height: 1.4;
+  overflow-wrap: break-word;
+  white-space: normal;
 `;
 
 const defaultProfileImage = require("../../assets/images/ProfileImage.png");
@@ -431,19 +433,11 @@ const handleCommentDelete = async (commentId) => {
                                 }   
                             />
                             <Button type="submit">⬆</Button>
-                    </CommentForm>
-                    
-
-                    
-                    
+                    </CommentForm>                 
                 </Wrapper>
-                </Content>
-                
-                
+                </Content>                
             </Center>
-        </Main>
-
-    
+        </Main>    
   );
 };
 

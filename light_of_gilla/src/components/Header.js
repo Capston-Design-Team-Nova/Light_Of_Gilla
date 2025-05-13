@@ -113,6 +113,10 @@ function Header() {
                     src={profileImage}
                     alt="프로필"
                     style={{ borderRadius: "50%", width: "36px", height: "36px" }} // 원형
+                    onError={(e) => {
+      e.target.onerror = null;
+      e.target.src = defaultProfileImage;
+    }}
                   />
                 </ImageButton2>
                 {isDropdownOpen && (

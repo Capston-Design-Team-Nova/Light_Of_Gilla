@@ -224,7 +224,7 @@ ${mobile} {
 export const LinkButton = styled(Link)`
   margin-top: 15px;
   padding: 2.6rem;
-  background-color: #BDBDBD;
+  background-color:rgb(238, 153, 26);
   color: white;
   font-family: 'OurFont2';
   font-size: 1.5rem;
@@ -237,7 +237,7 @@ export const LinkButton = styled(Link)`
   text-align: center;
 
   &:hover {
-    background-color:rgb(238, 153, 26);
+    background-color: #BDBDBD;
   }
 
   ${mobile} {
@@ -250,7 +250,7 @@ export const LinkButton = styled(Link)`
 export const Button = styled(Link)`
   margin-top: 15px;
   padding: 2.5rem;
-  background-color: #BDBDBD;
+  background-color:rgb(238, 153, 26);
   color: white;
   font-family: 'OurFont2';
   font-size: 1.5rem;
