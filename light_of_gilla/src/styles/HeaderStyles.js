@@ -45,24 +45,28 @@ export const NavRight = styled.nav`
     justify-content: center;
     gap: 10px;
     flex-wrap: nowrap; // 필요 시 wrap으로 바꿔도 돼
-    overflow-x: auto;   // 버튼이 많다면 좌우 스크롤 허용
-
-    
+    overflow-x: auto;   // 버튼이 많다면 좌우 스크롤 허용    
   }
 `;
+
 export const Button = styled.button`
   padding: 12px;
   width: 100%;
   height: 100%;
-  background-color: #ffc86a;
+  background-color:#ffc86a;
   color: black;
-  font-family: "OurFont1";
+  font-family: "OurFont7";
   font-weight: bold;
   font-size: 1.3vw;
   cursor: pointer;
   border: none;
+  border-radius: 5px;
   margin-left: 10px;
   margin-right: 20px;
+
+  &:hover {
+    background-color:#FFB536;
+  }
 
   @media screen and (max-width: 480px) {
   padding: 4px 6px;

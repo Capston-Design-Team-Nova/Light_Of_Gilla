@@ -100,9 +100,5 @@ export const faqs = [
     
   ];
 
-  export const formattedFaqs = faqs.map(faq => ({
-  ...faq,
-  question: faq.question.replace(/([.?!])\s*/g, '$1\n'),
-  answer: faq.answer.replace(/([.?!])\s*/g, '$1\n')
-}));
+  
   
