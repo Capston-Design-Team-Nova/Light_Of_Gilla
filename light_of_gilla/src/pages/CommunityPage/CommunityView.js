@@ -208,7 +208,7 @@ const CommentText = styled.div`
   white-space: normal;
 `;
 
-const defaultProfileImage = require("../../assets/images/ProfileImage.png");
+const defaultProfileImage = require("../../assets/images/profileimage2.png");
 const CommunityView = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const [postData, setPostData] = useState(null); 
