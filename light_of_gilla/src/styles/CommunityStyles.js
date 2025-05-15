@@ -53,10 +53,12 @@ export const Content = styled.div`
   width: calc(97% - 250px);
     margin-left: 250px;
   transition: margin-left 0.3s ease;
-  height: 83vh; // 전체 높이 고정
+  min-height: 300px; /* 내용이 너무 적을 때는 최소 높이 보장 */
+  height: auto;
+
   background-color: white;
   border-radius: 15px;
-  overflow: hidden; // 자식 요소 넘침 방지
+  overflow: visible; // 자식 요소 넘침 방지
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

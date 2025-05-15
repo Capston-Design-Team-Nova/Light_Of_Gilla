@@ -1,12 +1,4 @@
-//import React,{Component} from 'react';
 import React from 'react';
-//import CommunityListItem from './CommunityListItem';
-//import { ListContainer } from '../../styles/CommunityListStyles';
-//import { Link } from 'react-router-dom';
-//import CommunityListItem from "./CommunityListItem";
-//import { Wrapper1 } from '../../styles/CommunityListStyles';
-//import axios from 'axios';
-//import { ListContainer, ListTitle, ListItem, CenteredText } from '../../styles/CommunityListStyles';
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -113,6 +105,17 @@ function CommunityList({posts}){
   return(
     <PostList>
       <PostListInner>
+        {/* ✅ 리스트 헤더 */}
+        <PostItem style={{ fontWeight: "bold", backgroundColor: "#f3f3f3" }}>
+          <PostRow>
+            <PostTitle>제목</PostTitle>
+            <PostAuthor>작성자</PostAuthor>
+            <PostTime>작성일</PostTime>
+            <PostLikes>좋아요</PostLikes>
+          </PostRow>
+        </PostItem>
+
+        {/* ✅ 실제 게시글 목록 */}
         {posts.map((post) => (
           <PostItem key={post.post_Id} onClick={() => navigate(`/post/${post.post_Id}`)}>
             <PostRow>
@@ -133,79 +136,4 @@ function CommunityList({posts}){
   );
 }
 
-    {/*<Link to ="/View">
-      <ListContainer>
-        <CommunityListItem />
-      </ListContainer>
-    </Link>*/}
-
-{/*
-class CommunityList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-    };
-  }
-
-  componentDidMount() {
-    this._getListData();
-  }
-
-  _getListData = async () => {
-    try {
-      const response = await axios.get('/get/board');
-      this.setState({ data: response.data });
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  render() {
-    const { data } = this.state;
-    const list = data.data;
-
-    return (
-      <ListContainer>
-        <ListTitle>
-          <div>제목</div>
-          <div>조회수</div>
-          <CenteredText>날짜</CenteredText>
-        </ListTitle>
-
-        {list
-          ? list.map((el, key) => (
-              <ListItem key={key}>
-                <div>{el.title}</div>
-                <div></div>
-                <CenteredText>{el.date.slice(0, 10)}</CenteredText>
-              </ListItem>
-            ))
-          : null}
-      </ListContainer>
-    );
-  }
-}
-*/}
-{/*
-function CommunityList(props) {
-  const { posts, onClickItem } = props;
-
-  return (
-    <Wrapper1>
-      {posts.map((post, index) => {
-        return (
-          <CommunityListItem
-            key={post.id}
-            post={post}
-            onClick={() => {
-              onClickItem(post);
-            }}
-          />
-        );
-      })}
-    </Wrapper1>
-  );
-}
-*/}
 export default CommunityList;

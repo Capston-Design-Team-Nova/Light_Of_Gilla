@@ -27,24 +27,24 @@ const CommentsWrapper = styled.div`
 const Title = styled.h1`
     color: #000;
     font-family: Ourfont5;
-    font-size: 23px;
+    font-size: 1.6rem;
 `;
 
 const Meta = styled.div`
   color: #00000080;
-  font-size: 11px;
+  font-size: 1rem;
   margin-bottom: 1rem;
 `;
 
 const Content1 = styled.p`
   line-height: 1.6;
-  font-size: 14px;
+  font-size: 1.4rem;
   font-family: Ourfont5;
   `;
 
 const Category = styled.p`
   line-height: 1.6;
-  font-size: 15px;
+  font-size: 1.4rem;
   font-family: Ourfont3;
   color: #FF710B;
   `;
