@@ -41,7 +41,8 @@
 
 ## 📷 스크린샷
 > (앱 실행 화면 예시를 여기에 첨부해주세요)
-![Image](https://github.com/user-attachments/assets/7676a216-3208-41fb-a1c8-330a7241cd5b)
+<img src="https://github.com/user-attachments/assets/7676a216-3208-41fb-a1c8-330a7241cd5b" width="600" />
+
 ---
 
 ## 📥 기대 효과
