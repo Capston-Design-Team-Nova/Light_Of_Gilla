@@ -53,9 +53,8 @@ export const Content = styled.div`
   width: calc(97% - 250px);
     margin-left: 250px;
   transition: margin-left 0.3s ease;
-  min-height: 300px; /* 내용이 너무 적을 때는 최소 높이 보장 */
+  min-height: 70vh; /* 내용이 너무 적을 때는 최소 높이 보장 */
   height: auto;
-
   background-color: white;
   border-radius: 15px;
   overflow: visible; // 자식 요소 넘침 방지
@@ -157,7 +156,7 @@ export const SearchBar = styled.div`
 export const SearchInput = styled.input`
   padding: 10px;
   width: 96%;
-  font-size: 15px;
+  font-size: 16px;
   font-family: 'OurFont2';
   border:none;
   border-radius:20px;
@@ -241,12 +240,14 @@ export const Label = styled.label`
   font-size: 16px;
   font-family: 'Ourfont6';
   color: black;
+ 
   margin-right: 1px;
   padding-top: 9px; 
 
      ${mobile} {
     padding-top: 3px;         // ✅ 모바일에서 좀 더 위로 올림
     align-self: flex-start;   // ✅ 입력창보다 위 정렬
+     margin-left: 1px;
   }
 `;
 

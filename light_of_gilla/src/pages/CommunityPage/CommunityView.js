@@ -266,31 +266,34 @@ const CommunityView = () => {
   const [newComment, setNewComment] = useState({ writer: "", text: "" });
   const [commentCount, setCommentCount] = useState(0);
   const [likes, setLikes] = useState(0);
+ const [hasLiked, setHasLiked] = useState(false); // ✅ 유저가 이미 좋아요 눌렀는지
   
   if (!postData) return <div>글을 찾을 수 없습니다.</div>;
-
-  const handleLike = async () => {
-    const updatedLikes = likes + 1; // UI 업데이트를 위해 좋아요 수 증가
-    setLikes(updatedLikes); // UI 먼저 업데이트
-    const likeData = {
-      post_id: id,
-      nickName: name
-  };
-  console.log(likeData.post_id,likeData.nickName);
-    try {
-      await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/savelike`,likeData);//백틱으로 선언해야함함
-    
-  } catch (error) {
-      console.error('좋아요 업데이트 중 오류 발생:', error);
+ const handleLike = async () => {
+    if (hasLiked) {
+    return; // 이미 누른 경우 더 이상 증가하지 않음
   }
 
-    try {
-        await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like?post_id=${id}`);//백틱으로 선언해야함함
-      
-    } catch (error) {
-        console.error('좋아요 업데이트 중 오류 발생:', error);
-    }
-  
+  const updatedLikes = likes + 1;
+  setLikes(updatedLikes);
+  setHasLiked(true); // ✅ 한 번만 가능하게 설정
+
+  const likeData = {
+    post_id: id,
+    nickName: name,
+  };
+
+  try {
+    await axios.post(
+      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/savelike`,
+      likeData
+    );
+    await axios.post(
+      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like?post_id=${id}`
+    );
+  } catch (error) {
+    console.error("좋아요 업데이트 중 오류 발생:", error);
+  }
   };
 
   const handleCommentSubmit = (e) => {
@@ -396,7 +399,7 @@ const handleCommentDelete = async (commentId) => {
                     <Content1>{postData.content}</Content1>
                      <Category>#{postData.category}</Category>
                     <MiddleRow>
-                        <LikeButton onClick={handleLike}>♡좋아요 {likes}개</LikeButton>
+                        <LikeButton onClick={handleLike} disabled={hasLiked}>{hasLiked ? "♥ 좋아요 " : "♡ 좋아요 "} {likes}개</LikeButton>
                         <H3>💬 댓글 ({commentCount})</H3>
                     </MiddleRow>
 
