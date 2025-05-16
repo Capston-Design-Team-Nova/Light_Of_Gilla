@@ -256,7 +256,7 @@ export const PaginationWrapper = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 90%;
+  width: 98%;
   height: 50px;
   display: flex;
   justify-content: center;

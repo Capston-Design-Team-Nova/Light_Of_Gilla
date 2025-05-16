@@ -143,7 +143,7 @@ const CommentForm = styled.form`
   padding: 0.6rem 1rem;
   gap: 0.5rem;
   background: white;
-  border-top: 1px solid #ccc;
+  border:none;
 
   textarea {
     flex: 1;
