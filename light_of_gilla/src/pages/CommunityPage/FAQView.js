@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { Main,Center,ToggleButton,Content } from "../../styles/CommunityStyles";
 import Header from "../../components/Header";
 import Sidebar from '../../components/Sidebar';
-import {formattedFaqs as faqs} from './data';
+import { faqs} from './data';
 
 
 // 모바일 기준 (갤럭시 S24)
@@ -44,21 +44,13 @@ const Content1 = styled.p`
   line-height: 1.6;
   font-size: 18px;
   font-family: Ourfont5;
+  overflow-wrap: break-word;
+  white-space: normal;
   `;
 
 
 const FAQView = () => {
-  const formatText = (text) =>
-  text.split(/([.?!])\s*/g).reduce((acc, part, i) => {
-    if (!part.trim()) return acc;
-    if (i % 2 === 1) {
-      acc[acc.length - 1] += part;
-      acc.push(<br key={i} />);
-    } else {
-      acc.push(part);
-    }
-    return acc;
-  }, []);
+  
     const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const { id } = useParams();
     
@@ -88,11 +80,11 @@ if (!faqData) return <div>해당 FAQ를 찾을 수 없습니다.</div>;
                 
 
                 <Wrapper>
-                    <Title>Q. {formatText(faqData.question)} </Title>
+                    <Title>Q. {faqData.question} </Title>
                     <Meta>                   
-                        {formatText(faqData.author)}의 답변이에요.
+                        {faqData.author}의 답변이에요.
                     </Meta>
-                    <Content1>A. {formatText(faqData.answer)} </Content1>
+                    <Content1>A. {faqData.answer} </Content1>
                      
                   
                 </Wrapper>

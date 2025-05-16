@@ -46,7 +46,7 @@ function Community() {
     const category = encodeURIComponent(value);
     try {
       const response = await axios.get(
-        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/category/${category}`
+        `https://www.thegilla.com/post/category/${category}`
       );
       setPosts(response.data);
     } catch (error) {
@@ -68,7 +68,7 @@ function Community() {
       }
     } else {
       try {
-        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/`);
+        const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/view`);
         console.log("게시글 데이터를 불러오는 중");
         setPosts(response.data);
       } catch (error) {
@@ -119,7 +119,13 @@ function Community() {
         </TopRow>
         <Content isSidebarOpen={isSidebarOpen}>
           <CommunityListWrapper>
-            <CommunityList posts={currentPosts} />
+            {currentPosts.length > 0 ? (
+              <CommunityList posts={currentPosts} />
+            ) : (
+              <p style={{ padding: "20px", fontSize: "16px", textAlign: "center" }}>
+                해당 카테고리의 글이 아직 없습니다!
+              </p>
+            )}
           </CommunityListWrapper>
 
           {/* 페이지네이션 */}

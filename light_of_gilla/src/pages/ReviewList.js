@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
 
 const BASE_URL = "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api";
 
@@ -50,7 +51,14 @@ const PostRating = styled.div`
   font-size: 14px;
   color: #000;
   flex: 1;
+  color: #F2B84B; // 별 색상
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+
 `;
+
 
 const PostContent = styled.p`
   font-size: 15px;
@@ -74,11 +82,36 @@ function ReviewList() {
   const [reviews, setReviews] = useState([]);
   const [hospitalMap, setHospitalMap] = useState({});
   
+  const renderStars = (rating) => {
+  const stars = [];
+  const fullStars = Math.floor(rating); // 정수 부분
+  const hasHalfStar = rating % 1 >= 0.5; // 0.5 이상이면 반 개
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+  // 꽉 찬 별
+  for (let i = 0; i < fullStars; i++) {
+    stars.push(<BsStarFill key={`full-${i}`} />);
+  }
+
+  // 반 개 별
+  if (hasHalfStar) {
+    stars.push(<BsStarHalf key="half" />);
+  }
+
+  // 빈 별
+  for (let i = 0; i < emptyStars; i++) {
+    stars.push(<BsStar key={`empty-${i}`} />);
+  }
+
+  return stars;
+};
 
   useEffect(() => {
     const userName = localStorage.getItem("nickname");
+    
     if (!userName) {
       console.error("유저 이름이 없습니다. 로그인 필요.");
+      
       return;
     }
 
@@ -90,6 +123,7 @@ function ReviewList() {
             "X-User-Name": userName,
           },
         });
+        console.log(res.data); 
         const reviewData = res.data;
         setReviews(reviewData);
 
@@ -143,7 +177,7 @@ function ReviewList() {
             <PostItem key={review.id} >
               <PostRow>
   <PostTitle style={{ flex: 2 }}>{hospital ? hospital.name : "병원 이름 불러오는 중..."}</PostTitle>
-  <PostRating style={{ flex: 1, textAlign: "center" }}>⭐{review.rating}</PostRating>
+  <PostRating style={{ flex: 1, textAlign: "center" }}>{renderStars(review.rating)}</PostRating>
   <PostTime style={{ flex: 1, textAlign: "right" }}>{new Date(review.createdAt).toLocaleDateString()}</PostTime>
 </PostRow>
               
