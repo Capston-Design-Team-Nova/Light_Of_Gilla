@@ -1,44 +1,39 @@
-import React from 'react';
+import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-
 
 // 모바일 기준 (갤럭시 S24)
 const mobile = '@media screen and (max-width: 480px)';
 
-
 const PostList = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center; // 가운데 정렬
-`;
 
-const PostListInner = styled.div`
-  width: 97%;
- 
-`;
-
-const PostItem = styled.div`
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  padding: 1rem;
-  margin-bottom: 1px;
+width:100%;
+transition: margin-left 0.3s ease;
+display:flex;
+flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  background-color:rgb(243, 243, 243);
   border-bottom: 1px solid #A09F9F;
-  transition: 0.2s;
 
-  &:hover {
-    background-color: #f9f9f9;
+
+  ${mobile} {
+    width: 100%;
+    margin-left: 0;
   }
 `;
 
+
+
 const PostRow = styled.div`
-  display: flex;
-  justify-content: space-evenly; /* 자식 요소 간 균등한 간격 설정 */
+display: flex;
+  justify-content: space-evenly;
   align-items: center;
-  flex-wrap: wrap; /* 반응형 대응 */
-  width: 100%;
-  
+  width: 95%;
+  padding: 1rem 1rem;
+
+
 `;
 
 const PostTitle = styled.h2`
@@ -59,6 +54,7 @@ const PostTitle = styled.h2`
 const PostAuthor = styled.div`
   font-family: Ourfont5;
   font-size: 1.1rem;
+  font-weight:bold;
   color: #000;
   display: flex;
   justify-content: center; /* 가운데 정렬 */
@@ -74,6 +70,7 @@ const PostAuthor = styled.div`
 const PostTime = styled.div`
   font-family: Ourfont5;
   font-size: 1.1rem;
+  font-weight:bold;
   color: #000;
   display: flex;
   justify-content: center; /* 가운데 정렬 */
@@ -89,6 +86,7 @@ const PostTime = styled.div`
 const PostLikes = styled.div`
   font-family: Ourfont5;
   font-size: 1.1rem;
+  font-weight:bold;
   color: #000;
   display: flex;
   justify-content: center; /* 가운데 정렬 */
@@ -98,36 +96,27 @@ flex: 0.2; /* 균등한 간격을 위한 flex 설정 */
 
   ${mobile} {
     font-size: 12px;
+    
   }
 
 `;
 
-function CommunityList({posts}){
-  const navigate = useNavigate();
-  return(
+function PostHeader(){
+    return(
     <PostList>
-      <PostListInner>
-        
-
-        {/* ✅ 실제 게시글 목록 */}
-        {posts.map((post) => (
-          <PostItem key={post.post_Id} onClick={() => navigate(`/post/${post.post_Id}`)}>
-            <PostRow>
-              <PostTitle>{post.title}({post.commentCounts})</PostTitle>
-              <PostAuthor>{post.nickName}</PostAuthor>
-              <PostTime>{post.postCreated_date}</PostTime>
-              <PostLikes>♡{post.likes}</PostLikes>
-            </PostRow>
-          
-          </PostItem>
-        ))}
-      </PostListInner>
       
-    </PostList>
-    
-    
-    
-  );
-}
+        
+          <PostRow>
+            <PostTitle>제목(댓글수)</PostTitle>
+            <PostAuthor>작성자</PostAuthor>
+            <PostTime>작성일</PostTime>
+            <PostLikes>좋아요</PostLikes>
+          </PostRow>
+        
+    </PostList>    
+        );
+    } 
 
-export default CommunityList;
+
+export default PostHeader;
+        

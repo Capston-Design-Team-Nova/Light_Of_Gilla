@@ -1,10 +1,37 @@
 import axios from 'axios';
 import React,{useState} from 'react';
 import Header from '../../components/Header';
-import { Main, Center, Content, Button, TitleInput, ContentTextArea, LowRow,ToggleButton,FormRow,Label } from '../../styles/CommunityStyles';
+import { Main, Center, Button, TitleInput, ContentTextArea, LowRow,ToggleButton,FormRow,Label } from '../../styles/CommunityStyles';
 import { useNavigate } from "react-router-dom";
 import CustomSelect from './CustomSelect';
 import Sidebar from '../../components/Sidebar';
+import styled from 'styled-components';
+
+// 모바일 기준 (갤럭시 S24)
+const mobile = '@media screen and (max-width: 480px)';
+
+export const Content = styled.div`
+  position: relative; // 기준이 되는 부모
+  width: calc(97% - 250px);
+    margin-left: 250px;
+  transition: margin-left 0.3s ease;
+  min-height: 50vh; /* 내용이 너무 적을 때는 최소 높이 보장 */
+  height: auto;
+  background-color: white;
+  border-radius: 15px;
+  overflow: visible; // 자식 요소 넘침 방지
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+padding-top: 20px;
+  ${mobile} {
+    width: 98%;
+    height: auto;
+    margin-top: 5px;
+    margin-left: 0;
+  }
+`;
 
 function CommunityWS() {
     const [title, setTitle] = useState('');

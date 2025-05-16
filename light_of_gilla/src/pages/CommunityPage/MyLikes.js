@@ -7,6 +7,7 @@ import Sidebar from '../../components/Sidebar';
 import SearchField from '../../components/SearchField';
 import axios from "axios";
 import Pagination from "../../components/Pagination";
+import PostHeader from '../../components/PostHeader';
 
 function MyLikes() {
     const token = localStorage.getItem("token");
@@ -66,30 +67,30 @@ function MyLikes() {
                     <Button>글쓰기</Button>
                     </Link>
                 </TopRow>
-                <Content isSidebarOpen={isSidebarOpen}>
-  {posts.length === 0 ? (
-    <div style={{
-      textAlign: "center",
+<Content isSidebarOpen={isSidebarOpen}>
+  <CommunityListWrapper>
+    <PostHeader /> {/* ✅ 항상 보여주기 */}
+
+    {posts.length === 0 ? (
+      <div style={{ 
+        textAlign: "center",
       marginTop: "2rem",
       fontSize: "1.1rem",
       fontFamily: "Ourfont5"
-    }}>
-      아직 좋아요를 남긴 글이 없습니다. 좋아요를 남겨보세요!
-    </div>
-  ) : (
-    <>
-      <CommunityListWrapper>
-        <CommunityList posts={currentPosts} />
-      </CommunityListWrapper>
+      }}>
+        아직 작성한 글이 없습니다. 글을 작성해보세요!
+      </div>
+    ) : (
+      <CommunityList posts={currentPosts} />
+    )}
+  </CommunityListWrapper>
 
-      {totalPages > 0 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
-      )}
-    </>
+  {posts.length > 0 && totalPages > 0 && (
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={handlePageChange}
+    />
   )}
 </Content>
         
