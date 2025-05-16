@@ -17,6 +17,7 @@ import CustomSelect from "./CustomSelect";
 import CommunityList from "./CommunityList";
 import Sidebar from "../../components/Sidebar";
 import SearchField from "../../components/SearchField";
+import PostHeader from "../../components/PostHeader";
 
 function Community() {
   const Email = localStorage.getItem("Email");
@@ -117,8 +118,11 @@ function Community() {
             <Button>글쓰기</Button>
           </Link>
         </TopRow>
+        
         <Content isSidebarOpen={isSidebarOpen}>
+          
           <CommunityListWrapper>
+            <PostHeader />
             {currentPosts.length > 0 ? (
               <CommunityList posts={currentPosts} />
             ) : (
@@ -146,15 +150,3 @@ function Community() {
 export default Community;
 
 
-{/*<PaginationWrapper>
-          <PageButton>{"«"}</PageButton>
-          <PageButton>{"<"}</PageButton>
-          <ActivePageButton>1</ActivePageButton>
-          {/*현재 위치한 페이지를 효과로 나타냄 */}
-          {/*<PageButton>2</PageButton>
-          <PageButton>3</PageButton>
-          <PageButton>4</PageButton>
-          <PageButton>5</PageButton>
-          <PageButton>{">"}</PageButton>
-          <PageButton>{"»"}</PageButton>
-        </PaginationWrapper>*/}

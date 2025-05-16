@@ -15,14 +15,14 @@ export const Content = styled.div`
   width: calc(97% - 250px);
     margin-left: 250px;
   transition: margin-left 0.3s ease;
-  min-height: 70vh; /* 내용이 너무 적을 때는 최소 높이 보장 */
+  min-height: 50vh; /* 내용이 너무 적을 때는 최소 높이 보장 */
   height: auto;
   background-color: white;
   border-radius: 15px;
   overflow: visible; // 자식 요소 넘침 방지
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 padding-top: 20px;
   ${mobile} {

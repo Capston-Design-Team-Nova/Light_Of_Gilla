@@ -7,6 +7,7 @@ import Sidebar from '../../components/Sidebar';
 import SearchField from '../../components/SearchField';
 import Pagination from "../../components/Pagination";
 import axios from "axios";
+import PostHeader from '../../components/PostHeader';
 
 function MyArticles() {
     
@@ -70,31 +71,32 @@ function MyArticles() {
                 </TopRow>
                 
                 <Content isSidebarOpen={isSidebarOpen}>
-  {posts.length === 0 ? (
-    <div style={{ 
-      textAlign: "center", 
-      marginTop: "2rem", 
-      fontSize: "1.1rem", 
-      fontFamily: "Ourfont5"
-    }}>
-      아직 작성한 글이 없습니다. 글을 작성해보세요!
-    </div>
-  ) : (
-    <>
-      <CommunityListWrapper>
-        <CommunityList posts={currentPosts} />
-      </CommunityListWrapper>
+  <CommunityListWrapper>
+    <PostHeader /> {/* ✅ 항상 보여주기 */}
 
-      {totalPages > 0 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
-      )}
-    </>
+    {posts.length === 0 ? (
+      <div style={{ 
+        textAlign: "center",
+      marginTop: "2rem",
+      fontSize: "1.1rem",
+      fontFamily: "Ourfont5"
+      }}>
+        아직 작성한 글이 없습니다. 글을 작성해보세요!
+      </div>
+    ) : (
+      <CommunityList posts={currentPosts} />
+    )}
+  </CommunityListWrapper>
+
+  {posts.length > 0 && totalPages > 0 && (
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      onPageChange={handlePageChange}
+    />
   )}
 </Content>
+
 
             </Center>
         </Main>

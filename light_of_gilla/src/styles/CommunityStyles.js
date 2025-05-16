@@ -57,6 +57,7 @@ export const Content = styled.div`
   height: auto;
   background-color: white;
   border-radius: 15px;
+
   overflow: visible; // 자식 요소 넘침 방지
   display: flex;
   flex-direction: column;
@@ -76,7 +77,7 @@ export const CommunityListWrapper = styled.div`
   flex: 1;
   width: 100%;
   overflow-y: auto;
-  padding: 10px 5px 60px; /* 아래 패딩으로 페이지네이션 안 가려지게 */
+  padding: 0 5px 60px; /* 아래 패딩으로 페이지네이션 안 가려지게 */
 
   ${mobile} {
     
@@ -255,7 +256,7 @@ export const PaginationWrapper = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 100%;
+  width: 90%;
   height: 50px;
   display: flex;
   justify-content: center;
@@ -265,6 +266,7 @@ export const PaginationWrapper = styled.div`
   gap: 2px;
 
   ${mobile} {
+  width:100%;
     height: 45px;
     padding: 5px 0;
     gap: 4px;
