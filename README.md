@@ -24,12 +24,8 @@
 - 건강 관련 궁금증을 빠르게 해결할 수 있도록 구성된 Q&A입니다.
 
 ## 🚀 기술 스택
+![Image](https://github.com/user-attachments/assets/adf6ba31-3f18-45a2-87f4-0c4b7e8f5c46)
 
-- **Android Studio**
-- **Java / Kotlin**
-- **Firebase**
-- **Item-based Collaborative Filtering Algorithm**
-- **Google Fit API (선택)**
 
 ## 💡 향후 업데이트 예정 기능
 
