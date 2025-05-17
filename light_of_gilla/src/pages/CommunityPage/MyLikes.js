@@ -31,6 +31,24 @@ function MyLikes() {
         };
         fetchPosts();    
     },[])
+
+const [isSearching, setIsSearching] = useState(false);
+
+  const handleSearch = (term) => {
+    const keyword = term.toLowerCase();
+  setIsSearching(!!term); // 검색어가 있으면 true, 없으면 false
+
+  const filtered = posts.filter((post) =>{
+    const title = post.title?.toLowerCase() || '';
+    const content = post.content?.toLowerCase() || '';
+    const keyword = term.toLowerCase();
+
+    return title.includes(keyword) || content.includes(keyword);
+  });
+  setCurrentPage(1); // 첫 페이지로 이동
+  setPosts(filtered);
+};
+
 // 페이지네이션 상태와 로직 추가
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 10; /*한 페이지에 글 10개씩 보여주기*/
@@ -60,7 +78,7 @@ function MyLikes() {
             )}
             <Center>
                 <TopRow isSidebarOpen={isSidebarOpen}>
-                    <SearchField />
+                    <SearchField onSearch={handleSearch}/>
                     <div style={{ flex: 1 }} /> {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}
                     
                     <Link to="/Write">
@@ -75,17 +93,19 @@ function MyLikes() {
       <div style={{ 
         textAlign: "center",
       marginTop: "2rem",
-      fontSize: "1.1rem",
+      fontSize: "1.2rem",
       fontFamily: "Ourfont5"
       }}>
-        아직 작성한 글이 없습니다. 글을 작성해보세요!
+        {isSearching
+      ? "검색 결과가 없습니다 😥"
+      : "아직 좋아요를 누른 글이 없습니다. 글에 좋아요를 눌러보세요!"}
       </div>
     ) : (
       <CommunityList posts={currentPosts} />
     )}
   </CommunityListWrapper>
 
-  {posts.length > 0 && totalPages > 0 && (
+  {totalPages > 0 && (
     <Pagination
       currentPage={currentPage}
       totalPages={totalPages}

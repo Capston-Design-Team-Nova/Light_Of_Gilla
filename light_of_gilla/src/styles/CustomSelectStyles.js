@@ -24,10 +24,15 @@ export const Select = styled.select`
   border-radius: 5px;
   border: 1px solid #ccc;
   cursor: pointer;
+
+  option:hover {
+    background-color: rgb(255, 234, 208); /* ✅ hover 시 배경색 */
+  }
+
 `;
 
 export const Message = styled.div`
   margin-top: 20px;
   font-size: 18px;
-  color: #333;
+  color: black;
 `;
