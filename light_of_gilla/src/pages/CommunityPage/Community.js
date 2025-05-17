@@ -42,8 +42,8 @@ function Community() {
     };
     fetchPosts();
   }, []);
-  const handleSelectChange = async (selectedOption) => {
-    const value= selectedOption.value;
+  const handleSelectChange = async (option) => {
+    const value= option.value;
     console.log("선택한 카테고리:", value);
     const category = encodeURIComponent(value);
     try {
