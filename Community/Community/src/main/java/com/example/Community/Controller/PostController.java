@@ -107,11 +107,14 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
     @PostMapping("/savelike")
-    public void saveLike(@RequestBody LikeDTO likeDTO) {
-        System.out.println(likeDTO.getPost_id());
-        System.out.println(likeDTO.getNickName());
+    public ResponseEntity<String> saveLike(@RequestBody LikeDTO likeDTO) {
+        boolean saved = postService.likesave(likeDTO);
 
-        postService.likesave(likeDTO);
+        if (!saved) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 좋아요 했습니다.");
+        }
+
+        return ResponseEntity.ok("좋아요 저장 완료");
 
     }
     @DeleteMapping("/delete/{postId}")

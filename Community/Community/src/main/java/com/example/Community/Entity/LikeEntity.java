@@ -22,12 +22,12 @@ public class LikeEntity {
     private String nickName;
 
     @Column
-    private Long post_id;
+    private Long postid;
 
     public static LikeEntity toSaveLikeEntity(LikeDTO likeDTO) {
         LikeEntity likeEntity = new LikeEntity();
         likeEntity.setNickName(likeDTO.getNickName());
-        likeEntity.setPost_id(likeDTO.getPost_id());
+        likeEntity.setPostid(likeDTO.getPost_id());
         return likeEntity;
     }
 }

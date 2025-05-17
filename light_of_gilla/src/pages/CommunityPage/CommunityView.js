@@ -347,25 +347,29 @@ useEffect(() => {
 }, [id, name]);
 
  
-  const handleLike = async () => {
-    if (hasLiked) 
-    return; // 이미 누른 경우 더 이상 증가하지 않음
-  
+const handleLike = async () => {
+  if (hasLiked) return; // 이미 눌렀으면 무시
+
   try {
     await axios.post(
-      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/savelike`,
+      `http://localhost:8082/post/savelike`,
       { post_id: id, nickName: name }
     );
+    
+    // 좋아요 카운트 증가 요청
     await axios.post(
-      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like?post_id=${id}`
+      `http://localhost:8082/post/like?post_id=${id}`
     );
-    setLikes((prev) => prev + 1);
-    setHasLiked(true); // UI 상태 업데이트
+    setLikes(prev => prev + 1);
+    setHasLiked(true);
   } catch (error) {
-    console.error("좋아요 처리 중 오류", error);
+    if (error.response && error.response.status === 409) {
+      setHasLiked(true); 
+    } else {
+      console.error("좋아요 처리 중 오류", error);
+    }
   }
-  };
-
+};
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     console.log("댓글 제출 클릭됨");

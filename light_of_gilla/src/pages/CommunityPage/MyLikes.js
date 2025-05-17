@@ -22,7 +22,7 @@ function MyLikes() {
         const fetchPosts = async () => {
             const name = encodeURIComponent(NickName);
         try {
-            const response = await axios.get(`http://localhost:8082/post/mylike?value=${name}`);
+            const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/mylike?value=${name}`);
             console.log("댓글글 데이터를 불러오는 중");
             setPosts(response.data);
         } catch (error) {

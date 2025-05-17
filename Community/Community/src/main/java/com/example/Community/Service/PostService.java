@@ -122,16 +122,25 @@ public class PostService {
         return PostDTOList;
     }
 
-    public void likesave(LikeDTO likeDTO) {
-        LikeEntity likeEntity=LikeEntity.toSaveLikeEntity(likeDTO);
-        likeRepository.save(likeEntity);
+    public boolean likesave(LikeDTO likeDTO) {
+        Optional<LikeEntity> existing = likeRepository.findByPostidAndNickName(
+                likeDTO.getPost_id(), likeDTO.getNickName()
+        );
+
+        if (existing.isPresent()) {
+            return false;
+        }
+
+        LikeEntity like = LikeEntity.toSaveLikeEntity(likeDTO);
+        likeRepository.save(like);
+        return true;
     }
 
     public List<PostDTO> findByMyLike(String name) {
         List<LikeEntity> LikeEntities = likeRepository.findAllByNickName(name);
 
         Set<Long> postIds = LikeEntities.stream()
-                .map(likeEntity -> likeEntity.getPost_id())
+                .map(likeEntity -> likeEntity.getPostid())
                 .collect(Collectors.toSet());
 
         List<PostDTO> postDTOList = new ArrayList<>();
