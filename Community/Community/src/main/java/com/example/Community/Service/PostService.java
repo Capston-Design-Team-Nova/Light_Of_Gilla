@@ -121,20 +121,22 @@ public class PostService {
         Collections.reverse(PostDTOList);
         return PostDTOList;
     }
-
-    public boolean likesave(LikeDTO likeDTO) {
+    public boolean toggleLike(LikeDTO likeDTO) {
         Optional<LikeEntity> existing = likeRepository.findByPostidAndNickName(
                 likeDTO.getPost_id(), likeDTO.getNickName()
         );
 
         if (existing.isPresent()) {
-            return false;
+            likeRepository.delete(existing.get());
+            postRepository.decreaseLikeCount(likeDTO.getPost_id()); // 좋아요 -1
+            return false; // 좋아요 취소됨
+        } else {
+            likeRepository.save(LikeEntity.toSaveLikeEntity(likeDTO));
+            postRepository.increaseLikeCount(likeDTO.getPost_id()); // 좋아요 +1
+            return true; // 좋아요 추가됨
         }
-
-        LikeEntity like = LikeEntity.toSaveLikeEntity(likeDTO);
-        likeRepository.save(like);
-        return true;
     }
+
 
     public List<PostDTO> findByMyLike(String name) {
         List<LikeEntity> LikeEntities = likeRepository.findAllByNickName(name);

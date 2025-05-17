@@ -78,8 +78,11 @@ public class PostController {
         return ResponseEntity.ok(postDTOList);
     }
     @PostMapping("/like")
-    public void like(@RequestParam("post_id") Long post_id) {
-        postService.updatelikes(post_id);
+    public ResponseEntity<Map<String, Boolean>> toggleLike(@RequestBody LikeDTO likeDTO) {
+        boolean liked = postService.toggleLike(likeDTO);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("liked", liked); // true면 좋아요 눌림, false면 취소됨
+        return ResponseEntity.ok(response);
     }
 
 //    @GetMapping("/search/{user_id}")
@@ -107,17 +110,6 @@ public class PostController {
         String name = URLDecoder.decode(value,StandardCharsets.UTF_8);
         List<PostDTO> posts = postService.findByMyPost(name);
         return ResponseEntity.ok(posts);
-    }
-    @PostMapping("/savelike")
-    public ResponseEntity<String> saveLike(@RequestBody LikeDTO likeDTO) {
-        boolean saved = postService.likesave(likeDTO);
-
-        if (!saved) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 좋아요 했습니다.");
-        }
-
-        return ResponseEntity.ok("좋아요 저장 완료");
-
     }
     @DeleteMapping("/delete/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId) {

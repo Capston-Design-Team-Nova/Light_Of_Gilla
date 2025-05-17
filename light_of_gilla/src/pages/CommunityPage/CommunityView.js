@@ -330,7 +330,7 @@ const CommunityView = () => {
  useEffect(() => {
   const checkIfLiked = async () => {
     try {
-      const response = await axios.get(`https://www.thegilla.com/post/hasliked`, {
+      const response = await axios.get(`http://localhost:8082/post/hasliked`, {
         params: { post_id: id, nickName: name }
       });
       setHasLiked(response.data); // true or false
@@ -345,28 +345,27 @@ const CommunityView = () => {
 
  
 const handleLike = async () => {
-  if (hasLiked) return; // 이미 눌렀으면 무시
-
   try {
-    await axios.post(
-      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/savelike`,
+    const response = await axios.post(
+      `http://localhost:8082/post/like`,
       { post_id: id, nickName: name }
     );
-    
-    // 좋아요 카운트 증가 요청
-    await axios.post(
-      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like?post_id=${id}`
-    );
-    setLikes(prev => prev + 1);
-    setHasLiked(true);
-  } catch (error) {
-    if (error.response && error.response.status === 409) {
-      setHasLiked(true); 
+    console.log(response.data.liked);
+    if (response.data.liked) {
+      // 좋아요 추가
+      setLikes(prev => prev + 1);
+      setHasLiked(true);
     } else {
-      console.error("좋아요 처리 중 오류", error);
+      // 좋아요 취소
+      setLikes(prev => Math.max(0, prev - 1));
+      setHasLiked(false);
     }
+  } catch (error) {
+    console.error("좋아요 토글 중 오류", error);
   }
 };
+
+
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     console.log("댓글 제출 클릭됨");
@@ -470,7 +469,9 @@ const handleCommentDelete = async (commentId) => {
                     <Content1>{postData.content}</Content1>
                      <Category>#{postData.category}</Category>
                     <MiddleRow>
-                        <LikeButton onClick={handleLike} disabled={hasLiked}>{hasLiked ? "💗 좋아요 " : "♡ 좋아요 "} {likes}개</LikeButton>
+                    <LikeButton onClick={handleLike}>
+                        {hasLiked ? "💗 좋아요 " : "♡ 좋아요 "} {likes}개  
+                    </LikeButton> 
                         <H3>💬 댓글 ({commentCount})</H3>
                     </MiddleRow>
 
