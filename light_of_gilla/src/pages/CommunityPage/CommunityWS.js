@@ -117,7 +117,7 @@ function CommunityWS() {
                         />
                     </FormRow>
                     <LowRow>
-                        <CustomSelect onChange={handleSelectChange}/>
+                        <CustomSelect onChange={handleSelectChange }menuPlacement="top"/>
                         {/*<CustomSelect />, CustomSelect 에서 선택한거 보내는 코드 작성*/}
                         <Button onClick={handleSubmit}>올리기</Button>
                         

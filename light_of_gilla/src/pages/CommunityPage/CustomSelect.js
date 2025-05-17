@@ -54,7 +54,7 @@ const customStyles = {
   })
 };
 
-const CustomSelect = ({ onChange }) => {
+const CustomSelect = ({ onChange, menuPlacement= "bottom"}) => {
   const [selectedOption, setSelectedOption] = useState(null); // ✅ 상태 정의
 
   const handleChange = (option) => {
@@ -73,6 +73,7 @@ const CustomSelect = ({ onChange }) => {
         isSearchable={false} // 검색창 제거 (선택사항)
         value={selectedOption}
         name="symptom"
+        menuPlacement={menuPlacement}
       />
     </Container>
   );

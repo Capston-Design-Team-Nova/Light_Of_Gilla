@@ -119,7 +119,7 @@ function Community() {
           <SearchField onSearch={handleSearch} />
           <div style={{ flex: 1 }} />{" "}
           {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}
-          <CustomSelect onChange={handleSelectChange} />
+          <CustomSelect onChange={handleSelectChange} menuPlacement="bottom" />
           <Link to="/Write">
             <Button>글쓰기</Button>
           </Link>
