@@ -327,24 +327,21 @@ const CommunityView = () => {
   
 
  
-useEffect(() => {
-  const fetchLikeStatus = async () => {
+ useEffect(() => {
+  const checkIfLiked = async () => {
     try {
-      const res = await axios.get(
-        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like-status`,
-        { params: { post_id: id, nickName: name } }
-      );
-      setHasLiked(res.data.hasLiked); // ✅ 좋아요 여부 상태 반영
-    } catch (err) {
-      console.error("좋아요 상태 조회 실패", err);
+      const response = await axios.get(`http://localhost:8082/post/hasliked`, {
+        params: { post_id: id, nickName: name }
+      });
+      setHasLiked(response.data); // true or false
+    } catch (error) {
+      console.error("좋아요 여부 확인 중 오류", error);
     }
   };
 
-  if (name) {
-    fetchLikeStatus();
-  }
-
+  checkIfLiked();
 }, [id, name]);
+
 
  
 const handleLike = async () => {

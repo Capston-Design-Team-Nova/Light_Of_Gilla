@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.example.Community.Dto.LikeDTO;
 import com.example.Community.Dto.UserDTO;
+import com.example.Community.Repository.LikeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
     private final PostService postService;
     private final CommentService commentService;
+    private final LikeRepository likeRepository;
     @PostMapping("/save")//post형식으로 받음
     public void save(@RequestBody PostDTO postDTO) throws IOException {
         postService.save(postDTO);
@@ -132,5 +134,9 @@ public class PostController {
         String name = URLDecoder.decode(value,StandardCharsets.UTF_8);
         List<PostDTO> posts = postService.findByMyLike(name);
         return ResponseEntity.ok(posts);
+    }
+    @GetMapping("/hasliked")
+    public boolean hasLiked(@RequestParam Long post_id, @RequestParam String nickName) {
+        return likeRepository.existsByPostidAndNickName(post_id, nickName);
     }
 }

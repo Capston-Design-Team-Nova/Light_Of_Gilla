@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
     List<LikeEntity> findAllByNickName(String nickName);
     Optional<LikeEntity> findByPostidAndNickName(Long post_id, String nickName);
+    boolean existsByPostidAndNickName(Long postId, String nickName);
 }
