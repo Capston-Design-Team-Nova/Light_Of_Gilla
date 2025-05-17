@@ -75,17 +75,17 @@ function MyLikes() {
       <div style={{ 
         textAlign: "center",
       marginTop: "2rem",
-      fontSize: "1.1rem",
+      fontSize: "1.2rem",
       fontFamily: "Ourfont5"
       }}>
-        아직 작성한 글이 없습니다. 글을 작성해보세요!
+        아직 좋아요를 누른 글이 없습니다. 글에 좋아요를 눌러보세요!
       </div>
     ) : (
       <CommunityList posts={currentPosts} />
     )}
   </CommunityListWrapper>
 
-  {posts.length > 0 && totalPages > 0 && (
+  {totalPages > 0 && (
     <Pagination
       currentPage={currentPage}
       totalPages={totalPages}

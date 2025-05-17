@@ -78,7 +78,7 @@ function MyArticles() {
       <div style={{ 
         textAlign: "center",
       marginTop: "2rem",
-      fontSize: "1.1rem",
+      fontSize: "1.2rem",
       fontFamily: "Ourfont5"
       }}>
         아직 작성한 글이 없습니다. 글을 작성해보세요!
@@ -88,7 +88,7 @@ function MyArticles() {
     )}
   </CommunityListWrapper>
 
-  {posts.length > 0 && totalPages > 0 && (
+  {totalPages > 0 && (
     <Pagination
       currentPage={currentPage}
       totalPages={totalPages}
