@@ -330,7 +330,7 @@ const CommunityView = () => {
  useEffect(() => {
   const checkIfLiked = async () => {
     try {
-      const response = await axios.get(`http://localhost:8082/post/hasliked`, {
+      const response = await axios.get(`https://www.thegilla.com/post/hasliked`, {
         params: { post_id: id, nickName: name }
       });
       setHasLiked(response.data); // true or false
@@ -349,13 +349,13 @@ const handleLike = async () => {
 
   try {
     await axios.post(
-      `http://localhost:8082/post/savelike`,
+      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/savelike`,
       { post_id: id, nickName: name }
     );
     
     // 좋아요 카운트 증가 요청
     await axios.post(
-      `http://localhost:8082/post/like?post_id=${id}`
+      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like?post_id=${id}`
     );
     setLikes(prev => prev + 1);
     setHasLiked(true);
