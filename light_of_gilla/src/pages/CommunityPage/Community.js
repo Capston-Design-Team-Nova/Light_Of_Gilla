@@ -55,8 +55,13 @@ function Community() {
       console.error("카테고리별 게시글 불러오기 오류:", error);
     }
   };
+
+  const [isSearching, setIsSearching] = useState(false);
+
   const handleSearch = async (term) => {
     setSearchTerm(term);
+    setIsSearching(!!term);
+
     const searchString = encodeURIComponent(term);
     if (term && searchString !== "") {
       try {
@@ -128,7 +133,9 @@ function Community() {
               <CommunityList posts={currentPosts} />
             ) : (
               <p style={{ padding: "20px", fontSize: "1.3rem", textAlign: "center" }}>
-                해당 카테고리의 글이 아직 없습니다! 글을 작성해 보세요!
+                {isSearching
+                  ? "검색 결과가 없습니다 😥"
+                  : "해당 카테고리의 글이 아직 없습니다! 글을 작성해 보세요!"}
               </p>
             )}
           </CommunityListWrapper>
