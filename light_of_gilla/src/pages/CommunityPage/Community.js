@@ -42,7 +42,8 @@ function Community() {
     };
     fetchPosts();
   }, []);
-  const handleSelectChange = async (value) => {
+  const handleSelectChange = async (selectedOption) => {
+    const value= selectedOption.value;
     console.log("선택한 카테고리:", value);
     const category = encodeURIComponent(value);
     try {
@@ -110,7 +111,7 @@ function Community() {
 
         <TopRow isSidebarOpen={isSidebarOpen}>
           {/* 검색 필드 */}
-          <SearchField onWrite={handleSearch} />
+          <SearchField onSearch={handleSearch} />
           <div style={{ flex: 1 }} />{" "}
           {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}
           <CustomSelect onChange={handleSelectChange} />
