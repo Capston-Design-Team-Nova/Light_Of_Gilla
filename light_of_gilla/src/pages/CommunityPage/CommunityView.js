@@ -330,7 +330,7 @@ const CommunityView = () => {
  useEffect(() => {
   const checkIfLiked = async () => {
     try {
-      const response = await axios.get(`http://localhost:8082/post/hasliked`, {
+      const response = await axios.get(`https://www.thegilla.com/post/hasliked`, {
         params: { post_id: id, nickName: name }
       });
       setHasLiked(response.data); // true or false
@@ -347,7 +347,7 @@ const CommunityView = () => {
 const handleLike = async () => {
   try {
     const response = await axios.post(
-      `http://localhost:8082/post/like`,
+      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like`,
       { post_id: id, nickName: name }
     );
     console.log(response.data.liked);
