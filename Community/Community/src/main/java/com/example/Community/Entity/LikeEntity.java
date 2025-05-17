@@ -10,7 +10,9 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="likes")
+@Table(name="likes", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"post_id", "nickName"})
+})
 public class LikeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
