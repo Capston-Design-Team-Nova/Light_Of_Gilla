@@ -3,50 +3,105 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useParams, useNavigate, Await } from "react-router-dom";
 import styled from "styled-components";
-import { Main,Center,ToggleButton,Content } from "../../styles/CommunityStyles";
+import { Main,ToggleButton } from "../../styles/CommunityStyles";
 import Header from "../../components/Header";
 import Sidebar from '../../components/Sidebar';
 
 // 모바일 기준 (갤럭시 S24)
 const mobile = '@media screen and (max-width: 480px)';
 
+const Content = styled.div`
+width: calc(97% - 250px);
+  margin-left: 250px;
+  
+  min-height: auto;
+  
+  
+  background-color: white;
+  padding: 2rem 0; // ✅ 위아래 여백 추가
+  border-radius: 15px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.05); // ✅ 자연스러운 경계 추천
+  overflow: visible;
+ overflow-x: hidden; // 양옆으로 삐져나온 거 안 보이게
+box-sizing: border-box; // 내부 패딩, 보더 포함해서 계산
+
+  ${mobile} {
+    width: 95%;
+    margin-left: 0;
+    
+    border-radius: 0;
+    height:100%;
+  }
+`;
+
+export const Center = styled.div`
+  width: 100%;
+  height: 100%; /* 높이를 명시적으로 설정 */
+  display: flex; /* Flexbox 활성화 */
+  flex-direction: column; /* 세로 정렬 */
+  justify-content: flex-start; /* 가로 정렬: 중앙 */
+  align-items: center; /* 세로 정렬: 중앙 */
+  background-position: center; /* 중앙에 위치 */
+  padding-top: 90px; /* PageHeader의 높이에 맞는 여백 추가 */
+  background-color: #FEF7FF;/*#ffece3;*/
+
+  ${mobile} {
+    padding-bottom: 100px;
+  }
+`;
+  
 
 const Wrapper = styled.div`
   width: 90%;
-  margin: 0.5rem auto;
+  margin: 0.5rem auto; // ✅ 상하 여백 확보
+  padding-bottom: 1rem;
+  box-sizing: border-box;
 `;
 const CommentsWrapper = styled.div`
-  max-height: calc(100vh - 400px); // 💡 헤더, 제목 등 제외한 높이
-  overflow-y: auto;
-  margin-bottom: 1rem;
+  max-height: none; // ✅ 아예 제한하지 않음
+  overflow-y: visible;
+  margin-bottom: 0.4rem;
 
-  ${mobile} {
-    max-height: calc(100vh - 460px); // 모바일에서 더 작게
-  }
 `;
 const Title = styled.h1`
     color: #000;
     font-family: Ourfont5;
-    font-size: 23px;
+    font-size: 1.8rem;
+     ${mobile} {
+    font-size: 22px;
+  }
+    
 `;
 
 const Meta = styled.div`
   color: #00000080;
-  font-size: 11px;
+  font-size: 1.3rem;
   margin-bottom: 1rem;
+
+   ${mobile} {
+    font-size: 14px;
+  }
 `;
 
 const Content1 = styled.p`
   line-height: 1.6;
-  font-size: 14px;
+  font-size: 1.6rem;
   font-family: Ourfont5;
+
+   ${mobile} {
+    font-size: 18px;
+  }
   `;
 
 const Category = styled.p`
   line-height: 1.6;
-  font-size: 15px;
+  font-size: 1.3rem;
   font-family: Ourfont3;
   color: #FF710B;
+
+   ${mobile} {
+    font-size: 15px;
+  }
   `;
 
 const Button = styled.button`
@@ -71,15 +126,22 @@ const LikeButton = styled.button`
   border:none;
   display: flex;
   align-items: center;           // ✅ 버튼 안 글자 중앙정렬
+  font-size: 1.1rem;
+
+   ${mobile} {
+    font-size: 14px;
+  }
 `;
 
 const CommentSection = styled.div`
-  overflow-y: auto;
+  overflow-y: visible;
   flex: 1;
   padding: 1rem 0;
-margin-bottom: 4rem;
-  ${mobile} {
-    max-height: calc(100vh - 220px);
+margin-bottom: 1rem;
+  
+      ${mobile} {
+    max-height: none; // ✅ 제거해줘야 전체 스크롤 가능
+  
   }
 `;
 
@@ -95,15 +157,13 @@ const CommentItem = styled.div`
 `;
 
 const CommentForm = styled.form`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 90%;
+  width: 100%;
   display: flex;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 0.6rem 1rem;
   gap: 0.5rem;
   background: white;
+  border:none;
 
   textarea {
     flex: 1;
@@ -117,15 +177,23 @@ const CommentForm = styled.form`
 
   button {
     font-size: 15px;
+    padding-bottom: 20px;
   }
 
   ${mobile} {
-    bottom: 0;
-    height: auto;
+    position: fixed;           // ✅ 모바일에서만 고정
+    bottom: 40px;
+    left: 0;
+    width: 95%;
+    z-index: 999;
+    padding: 0.5rem 0.7rem;
+    background: white;
+    border-top: 1px solid #ccc;
     textarea {
-      height: 32px;
-      font-size: 13px;
+      height: 36px;
+      font-size: 14px;
     }
+
     button {
       font-size: 18px;
     }
@@ -157,58 +225,78 @@ const MiddleRow = styled.div`
 const H3 = styled.h3`
   margin: 0;                     // ✅ 마진 제거
   font-family: Ourfont5;
-  font-size: 14px;
+  font-size: 1.1rem;
   height: 32px;                  // ✅ 버튼과 동일한 높이
   display: flex;
   align-items: center;           // ✅ 중앙 정렬
-`;
+ ${mobile} {
+    font-size: 14px;
+  }
+
+  `;
 
 
 const AuthorImg = styled.img`
-  width: 14px;
-  height: 14px;
+  width: 17px;
+  height: 17px;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 4px;
 `;
 
 const ProfileImg = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 7px;
+  margin-right: 5px;
+  flex-shrink:0;
 `;
+
 const DeleteButton = styled.button`
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
   background: none;
   border: none;
   color: #ff5555;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 1.1rem;
   padding: 0 0.5rem;
+  align-self: flex-start;
+  white-space: nowrap;
 `;
+
+
 const CommentContent = styled.div`
+  flex: 1;  // ✅ 가능한 공간 모두 차지
   display: flex;
   flex-direction: column;
+  word-break: break-word;
+  overflow-wrap: break-word;
 `;
+
 
 const Nickname = styled.strong`
+font-size:1.35rem;
   font-weight: bold;
   margin-bottom: 2px;
+  ${mobile} {
+    font-size: 16px;
+  }
 `;
+
 
 const CommentText = styled.div`
-  font-size: 14px;
+  font-size: 1.2rem;
   line-height: 1.4;
+  word-break: break-word;       // ✅ 긴 단어도 줄바꿈
+  white-space: pre-wrap;        // ✅ 줄바꿈과 공백 유지
   overflow-wrap: break-word;
-  white-space: normal;
-`;
 
-const defaultProfileImage = require("../../assets/images/ProfileImage.png");
+    ${mobile} {
+    font-size: 14px;
+  }
+  `;
+
+const defaultProfileImage = require("../../assets/images/profileimage2.png");
 const CommunityView = () => {
     const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
     const [postData, setPostData] = useState(null); 
@@ -266,32 +354,48 @@ const CommunityView = () => {
   const [newComment, setNewComment] = useState({ writer: "", text: "" });
   const [commentCount, setCommentCount] = useState(0);
   const [likes, setLikes] = useState(0);
+ const [hasLiked, setHasLiked] = useState(false); // ✅ 유저가 이미 좋아요 눌렀는지
   
-  if (!postData) return <div>글을 찾을 수 없습니다.</div>;
 
-  const handleLike = async () => {
-    const updatedLikes = likes + 1; // UI 업데이트를 위해 좋아요 수 증가
-    setLikes(updatedLikes); // UI 먼저 업데이트
-    const likeData = {
-      post_id: id,
-      nickName: name
-  };
-  console.log(likeData.post_id,likeData.nickName);
+ 
+ useEffect(() => {
+  const checkIfLiked = async () => {
     try {
-      await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/savelike`,likeData);//백틱으로 선언해야함함
-    
-  } catch (error) {
-      console.error('좋아요 업데이트 중 오류 발생:', error);
-  }
-
-    try {
-        await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like?post_id=${id}`);//백틱으로 선언해야함함
-      
+      const response = await axios.get(`https://www.thegilla.com/post/hasliked`, {
+        params: { post_id: id, nickName: name }
+      });
+      setHasLiked(response.data); // true or false
     } catch (error) {
-        console.error('좋아요 업데이트 중 오류 발생:', error);
+      console.error("좋아요 여부 확인 중 오류", error);
     }
-  
   };
+
+  checkIfLiked();
+}, [id, name]);
+
+
+ 
+const handleLike = async () => {
+  try {
+    const response = await axios.post(
+      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like`,
+      { post_id: id, nickName: name }
+    );
+    console.log(response.data.liked);
+    if (response.data.liked) {
+      // 좋아요 추가
+      setLikes(prev => prev + 1);
+      setHasLiked(true);
+    } else {
+      // 좋아요 취소
+      setLikes(prev => Math.max(0, prev - 1));
+      setHasLiked(false);
+    }
+  } catch (error) {
+    console.error("좋아요 토글 중 오류", error);
+  }
+};
+
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
@@ -359,7 +463,7 @@ const handleCommentDelete = async (commentId) => {
 };
 
 
-
+  if (!postData) return <div>글을 찾을 수 없습니다.</div>;
 
   return (
     <Main>
@@ -396,7 +500,9 @@ const handleCommentDelete = async (commentId) => {
                     <Content1>{postData.content}</Content1>
                      <Category>#{postData.category}</Category>
                     <MiddleRow>
-                        <LikeButton onClick={handleLike}>♡좋아요 {likes}개</LikeButton>
+                    <LikeButton onClick={handleLike}>
+                        {hasLiked ? "💗 좋아요 " : "♡ 좋아요 "} {likes}개  
+                    </LikeButton> 
                         <H3>💬 댓글 ({commentCount})</H3>
                     </MiddleRow>
 
@@ -435,7 +541,7 @@ const handleCommentDelete = async (commentId) => {
                             <Button type="submit">⬆</Button>
                     </CommentForm>                 
                 </Wrapper>
-                </Content>                
+              </Content>                
             </Center>
         </Main>    
   );

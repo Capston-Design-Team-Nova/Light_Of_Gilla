@@ -53,10 +53,12 @@ export const Content = styled.div`
   width: calc(97% - 250px);
     margin-left: 250px;
   transition: margin-left 0.3s ease;
-  height: 83vh; // 전체 높이 고정
+  min-height: 70vh; /* 내용이 너무 적을 때는 최소 높이 보장 */
+  height: auto;
   background-color: white;
   border-radius: 15px;
-  overflow: hidden; // 자식 요소 넘침 방지
+
+  overflow: visible; // 자식 요소 넘침 방지
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -75,7 +77,7 @@ export const CommunityListWrapper = styled.div`
   flex: 1;
   width: 100%;
   overflow-y: auto;
-  padding: 10px 5px 60px; /* 아래 패딩으로 페이지네이션 안 가려지게 */
+  padding: 0 5px 60px; /* 아래 패딩으로 페이지네이션 안 가려지게 */
 
   ${mobile} {
     
@@ -155,7 +157,7 @@ export const SearchBar = styled.div`
 export const SearchInput = styled.input`
   padding: 10px;
   width: 96%;
-  font-size: 15px;
+  font-size: 16px;
   font-family: 'OurFont2';
   border:none;
   border-radius:20px;
@@ -239,12 +241,14 @@ export const Label = styled.label`
   font-size: 16px;
   font-family: 'Ourfont6';
   color: black;
+ 
   margin-right: 1px;
   padding-top: 9px; 
 
      ${mobile} {
     padding-top: 3px;         // ✅ 모바일에서 좀 더 위로 올림
     align-self: flex-start;   // ✅ 입력창보다 위 정렬
+     margin-left: 1px;
   }
 `;
 
@@ -252,7 +256,7 @@ export const PaginationWrapper = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 100%;
+  width: 98%;
   height: 50px;
   display: flex;
   justify-content: center;
@@ -262,6 +266,7 @@ export const PaginationWrapper = styled.div`
   gap: 2px;
 
   ${mobile} {
+  width:100%;
     height: 45px;
     padding: 5px 0;
     gap: 4px;

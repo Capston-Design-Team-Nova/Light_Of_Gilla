@@ -16,7 +16,7 @@ public class LikeDTO {
     public static LikeDTO toLikeDTO(LikeEntity likeEntity) {
        LikeDTO likeDTO = new LikeDTO();
        likeDTO.setNickName(likeEntity.getNickName());
-       likeDTO.setPost_id(likeEntity.getPost_id());
+       likeDTO.setPost_id(likeEntity.getPostid());
        return likeDTO;
     }
 }

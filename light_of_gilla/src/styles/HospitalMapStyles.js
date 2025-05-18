@@ -6,18 +6,100 @@ export const Main = styled.main`
   width: 100%;
   height: 80vh;
   display: flex;
-  justify-content: flex-start; /* 왼쪽 정렬 */
+  justify-content: flex-start;
   align-items: flex-start;
   position: relative;
+`;
+
+export const ModeSwitcher = styled.div`
+  display: flex;
+  gap: 6px;
+  margin-left: 10%;
+  align-self: left;
+`;
+
+
+export const ModeButton = styled.button`
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 14px 14px 0 0;
+  border: none;
+  cursor: pointer;
+  color: white;
+  background: ${({ $active, $mode }) =>
+    $active ? ($mode === "symptom" ? "#ffc86a" : "#00b894") : "#ccc"};
+`;
+
+export const SearchContainer = styled.div`
+  position: absolute;
+  top: 90px;
+  left: 10px;
+  width: calc(100% - 60px);
+  padding: 15px;
+  border-radius: 8px;
+  z-index: 4;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  ${mobile} {
+    top: 10px;
+    left: 10px;
+    right: 5px;
+    width: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    align-items: flex-start;
+  }
+`;
+
+export const SearchBoxWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  margin-bottom: 20px;
+`;
+
+export const SearchInput = styled.input`
+  width: 80%;
+  padding: 12px 40px 12px 12px;
+  font-size: 16px;
+  border: 2px solid
+    ${({ mode }) => (mode === "symptom" ? "#ffc86a" : "#00b894")};
+  border-radius: 8px;
+  outline: none;
+`;
+
+export const SearchIcon = styled.img`
+  position: absolute;
+  right: calc(9% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+
+  &:hover {
+    background: #f2f2f2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  }
+
+  ${mobile}{
+    right: calc(2% + 10px);
+  }
 `;
 
 /* 지도 컨테이너*/
 export const MapContainer = styled.div`
   position: absolute;
-  top: 290px;
+  top: 340px;
   left: 350px; /* 사이드바(300px) + 여백(20px) 만큼 이동 */
   width: calc(100% - 370px); /* 전체 너비에서 사이드바 + 여백 제외 */
-  height: 95%;
+  height: 90%;
   border: 1px solid #ddd;
   border-radius: 8px;
   z-index: 3;
@@ -35,10 +117,10 @@ export const MapContainer = styled.div`
 /* 사이드바 */
 export const Sidebar = styled.div`
   position: absolute;
-  top: 290px;
+  top: 340px;
   left: 0;
   width: 300px;
-  height: 91%;
+  height: 86%;
   background: #f8f9fa;
   padding: 20px;
   overflow-y: auto;
@@ -84,29 +166,6 @@ export const Sidebar = styled.div`
   }
 `;
 
-export const SearchContainer = styled.div`
-  position: absolute;
-  top: 90px;
-  left: 10px;
-  width: calc(100% - 60px);
-  padding: 15px;
-  border-radius: 8px;
-  z-index: 4;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  ${mobile} {
-    top: 10px;
-    left: 10px;
-    right: 5px;
-    width: auto;
-    padding: 10px;
-    box-sizing: border-box;
-    z-index: 4;
-  }
-`;
-
 export const SearchBox = styled.div`
   display: flex;
   width: 100%;
@@ -144,15 +203,6 @@ export const HospitalItem = styled.div`
     margin: 4px 0 0 0;
     font-size: 14px;
   }
-`;
-
-export const SearchInput = styled.input`
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 10px;
 `;
 
 export const DropdownWrapper = styled.div`
@@ -272,8 +322,6 @@ export const CategoryItem = styled.div`
   }
 
   &:hover {
-    background: #f2f2f2;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     img {
       transform: scale(1.08);
     }
@@ -341,7 +389,7 @@ export const CategoryAllButton = styled(CategoryItem)`
 `;
 
 export const SortingButtonWrapper = styled.div`
-  padding: 10px;
+  padding: 3px;
   display: flex;
   gap: 10px;
 `;
@@ -370,7 +418,6 @@ export const SortingButton = styled.button`
   }
 `;
 
-
 const shimmer = keyframes`
   0% { left: -150%; }
   100% { left: 150%; }
@@ -392,19 +439,4 @@ export const ShimmerOverlay = styled.div`
   pointer-events: none;
   z-index: 1;
   transform: skewX(-25deg);
-`;
-
-export const SearchIcon = styled.img`
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-60%);
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
-
-  &:hover {
-    transform: scale(1.2) translateY(-50%);
-  }
 `;

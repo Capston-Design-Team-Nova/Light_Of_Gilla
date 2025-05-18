@@ -121,17 +121,28 @@ public class PostService {
         Collections.reverse(PostDTOList);
         return PostDTOList;
     }
+    public boolean toggleLike(LikeDTO likeDTO) {
+        Optional<LikeEntity> existing = likeRepository.findByPostidAndNickName(
+                likeDTO.getPost_id(), likeDTO.getNickName()
+        );
 
-    public void likesave(LikeDTO likeDTO) {
-        LikeEntity likeEntity=LikeEntity.toSaveLikeEntity(likeDTO);
-        likeRepository.save(likeEntity);
+        if (existing.isPresent()) {
+            likeRepository.delete(existing.get());
+            postRepository.decreaseLikeCount(likeDTO.getPost_id()); // 좋아요 -1
+            return false; // 좋아요 취소됨
+        } else {
+            likeRepository.save(LikeEntity.toSaveLikeEntity(likeDTO));
+            postRepository.increaseLikeCount(likeDTO.getPost_id()); // 좋아요 +1
+            return true; // 좋아요 추가됨
+        }
     }
+
 
     public List<PostDTO> findByMyLike(String name) {
         List<LikeEntity> LikeEntities = likeRepository.findAllByNickName(name);
 
         Set<Long> postIds = LikeEntities.stream()
-                .map(likeEntity -> likeEntity.getPost_id())
+                .map(likeEntity -> likeEntity.getPostid())
                 .collect(Collectors.toSet());
 
         List<PostDTO> postDTOList = new ArrayList<>();

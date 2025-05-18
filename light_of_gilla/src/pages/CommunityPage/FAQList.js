@@ -1,7 +1,7 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { faqs } from './data';
+
 
 const mobile = '@media screen and (max-width: 480px)';
 
@@ -42,7 +42,7 @@ const FAQTitle = styled.h2`
   font-family: Ourfont5;
   font-size: 16px;
   color: #1D1B20;
-  flex: 2;
+  flex: 2.5;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -69,6 +69,17 @@ const FAQAuthor = styled.div`
 
 function FAQList() {
   const navigate = useNavigate();
+   const [faqs, setFaqs] = useState([]);
+
+  useEffect(() => {
+    fetch("/data/faqs.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("FAQ 데이터 불러오기 실패");
+        return res.json();
+      })
+      .then((data) => setFaqs(data))
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <PostList>

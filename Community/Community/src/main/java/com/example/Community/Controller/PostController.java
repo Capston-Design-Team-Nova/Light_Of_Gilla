@@ -9,6 +9,7 @@ import java.util.Map;
 
 import com.example.Community.Dto.LikeDTO;
 import com.example.Community.Dto.UserDTO;
+import com.example.Community.Repository.LikeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class PostController {
     private final PostService postService;
     private final CommentService commentService;
+    private final LikeRepository likeRepository;
     @PostMapping("/save")//post형식으로 받음
     public void save(@RequestBody PostDTO postDTO) throws IOException {
         postService.save(postDTO);
@@ -76,8 +78,11 @@ public class PostController {
         return ResponseEntity.ok(postDTOList);
     }
     @PostMapping("/like")
-    public void like(@RequestParam("post_id") Long post_id) {
-        postService.updatelikes(post_id);
+    public ResponseEntity<Map<String, Boolean>> toggleLike(@RequestBody LikeDTO likeDTO) {
+        boolean liked = postService.toggleLike(likeDTO);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("liked", liked); // true면 좋아요 눌림, false면 취소됨
+        return ResponseEntity.ok(response);
     }
 
 //    @GetMapping("/search/{user_id}")
@@ -106,14 +111,6 @@ public class PostController {
         List<PostDTO> posts = postService.findByMyPost(name);
         return ResponseEntity.ok(posts);
     }
-    @PostMapping("/savelike")
-    public void saveLike(@RequestBody LikeDTO likeDTO) {
-        System.out.println(likeDTO.getPost_id());
-        System.out.println(likeDTO.getNickName());
-
-        postService.likesave(likeDTO);
-
-    }
     @DeleteMapping("/delete/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId) {
         try {
@@ -129,5 +126,9 @@ public class PostController {
         String name = URLDecoder.decode(value,StandardCharsets.UTF_8);
         List<PostDTO> posts = postService.findByMyLike(name);
         return ResponseEntity.ok(posts);
+    }
+    @GetMapping("/hasliked")
+    public boolean hasLiked(@RequestParam Long post_id, @RequestParam String nickName) {
+        return likeRepository.existsByPostidAndNickName(post_id, nickName);
     }
 }

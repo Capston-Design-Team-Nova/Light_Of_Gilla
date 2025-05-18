@@ -5,9 +5,7 @@ import {
   Main,
   MapContainer,
   Sidebar,
-  SearchContainer,
   SearchBox,
-  SearchInput,
   HospitalItem,
   DropdownWrapper,
   Column,
@@ -18,10 +16,14 @@ import {
   CategoryModalOverlay,
   CategoryButtonsWrapper,
   CategoryAllButton,
-  CategoryGrid,
   ShimmerOverlay,
   SortingButton,
   SortingButtonWrapper,
+  SearchContainer,
+  ModeSwitcher,
+  ModeButton,
+  SearchBoxWrapper,
+  SearchInput,
   SearchIcon,
 } from "../styles/HospitalMapStyles";
 import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
@@ -59,6 +61,10 @@ function HospitalMap() {
   const [maxVisible, setMaxVisible] = useState(5);
   const [highlightedHospitalName, setHighlightedHospitalName] = useState(null);
   const [selectedHospitalLoading, setSelectedHospitalLoading] = useState(false);
+  const [mode, setMode] = useState("symptom");
+  const inputWrapperRef = useRef(null);
+  const [dropdownStyle, setDropdownStyle] = useState({});
+  const [showDepartments, setShowDepartments] = useState(false);
 
   // 좋아요 토글
   const toggleLike = async (reviewId) => {
@@ -146,7 +152,12 @@ function HospitalMap() {
             if (newFavorites[key].id === hospitalId) delete newFavorites[key];
           });
         } else {
-          // 추가
+          // 추가 전 10개 초과 시 가장 오래된 항목 삭제
+          const keys = Object.keys(newFavorites);
+          if (keys.length >= 10) {
+            delete newFavorites[keys[0]]; // FIFO
+          }
+
           newFavorites[hospitalId] = {
             id: hospitalId,
             name: hospitalName,
@@ -785,46 +796,26 @@ function HospitalMap() {
     }
   };
 
-  // 증상 검색어 매핑
-  const symptomToCategory = {
-    두통: "신경과",
-    치통: "치과",
-    소화불량: "내과",
-    목감기: "이비인후과",
-    "피부 가려움": "피부과",
-    "눈 충혈": "안과",
-    충혈: "안과",
-    "귀 통증": "이비인후과",
-    골절: "정형외과",
-    "산전 검사": "산부인과",
-    복통: "내과",
-    기침: "호흡기내과",
-    발열: "내과",
-    피로: "내과",
-    어지러움: "신경과",
-    "가슴 통증": "심장내과",
-    "배뇨 문제": "비뇨기과",
-    "관절 통증": "정형외과",
-    "호흡 곤란": "호흡기내과",
-    "어깨 통증": "정형외과",
-    "배변 문제": "소화기내과",
-    "피부 발진": "피부과",
-    근육통: "정형외과, 류마티스내과",
-    "손발 저림": "신경과, 혈관외과, 내분비내과",
-    불면증: "정신건강의학과, 신경과",
-    "갑상선 문제": "내분비내과",
-    알레르기: "알레르기내과, 피부과, 이비인후과",
-    요통: "정형외과, 신경외과",
-    탈모: "피부과",
-    우울감: "정신건강의학과",
-    불안감: "정신건강의학과",
-    수면장애: "정신건강의학과, 신경과",
-    구토: "소화기내과",
-    설사: "소화기내과",
-  };
+  const departmentList = [
+    "내과",
+    "외과",
+    "치과",
+    "이비인후과",
+    "피부과",
+    "소아과",
+    "안과",
+    "비뇨기과",
+    "정형외과",
+    "정신건강의학과",
+    "산부인과",
+    "성형외과",
+    "신경외과",
+    "가정의학과",
+    "마취통증의학과",
+  ];
 
   // 검색 로직
-  const handleSearch = (customTerm) => {
+  const handleSearch = async (customTerm) => {
     const rawTerm = customTerm ?? searchTerm;
     const trimmedTerm =
       typeof rawTerm === "string"
@@ -835,47 +826,56 @@ function HospitalMap() {
 
     if (!trimmedTerm) return;
 
+    if (mode === "symptom") {
+      const dept = await fetchDepartmentFromSymptom(trimmedTerm);
+      if (dept && departmentList.includes(dept)) {
+        handleCategoryClick(dept); // 기존 검색 방식 그대로 사용
+        saveSearchKeyword(trimmedTerm); // 증상도 검색 기록에 저장
+      } else {
+        alert("적절한 진료과를 찾을 수 없어요.");
+      }
+      return;
+    }
+
     saveSearchKeyword(trimmedTerm);
 
-    const matchedCategory = symptomToCategory[trimmedTerm];
-    if (matchedCategory) {
-      matchedCategory
-        .split(",")
-        .forEach((cat) => handleCategoryClick(cat.trim()));
-    } else {
-      const ps = new window.kakao.maps.services.Places();
-      ps.categorySearch(
-        "HP8",
-        (data, status) => {
-          if (status === window.kakao.maps.services.Status.OK) {
-            const filtered = data.filter(
-              (item) =>
-                item.place_name.includes(trimmedTerm) ||
-                item.road_address_name?.includes(trimmedTerm) ||
-                item.address_name?.includes(trimmedTerm)
-            );
-            const nearby = filterHospitalsWithin2km(filtered);
-            setHospitals(nearby);
-
-            // ✅ 지도 중심 이동
-            if (mapRef.current && nearby.length > 0) {
-              const lat = parseFloat(nearby[0].y);
-              const lng = parseFloat(nearby[0].x);
-              mapRef.current.panTo(new window.kakao.maps.LatLng(lat, lng));
-            }
-          } else {
-            setHospitals([]);
-          }
-        },
-        {
-          location: new window.kakao.maps.LatLng(
-            state.center.lat,
-            state.center.lng
-          ),
-          radius: 3000,
-        }
-      );
+    if (departmentList.includes(trimmedTerm)) {
+      handleCategoryClick(trimmedTerm);
+      return;
     }
+
+    // 병원 이름/주소 검색
+    const ps = new window.kakao.maps.services.Places();
+    ps.categorySearch(
+      "HP8",
+      (data, status) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          const filtered = data.filter(
+            (item) =>
+              item.place_name.includes(trimmedTerm) ||
+              item.road_address_name?.includes(trimmedTerm) ||
+              item.address_name?.includes(trimmedTerm)
+          );
+          const nearby = filterHospitalsWithin2km(filtered);
+          setHospitals(nearby);
+
+          if (mapRef.current && nearby.length > 0) {
+            const lat = parseFloat(nearby[0].y);
+            const lng = parseFloat(nearby[0].x);
+            mapRef.current.panTo(new window.kakao.maps.LatLng(lat, lng));
+          }
+        } else {
+          setHospitals([]);
+        }
+      },
+      {
+        location: new window.kakao.maps.LatLng(
+          state.center.lat,
+          state.center.lng
+        ),
+        radius: 3000,
+      }
+    );
   };
 
   // 카테고리 버튼
@@ -1365,7 +1365,6 @@ function HospitalMap() {
     const token = localStorage.getItem("token");
     if (!token || !keyword) return;
 
-    // 중복 기록이 있으면 삭제하고 다시 추가
     fetch(
       "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history",
       {
@@ -1375,9 +1374,7 @@ function HospitalMap() {
       .then((res) => res.json())
       .then(async (history) => {
         const duplicate = history.find((item) => item.keyword === keyword);
-
         if (duplicate) {
-          // 기존 기록 삭제
           await fetch(
             `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history/${duplicate.id}`,
             {
@@ -1400,41 +1397,81 @@ function HospitalMap() {
           }
         );
 
-        refreshSearchHistory(); // 최신 기록 다시 가져오기
+        const refreshed = await fetch(
+          `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const updatedHistory = await refreshSearchHistory();
+
+        // ✅ 10개 초과 시 오래된 항목 삭제
+        if (Array.isArray(updatedHistory) && updatedHistory.length > 10) {
+          const sorted = [...updatedHistory].sort(
+            (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+          );
+          const excess = sorted.length - 10;
+
+          for (let i = 0; i < excess; i++) {
+            await fetch(
+              `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history/${sorted[i].id}`,
+              {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
+          }
+        }
+
+        // 최신 검색 기록 다시 불러오기
+        refreshSearchHistory();
       })
       .catch((e) => {
-        console.error("검색 기록 중복 확인/처리 실패", e);
+        console.error("검색 기록 처리 실패", e);
       });
   };
 
-  // ✅ 2. 검색기록 API 호출
+  // 검색기록 API 호출
   useEffect(() => {
     refreshSearchHistory();
   }, []);
 
-  const refreshSearchHistory = () => {
+  const refreshSearchHistory = async () => {
     const token = localStorage.getItem("token");
-    if (!token) return;
+    if (!token) return [];
 
-    fetch(
-      "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history",
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
-      .then((res) => res.json())
-      .then((history) => {
-        if (Array.isArray(history)) {
-          setSearchHistory(history);
-        } else {
-          setSearchHistory([]); // fallback
-          console.warn("searchHistory 응답이 배열이 아님:", history);
+    try {
+      const res = await fetch(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/search/history",
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
-      })
-      .catch((e) => {
-        console.error("검색기록 갱신 실패", e);
-        setSearchHistory([]); // 실패 시에도 fallback
-      });
+      );
+
+      const history = await res.json();
+
+      if (Array.isArray(history)) {
+        const sorted = [...history].sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        if (sorted.length > 10) {
+          const trimmed = sorted.slice(0, 10); // 최신순 상위 10개만 유지
+          setSearchHistory(trimmed);
+          return trimmed;
+        }
+
+        setSearchHistory(sorted);
+        return sorted;
+      } else {
+        setSearchHistory([]);
+        return [];
+      }
+    } catch (e) {
+      console.error("검색기록 갱신 실패", e);
+      setSearchHistory([]);
+      return [];
+    }
   };
 
   // 영업 정보 파싱
@@ -1575,17 +1612,118 @@ function HospitalMap() {
       return distance <= 2000;
     });
 
+  useEffect(() => {
+    if (inputWrapperRef.current) {
+      const rect = inputWrapperRef.current.getBoundingClientRect();
+      setDropdownStyle({
+        position: "absolute",
+        top: "100%",
+        left: rect.left,
+        width: rect.width,
+      });
+    }
+  }, [isDropdownOpen]);
+
+  // GPT 호출
+  const fetchDepartmentFromSymptom = async (symptom) => {
+    const apiKey = process.env.REACT_APP_OPENAI_API_KEY; // .env에 설정
+
+    try {
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-4o",
+          messages: [
+            {
+              role: "system",
+              content:
+                "사용자가 증상을 입력하면, 그에 해당하는 진료과를 한국어로 대답하세요. 예: '배가 아파요' → '내과'. 다른 설명은 하지 마세요.",
+            },
+            {
+              role: "user",
+              content: symptom,
+            },
+          ],
+          temperature: 0.2,
+        }),
+      });
+
+      const data = await res.json();
+      const department = data?.choices?.[0]?.message?.content?.trim();
+      console.log("GPT-4o 진료과 응답:", department);
+      return department;
+    } catch (e) {
+      console.error("GPT-4o 호출 실패:", e);
+      return null;
+    }
+  };
+
+  const getDepartmentStats = () => {
+    const deptSet = new Set();
+    const validLabels = categoryList.map((c) => c.label); // 카테고리 리스트 기준
+
+    hospitals.forEach((h) => {
+      let dept = h.category_name;
+
+      if (typeof dept === "string") {
+        // 예: "의료,건강 > 병원 > 피부과 (2)"
+        const parts = dept.split(" > ");
+        dept = parts[parts.length - 1];
+        dept = dept.replace(/\s*\(\d+\)/, ""); // 괄호 숫자 제거 → '피부과'
+      }
+
+      if (dept && validLabels.includes(dept)) {
+        deptSet.add(dept);
+      }
+    });
+
+    return Array.from(deptSet); // ['피부과', '정형외과', ...]
+  };
+
+  const toggleDepartments = () => {
+    setShowDepartments((prev) => !prev);
+  };
+
+  const categoryIconMap = Object.fromEntries(
+    categoryList.map((item) => [item.label, item.icon])
+  );
+
   return (
     <Main>
       <Header />
       <SearchContainer className="search-container">
-        <SearchBox style={{ position: "relative", width: "100%" }}>
+        <ModeSwitcher>
+          <ModeButton
+            $active={mode === "symptom"}
+            $mode="symptom"
+            onClick={() => setMode("symptom")}
+          >
+            증상 검색
+          </ModeButton>
+          <ModeButton
+            $active={mode === "keyword"}
+            $mode="keyword"
+            onClick={() => setMode("keyword")}
+          >
+            병원 검색
+          </ModeButton>
+        </ModeSwitcher>
+        <SearchBoxWrapper ref={inputWrapperRef}>
           <SearchInput
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="병원 검색..."
+            placeholder={
+              mode === "symptom"
+                ? "증상을 입력하세요"
+                : "병원 이름 또는 진료과를 입력하세요"
+            }
             onClick={handleSearchInputClick}
+            mode={mode}
           />
           <SearchIcon
             src={require("../assets/images/돋보기.png")}
@@ -1598,15 +1736,15 @@ function HospitalMap() {
               handleSearch();
             }}
           />
-
           {isDropdownOpen && (
             <div
               className="search-dropdown"
               style={{
                 position: "absolute",
                 top: "100%",
-                left: "0",
-                width: "100%",
+                left: "calc(10% - 29px)",
+                width: "calc(80% + 55px)",
+                maxWidth: "calc(80% + 55px)",
                 background: "#fff",
                 border: "1px solid #ccc",
                 borderRadius: "8px",
@@ -1641,9 +1779,40 @@ function HospitalMap() {
                     : renderSearchHistory()}
                 </div>
               )}
+              <hr
+                style={{
+                  border: "none",
+                  borderTop: "1px solid #eee",
+                  width: "99%",
+                  margin: "8px auto",
+                }}
+              />
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  padding: "3px 9px 10px 0",
+                }}
+              >
+                <button
+                  onClick={() => setIsDropdownOpen(false)}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    fontSize: "16px",
+                    cursor: "pointer",
+                    color: "#999",
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.color = "#000")}
+                  onMouseOut={(e) => (e.currentTarget.style.color = "#999")}
+                >
+                  닫기
+                </button>
+              </div>
             </div>
           )}
-        </SearchBox>
+        </SearchBoxWrapper>
 
         <CategoryButtonsWrapper ref={categoryWrapperRef}>
           {categoryList.slice(0, maxVisible).map((cat) => (
@@ -1684,6 +1853,62 @@ function HospitalMap() {
             <span>평점순</span>
           </SortingButton>
         </SortingButtonWrapper>
+        <hr />
+
+        {/* 현재 검색된 진료과 요약 표시 */}
+        <div
+          style={{
+            padding: "0 10px 10px 10px",
+            fontSize: "15px",
+            color: "#333",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            flexWrap: "wrap",
+          }}
+        >
+          {(() => {
+            const stats = getDepartmentStats();
+            const count = hospitals.length;
+            if (stats.length === 0 || count === 0) return null;
+
+            return (
+              <>
+                {stats.slice(0, 2).map((dept) => (
+                  <div
+                    key={dept}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                    }}
+                  >
+                    <img
+                      src={categoryIconMap[dept]}
+                      alt={dept}
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        borderRadius: "50%",
+                        boxShadow: "0 0 8px rgba(255, 107, 107, 0.7)",
+                        border: "2px solid #ff6b6b",
+                        padding: "3px",
+                        backgroundColor: "#fff",
+                      }}
+                    />
+
+                    <span style={{ fontWeight: 500 }}>{dept}</span>
+                  </div>
+                ))}
+                <span style={{ color: "#666" }}>
+                  을 포함한{" "}
+                  <strong style={{ color: "#ff6b6b" }}>{count}</strong>개의
+                  병원이 검색되었어요
+                </span>
+              </>
+            );
+          })()}
+        </div>
 
         <div>
           {state.isLoading ? (
@@ -1731,8 +1956,8 @@ function HospitalMap() {
                         ? "2px solid #C0C0C0"
                         : i === 2
                         ? "2px solid #CD7F32"
-                        : "1px solid #eee",
-                    boxShadow: i < 3 ? "0 0 6px rgba(0,0,0,0.1)" : "none",
+                        : "2px solid #eee",
+                    boxShadow: "0 0 6px rgba(0,0,0,0.1)",
                     background:
                       i === 0
                         ? "linear-gradient(to right, #fff8dc, #fff)"
