@@ -1,6 +1,7 @@
 package com.example.Community.Repository;
 
 import com.example.Community.Entity.PostEntity;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,5 +34,14 @@ public interface PostRepository extends JpaRepository<PostEntity,Long> {
     @Query(value= "update PostEntity b set b.likes=b.likes+1 where b.post_id= :id")//updateHits의 쿼리문
     void updateLikes(@Param("id") Long id);
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE PostEntity p SET p.likes = p.likes + 1 WHERE p.id = :postId")
+    void increaseLikeCount(@Param("postId") Long postId);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE PostEntity p SET p.likes = p.likes - 1 WHERE p.id = :postId AND p.likes > 0")
+    void decreaseLikeCount(@Param("postId") Long postId);
 
 }

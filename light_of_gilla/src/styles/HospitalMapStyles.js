@@ -18,6 +18,7 @@ export const ModeSwitcher = styled.div`
   align-self: left;
 `;
 
+
 export const ModeButton = styled.button`
   padding: 6px 14px;
   font-size: 14px;
@@ -84,9 +85,10 @@ export const SearchIcon = styled.img`
   &:hover {
     background: #f2f2f2;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
   }
 
-  ${mobile} {
+  ${mobile}{
     right: calc(2% + 10px);
   }
 `;

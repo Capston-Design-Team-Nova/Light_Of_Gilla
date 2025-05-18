@@ -42,7 +42,8 @@ function Community() {
     };
     fetchPosts();
   }, []);
-  const handleSelectChange = async (value) => {
+  const handleSelectChange = async (option) => {
+    const value= option.value;
     console.log("선택한 카테고리:", value);
     const category = encodeURIComponent(value);
     try {
@@ -54,8 +55,13 @@ function Community() {
       console.error("카테고리별 게시글 불러오기 오류:", error);
     }
   };
+
+  const [isSearching, setIsSearching] = useState(false);
+
   const handleSearch = async (term) => {
     setSearchTerm(term);
+    setIsSearching(!!term);
+
     const searchString = encodeURIComponent(term);
     if (term && searchString !== "") {
       try {
@@ -110,10 +116,10 @@ function Community() {
 
         <TopRow isSidebarOpen={isSidebarOpen}>
           {/* 검색 필드 */}
-          <SearchField onWrite={handleSearch} />
+          <SearchField onSearch={handleSearch} />
           <div style={{ flex: 1 }} />{" "}
           {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}
-          <CustomSelect onChange={handleSelectChange} />
+          <CustomSelect onChange={handleSelectChange} menuPlacement="bottom" />
           <Link to="/Write">
             <Button>글쓰기</Button>
           </Link>
@@ -126,8 +132,10 @@ function Community() {
             {currentPosts.length > 0 ? (
               <CommunityList posts={currentPosts} />
             ) : (
-              <p style={{ padding: "20px", fontSize: "16px", textAlign: "center" }}>
-                해당 카테고리의 글이 아직 없습니다!
+              <p style={{ padding: "20px", fontSize: "1.3rem", textAlign: "center" }}>
+                {isSearching
+                  ? "검색 결과가 없습니다 😥"
+                  : "해당 카테고리의 글이 아직 없습니다! 글을 작성해 보세요!"}
               </p>
             )}
           </CommunityListWrapper>

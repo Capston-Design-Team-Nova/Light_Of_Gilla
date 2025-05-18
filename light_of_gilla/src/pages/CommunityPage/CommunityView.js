@@ -67,18 +67,30 @@ const Title = styled.h1`
     color: #000;
     font-family: Ourfont5;
     font-size: 1.8rem;
+     ${mobile} {
+    font-size: 22px;
+  }
+    
 `;
 
 const Meta = styled.div`
   color: #00000080;
   font-size: 1.3rem;
   margin-bottom: 1rem;
+
+   ${mobile} {
+    font-size: 14px;
+  }
 `;
 
 const Content1 = styled.p`
   line-height: 1.6;
   font-size: 1.6rem;
   font-family: Ourfont5;
+
+   ${mobile} {
+    font-size: 18px;
+  }
   `;
 
 const Category = styled.p`
@@ -86,6 +98,10 @@ const Category = styled.p`
   font-size: 1.3rem;
   font-family: Ourfont3;
   color: #FF710B;
+
+   ${mobile} {
+    font-size: 15px;
+  }
   `;
 
 const Button = styled.button`
@@ -111,6 +127,10 @@ const LikeButton = styled.button`
   display: flex;
   align-items: center;           // ✅ 버튼 안 글자 중앙정렬
   font-size: 1.1rem;
+
+   ${mobile} {
+    font-size: 14px;
+  }
 `;
 
 const CommentSection = styled.div`
@@ -209,7 +229,11 @@ const H3 = styled.h3`
   height: 32px;                  // ✅ 버튼과 동일한 높이
   display: flex;
   align-items: center;           // ✅ 중앙 정렬
-`;
+ ${mobile} {
+    font-size: 14px;
+  }
+
+  `;
 
 
 const AuthorImg = styled.img`
@@ -254,6 +278,9 @@ const Nickname = styled.strong`
 font-size:1.35rem;
   font-weight: bold;
   margin-bottom: 2px;
+  ${mobile} {
+    font-size: 16px;
+  }
 `;
 
 
@@ -263,7 +290,11 @@ const CommentText = styled.div`
   word-break: break-word;       // ✅ 긴 단어도 줄바꿈
   white-space: pre-wrap;        // ✅ 줄바꿈과 공백 유지
   overflow-wrap: break-word;
-`;
+
+    ${mobile} {
+    font-size: 14px;
+  }
+  `;
 
 const defaultProfileImage = require("../../assets/images/profileimage2.png");
 const CommunityView = () => {
@@ -327,44 +358,44 @@ const CommunityView = () => {
   
 
  
-useEffect(() => {
-  const fetchLikeStatus = async () => {
+ useEffect(() => {
+  const checkIfLiked = async () => {
     try {
-      const res = await axios.get(
-        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like-status`,
-        { params: { post_id: id, nickName: name } }
-      );
-      setHasLiked(res.data.hasLiked); // ✅ 좋아요 여부 상태 반영
-    } catch (err) {
-      console.error("좋아요 상태 조회 실패", err);
+      const response = await axios.get(`https://www.thegilla.com/post/hasliked`, {
+        params: { post_id: id, nickName: name }
+      });
+      setHasLiked(response.data); // true or false
+    } catch (error) {
+      console.error("좋아요 여부 확인 중 오류", error);
     }
   };
 
-  if (name) {
-    fetchLikeStatus();
-  }
-
+  checkIfLiked();
 }, [id, name]);
 
+
  
-  const handleLike = async () => {
-    if (hasLiked) 
-    return; // 이미 누른 경우 더 이상 증가하지 않음
-  
+const handleLike = async () => {
   try {
-    await axios.post(
-      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/savelike`,
+    const response = await axios.post(
+      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like`,
       { post_id: id, nickName: name }
     );
-    await axios.post(
-      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like?post_id=${id}`
-    );
-    setLikes((prev) => prev + 1);
-    setHasLiked(true); // UI 상태 업데이트
+    console.log(response.data.liked);
+    if (response.data.liked) {
+      // 좋아요 추가
+      setLikes(prev => prev + 1);
+      setHasLiked(true);
+    } else {
+      // 좋아요 취소
+      setLikes(prev => Math.max(0, prev - 1));
+      setHasLiked(false);
+    }
   } catch (error) {
-    console.error("좋아요 처리 중 오류", error);
+    console.error("좋아요 토글 중 오류", error);
   }
-  };
+};
+
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
@@ -469,7 +500,9 @@ const handleCommentDelete = async (commentId) => {
                     <Content1>{postData.content}</Content1>
                      <Category>#{postData.category}</Category>
                     <MiddleRow>
-                        <LikeButton onClick={handleLike} disabled={hasLiked}>{hasLiked ? "💗 좋아요 " : "♡ 좋아요 "} {likes}개</LikeButton>
+                    <LikeButton onClick={handleLike}>
+                        {hasLiked ? "💗 좋아요 " : "♡ 좋아요 "} {likes}개  
+                    </LikeButton> 
                         <H3>💬 댓글 ({commentCount})</H3>
                     </MiddleRow>
 

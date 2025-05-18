@@ -8,7 +8,6 @@ import Header from "../../components/Header";
 import Sidebar from '../../components/Sidebar';
 
 
-
 // 모바일 기준 (갤럭시 S24)
 const mobile = '@media screen and (max-width: 480px)';
 // 태블릿 ~ 작은 데스크탑
