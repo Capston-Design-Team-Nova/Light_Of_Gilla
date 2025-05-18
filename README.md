@@ -24,28 +24,23 @@
 - 건강 관련 궁금증을 빠르게 해결할 수 있도록 구성된 Q&A입니다.
 
 ## 🚀 기술 스택
-<img src="https://github.com/user-attachments/assets/adf6ba31-3f18-45a2-87f4-0c4b7e8f5c46" width="600" />
 
-### 📌 Language
-- **Java**
-- **JavaScript**
+- **Android Studio**
+- **Java / Kotlin**
+- **Firebase**
+- **Item-based Collaborative Filtering Algorithm**
+- **Google Fit API (선택)**
 
-### 🧰 Tools & Environment
-- **Visual Studio Code (VSCode)**
-- **IntelliJ IDEA**
-- **AWS EC2**
-- **AWS RDS**
+## 💡 향후 업데이트 예정 기능
 
-### ⚙️ Frameworks & Libraries
-- **Spring Boot**
-- **React**
-
+- 소셜 로그인 연동 (Google, Kakao)
+- 사용자 간 메시지/응원 기능
+- 날씨 기반 운동 추천
 
 ---
 
 ## 📷 스크린샷
 > (앱 실행 화면 예시를 여기에 첨부해주세요)
-<img src="https://github.com/user-attachments/assets/7676a216-3208-41fb-a1c8-330a7241cd5b" width="600" />
 
 ---
 
