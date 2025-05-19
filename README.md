@@ -20,7 +20,8 @@
 - 건강 관련 궁금증을 빠르게 해결할 수 있도록 구성된 Q&A입니다.
 
 ## 🚀 기술 스택
-<img src="https://github.com/user-attachments/assets/443c2fc0-256e-4466-8bb6-c1761ff35d95" width="400" />
+<img src="https://github.com/user-attachments/assets/443c2fc0-256e-4466-8bb6-c1761ff35d95" width="600" />
+
 - **개발 환경**: IntelliJ IDEA, VS Code  
 - **프론트엔드**: React  
 - **백엔드**: Spring Boot  
