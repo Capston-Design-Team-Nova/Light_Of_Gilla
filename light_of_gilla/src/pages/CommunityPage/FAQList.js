@@ -13,6 +13,7 @@ const PostList = styled.div`
 
 const PostListInner = styled.div`
   width: 95%;
+  margin: 0 auto;
 `;
 
 const PostItem = styled.div`
@@ -66,7 +67,7 @@ const FAQAuthor = styled.div`
   }
 `;
 
-function FAQList() {
+function FAQList({ searchTerm }) {
   const navigate = useNavigate();
   const [faqs, setFaqs] = useState([]);
 
@@ -116,23 +117,37 @@ function FAQList() {
     })
     .catch((err) => console.error("FAQ 불러오기 실패:", err));
 }, []);
-
-
+ // ✅ 필터링: 제목, 작성자, 내용 모두 포함
+ const filteredList = faqs.filter((item) => {
+  const term = searchTerm.toLowerCase();
   return (
-    <PostList>
-      {faqs.map(faq => (
-        <PostListInner key={faq.id}>
-          <PostItem onClick={() => navigate(`/faq/${faq.id}`)}>
-            <PostRow>
-              <FAQTitle>Q. {faq.question}</FAQTitle>
-              <FAQAuthor>{faq.author}</FAQAuthor>
-            </PostRow>
-          </PostItem>
-        </PostListInner>
-      ))}
-    </PostList>
+    item.question.toLowerCase().includes(term) ||
+    item.author.toLowerCase().includes(term) ||
+    item.answer.toLowerCase().includes(term)
   );
-}
+});
 
+return (
+  <PostList>
+    <div style={{ width: "100%" }}>
+      {filteredList.length === 0 ? (
+        <p>검색 결과가 없습니다.</p>
+      ) : (
+        filteredList.map((faq) => (
+          <PostListInner key={faq.id}>
+            <PostItem onClick={() => navigate(`/faq/${faq.id}`)}>
+              <PostRow>
+                <FAQTitle>Q. {faq.question}</FAQTitle>
+                <FAQAuthor>{faq.author}</FAQAuthor>
+              </PostRow>
+            </PostItem>
+          </PostListInner>
+        )) // ✅ map 닫는 괄호
+      )}
+    </div>
+  </PostList> // ✅ PostList 닫는 괄호
+); // ✅ return 전체 닫는 괄호
+
+}
 
 export default FAQList;

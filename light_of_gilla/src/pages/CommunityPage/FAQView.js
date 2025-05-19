@@ -23,8 +23,8 @@ const Center = styled.div`
 `;
 
 const Content = styled.div`
-max-width: 850px;
-  width: 85%;
+  max-width: 800px;
+  width: 78%;
   background-color: white;
   min-height:70vh;
   height:auto;
