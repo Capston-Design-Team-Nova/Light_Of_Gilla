@@ -25,11 +25,26 @@
 
 ## 🚀 기술 스택
 
-- **Android Studio**
-- **Java / Kotlin**
-- **Firebase**
-- **Item-based Collaborative Filtering Algorithm**
-- **Google Fit API (선택)**
+### 🛠 개발 환경
+- IntelliJ IDEA  
+- Visual Studio Code
+
+### 💻 프론트엔드
+- React
+
+### 🧩 백엔드
+- Spring Boot
+
+### ☁️ 클라우드 & 인프라
+- AWS RDS  
+- AWS API Gateway  
+- AWS EC2
+
+### 🔗 외부 API
+- Kakao Map API  
+- Kakao Login API  
+- ChatGPT API
+
 
 ## 💡 향후 업데이트 예정 기능
 
