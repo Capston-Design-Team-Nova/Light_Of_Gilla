@@ -7,6 +7,7 @@ import font4 from '../assets/fonts/Fustat-VariableFont_wght.ttf';
 import font5 from '../assets/fonts/Roboto-VariableFont_wdth,wght.ttf';
 import font6 from '../assets/fonts/Roboto-Italic-VariableFont_wdth,wght.ttf';
 import font7 from '../assets/fonts/NanumGothicBold.ttf';
+import font8 from '../assets/fonts/OpenSans-VariableFont_wdth,wght.ttf'
 
 export const GlobalStyle = createGlobalStyle`
 ${reset}
@@ -56,11 +57,19 @@ ${reset}
   }
 
   @font-face {
-    font-family: 'OurFont6';
+    font-family: 'OurFont7';
     src: url(${font7}) format('truetype');
     font-weight: normal;
     font-style: normal;
   }
+
+  @font-face {
+    font-family: 'OurFont8';
+    src: url(${font8}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
 
   body {
     font-family: Font1;

@@ -41,10 +41,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                     <SidebarButton onClick={() => handleSidebarClick("/MyLikes")} 
                     isActive={location.pathname.startsWith("/MyLikes")}>내가 좋아요 한 글</SidebarButton>
                 </Link>
-                <Link to="/faq">
-                    <SidebarButton onClick={toggleSidebar} 
-                    isActive={location.pathname.startsWith("/faq")}>전문가 FAQ</SidebarButton>
-                </Link>
+                
 
             </SidebarContent>
         </SidebarContainer>
