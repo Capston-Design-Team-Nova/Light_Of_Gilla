@@ -43,15 +43,6 @@
 - **외부 API**: Kakao Map API, Kakao Login API, ChatGPT API
 
 
-
-## 💡 향후 업데이트 예정 기능
-
-- 소셜 로그인 연동 (Google, Kakao)
-- 사용자 간 메시지/응원 기능
-- 날씨 기반 운동 추천
-
----
-
 ## 📷 스크린샷
 > (앱 실행 화면 예시를 여기에 첨부해주세요)
 
