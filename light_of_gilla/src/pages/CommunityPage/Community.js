@@ -61,7 +61,7 @@ function Community() {
   const handleSearch = async (term) => {
     setSearchTerm(term);
     setIsSearching(!!term);
-
+    console.log(term);
     const searchString = encodeURIComponent(term);
     if (term && searchString !== "") {
       try {
