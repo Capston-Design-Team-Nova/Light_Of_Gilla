@@ -9,7 +9,8 @@ import {
   Content,
   Button,
   TopRow,
-  ToggleButton, CommunityListWrapper
+  ToggleButton, CommunityListWrapper,
+  PaginationWrapper
   
 } from "../../styles/CommunityStyles";
 import { Link } from "react-router-dom";
@@ -117,9 +118,10 @@ function Community() {
         <TopRow isSidebarOpen={isSidebarOpen}>
           {/* 검색 필드 */}
           <SearchField onSearch={handleSearch} />
+          <CustomSelect onChange={handleSelectChange} menuPlacement="bottom" />
           <div style={{ flex: 1 }} />{" "}
           {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}
-          <CustomSelect onChange={handleSelectChange} menuPlacement="bottom" />
+          
           <Link to="/Write">
             <Button>글쓰기</Button>
           </Link>
@@ -141,14 +143,16 @@ function Community() {
           </CommunityListWrapper>
 
           {/* 페이지네이션 */}
-          {totalPages > 0 && (
+          <PaginationWrapper>
+            {totalPages > 0 && (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
             />
           )}  
-
+          </PaginationWrapper>
+          
         </Content>
       </Center>
     </Main>

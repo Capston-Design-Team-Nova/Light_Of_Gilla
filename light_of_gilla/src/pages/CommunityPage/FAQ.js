@@ -65,6 +65,11 @@ export const Content = styled.div`
   justify-content: flex-start;
   align-items: center;
 
+box-shadow: 0 2px 4px rgba(202, 201, 201, 0.3),   /* 아래 */
+    0 -2px 4px rgba(202, 201, 201, 0.3),  /* 위 */
+    2px 0 4px rgba(202, 201, 201, 0.3),   /* 오른쪽 */
+    -2px 0 4px rgba(202, 201, 201, 0.3);  /* 왼쪽 */
+
   ${mobile} {
     width: 95%;
     height: auto;
