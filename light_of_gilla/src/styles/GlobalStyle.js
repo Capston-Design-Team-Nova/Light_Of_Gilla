@@ -7,7 +7,12 @@ import font4 from '../assets/fonts/Fustat-VariableFont_wght.ttf';
 import font5 from '../assets/fonts/Roboto-VariableFont_wdth,wght.ttf';
 import font6 from '../assets/fonts/Roboto-Italic-VariableFont_wdth,wght.ttf';
 import font7 from '../assets/fonts/NanumGothicBold.ttf';
-import font8 from '../assets/fonts/OpenSans-VariableFont_wdth,wght.ttf'
+import font8 from '../assets/fonts/OpenSans-VariableFont_wdth,wght.ttf';
+import font9 from '../assets/fonts/GmarketSansTTFBold.ttf';
+import font10 from '../assets/fonts/GmarketSansTTFMedium.ttf';
+import font11 from '../assets/fonts/SpoqaHanSansNeo-Bold.ttf';
+import font12 from '../assets/fonts/SpoqaHanSansNeo-Regular.ttf';
+import font13 from '../assets/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf';
 
 export const GlobalStyle = createGlobalStyle`
 ${reset}
@@ -70,6 +75,36 @@ ${reset}
     font-style: normal;
   }
 
+    @font-face {
+    font-family: 'OurFont9';
+    src: url(${font9}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+      @font-face {
+    font-family: 'OurFont10';
+    src: url(${font10}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+      @font-face {
+    font-family: 'OurFont11';
+    src: url(${font11}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+      @font-face {
+    font-family: 'OurFont12';
+    src: url(${font12}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+      @font-face {
+    font-family: 'OurFont13';
+    src: url(${font13}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
 
   body {
     font-family: Font1;

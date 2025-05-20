@@ -51,7 +51,7 @@ export const TopRow = styled.div`
 
 export const Content = styled.div`
   position: relative; // 기준이 되는 부모
-  width: 78%;
+  width: 80%;
    
   transition: margin-left 0.3s ease;
   min-height: 70vh; /* 내용이 너무 적을 때는 최소 높이 보장 */
