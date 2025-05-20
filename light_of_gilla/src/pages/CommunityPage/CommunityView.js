@@ -67,30 +67,18 @@ const Title = styled.h1`
     color: #000;
     font-family: Ourfont5;
     font-size: 1.8rem;
-     ${mobile} {
-    font-size: 22px;
-  }
-    
 `;
 
 const Meta = styled.div`
   color: #00000080;
   font-size: 1.3rem;
   margin-bottom: 1rem;
-
-   ${mobile} {
-    font-size: 14px;
-  }
 `;
 
 const Content1 = styled.p`
   line-height: 1.6;
   font-size: 1.6rem;
   font-family: Ourfont5;
-
-   ${mobile} {
-    font-size: 18px;
-  }
   `;
 
 const Category = styled.p`
@@ -98,10 +86,6 @@ const Category = styled.p`
   font-size: 1.3rem;
   font-family: Ourfont3;
   color: #FF710B;
-
-   ${mobile} {
-    font-size: 15px;
-  }
   `;
 
 const Button = styled.button`
@@ -127,10 +111,6 @@ const LikeButton = styled.button`
   display: flex;
   align-items: center;           // ✅ 버튼 안 글자 중앙정렬
   font-size: 1.1rem;
-
-   ${mobile} {
-    font-size: 14px;
-  }
 `;
 
 const CommentSection = styled.div`
@@ -229,11 +209,7 @@ const H3 = styled.h3`
   height: 32px;                  // ✅ 버튼과 동일한 높이
   display: flex;
   align-items: center;           // ✅ 중앙 정렬
- ${mobile} {
-    font-size: 14px;
-  }
-
-  `;
+`;
 
 
 const AuthorImg = styled.img`
@@ -278,9 +254,6 @@ const Nickname = styled.strong`
 font-size:1.35rem;
   font-weight: bold;
   margin-bottom: 2px;
-  ${mobile} {
-    font-size: 16px;
-  }
 `;
 
 
@@ -290,11 +263,7 @@ const CommentText = styled.div`
   word-break: break-word;       // ✅ 긴 단어도 줄바꿈
   white-space: pre-wrap;        // ✅ 줄바꿈과 공백 유지
   overflow-wrap: break-word;
-
-    ${mobile} {
-    font-size: 14px;
-  }
-  `;
+`;
 
 const defaultProfileImage = require("../../assets/images/profileimage2.png");
 const CommunityView = () => {
@@ -451,7 +420,7 @@ const handleCommentDelete = async (commentId) => {
   try {
     // 백엔드에 맞게 endpoint URL 수정하세요
     await axios.delete(
-      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/delete/${commentId}`
+      `http://localhost:8082/comment/delete/${commentId}`
     );
     // 삭제 후 state에서 제거
     setComments((prev) => prev.filter((c) => c.id !== commentId));

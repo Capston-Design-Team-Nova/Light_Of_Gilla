@@ -108,7 +108,27 @@ public class CommentService {
     }
 
     public void deleteCommentById(Long commentId) {
-        Optional<CommentEntity> optionalCommentEntity=commentRepository.findById(commentId);
-        commentRepository.delete(optionalCommentEntity.get());
+        Optional<CommentEntity> optionalCommentEntity = commentRepository.findById(commentId);
+
+        if (optionalCommentEntity.isPresent()) {
+            CommentEntity comment = optionalCommentEntity.get();
+
+            // post_id 직접 가져와서 post 조회
+            Long postId = comment.getPostEntity().getPost_id();  // 또는 comment.getPostId() 형태로 접근할 수도 있음 (getter가 있다면)
+
+            Optional<PostEntity> optionalPostEntity = PostRepository.findById(postId);
+            if (optionalPostEntity.isPresent()) {
+                PostEntity post = optionalPostEntity.get();
+                post.setCommentCounts(post.getCommentCounts() - 1); // 댓글 수 -1
+                PostRepository.save(post);
+            } else {
+                throw new IllegalArgumentException("해당 게시글을 찾을 수 없습니다: " + postId);
+            }
+
+            // 댓글 삭제
+            commentRepository.delete(comment);
+        } else {
+            throw new IllegalArgumentException("해당 댓글을 찾을 수 없습니다: " + commentId);
+        }
     }
 }

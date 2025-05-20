@@ -61,13 +61,13 @@ function Community() {
   const handleSearch = async (term) => {
     setSearchTerm(term);
     setIsSearching(!!term);
-    console.log(term);
     const searchString = encodeURIComponent(term);
+    console.log(searchString);
     if (term && searchString !== "") {
       try {
        
         const response = await axios.get(
-          `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/search/${searchString}`
+          `https://www.thegilla.com/post/search/${searchString}`
         );
         setPosts(response.data);
       } catch (error) {
