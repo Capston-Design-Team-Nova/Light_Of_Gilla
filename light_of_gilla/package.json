@@ -19,7 +19,6 @@
     "react-scripts": "^5.0.1",
     "react-select": "^5.10.1",
     "rehype-raw": "^7.0.0",
-    "remark-gfm": "^4.0.1",
     "styled-components": "^6.1.15",
     "styled-reset": "^4.5.2",
     "web-vitals": "^2.1.4"
