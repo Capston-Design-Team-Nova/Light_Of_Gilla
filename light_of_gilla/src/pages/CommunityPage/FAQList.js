@@ -42,7 +42,7 @@ const PostRow = styled.div`
 
 const FAQTitle = styled.h2`
   margin: 0;
-  font-family: Ourfont11;
+  font-family: OurFont11;
   font-size: 1.4rem;
   color: #1D1B20;
   flex: 3;
@@ -60,7 +60,7 @@ const FAQTitle = styled.h2`
 
 const FAQAuthor = styled.div`
 margin-top: 1.1rem;
-  font-family: Ourfont13;
+  font-family: OurFont13;
   font-size: 1.1rem;
   color: #000;
   white-space: nowrap;
@@ -75,9 +75,9 @@ margin-top: 1.1rem;
 const Answer = styled.div`
   margin-top: 1rem;
   font-size: 1.23rem;
-  font-family: Ourfont10;
+  font-family: OurFont12;
   line-height: 1.6;
-  color: #333;
+  color: #111;
 
   ${mobile} {
     font-size: 14px;
@@ -159,7 +159,7 @@ function FAQList({ searchTerm }) {
               </PostRow>
               {expandedId === faq.id && (
   <>
-    <FAQAuthor><em>{faq.author}의 답변이에요.</em></FAQAuthor>
+    <FAQAuthor>{faq.author}의 답변이에요.</FAQAuthor>
     <Answer>
       <ReactMarkdown rehypePlugins={[rehypeRaw]}>
         {faq.answer}

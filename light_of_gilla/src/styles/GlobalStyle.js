@@ -1,5 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
-import reset from 'styled-reset';
+import { reset } from 'styled-reset';
+
 import font1 from '../assets/fonts/DavidLibre-Bold.ttf';
 import font2 from '../assets/fonts/DavidLibre-Medium.ttf';
 import font3 from '../assets/fonts/DavidLibre-Regular.ttf';
@@ -13,6 +14,7 @@ import font10 from '../assets/fonts/GmarketSansTTFMedium.ttf';
 import font11 from '../assets/fonts/SpoqaHanSansNeo-Bold.ttf';
 import font12 from '../assets/fonts/SpoqaHanSansNeo-Regular.ttf';
 import font13 from '../assets/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf';
+import font14 from '../assets/fonts/GmarketSansTTFLight.ttf';
 
 export const GlobalStyle = createGlobalStyle`
 ${reset}
@@ -87,21 +89,27 @@ ${reset}
     font-weight: normal;
     font-style: normal;
   }
-      @font-face {
+  @font-face {
     font-family: 'OurFont11';
     src: url(${font11}) format('truetype');
     font-weight: normal;
     font-style: normal;
   }
-      @font-face {
+  @font-face {
     font-family: 'OurFont12';
     src: url(${font12}) format('truetype');
     font-weight: normal;
     font-style: normal;
   }
-      @font-face {
+  @font-face {
     font-family: 'OurFont13';
     src: url(${font13}) format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'OurFont14';
+    src: url(${font14}) format('truetype');
     font-weight: normal;
     font-style: normal;
   }
