@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from "styled-components";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 
 const mobile = '@media screen and (max-width: 480px)';
 
@@ -79,6 +80,8 @@ const Answer = styled.div`
   line-height: 1.6;
   color: #111;
 
+
+  
   ${mobile} {
     font-size: 14px;
   }
@@ -99,31 +102,36 @@ function FAQList({ searchTerm }) {
         let current = null;
 
         lines.forEach((line) => {
-          line = line.trim();
-          if (line.startsWith("## [")) {
-            if (current) parsed.push(current);
-            const idMatch = line.match(/^## \[(\d+)] (.+)$/);
-            if (idMatch) {
-              current = {
-                id: parseInt(idMatch[1]),
-                question: idMatch[2].trim(),
-                author: "",
-                answer: "",
-              };
-            }
-          } else if (line.startsWith("**작성자:**")) {
-            if (current) current.author = line.replace("**작성자:**", "").trim();
-          } else if (line === "---") {
-            if (current) {
-              parsed.push(current);
-              current = null;
-            }
-          } else {
-            if (current) current.answer += line + "\n";
-          }
-        });
+  // 기존: line = line.trim();
+  const rawLine = line; // 원본 줄은 그대로 두고
+  const lineTrimmed = line.trim(); // 제목, 작성자 검사용
+
+  if (lineTrimmed.startsWith("## [")) {
+    if (current) parsed.push(current);
+    const idMatch = lineTrimmed.match(/^## \[(\d+)] (.+)$/);
+    if (idMatch) {
+      current = {
+        id: parseInt(idMatch[1]),
+        question: idMatch[2].trim(),
+        author: "",
+        answer: "",
+      };
+    }
+  } else if (lineTrimmed.startsWith("**작성자:**")) {
+    if (current) current.author = lineTrimmed.replace("**작성자:**", "").trim();
+  } else if (lineTrimmed === "---") {
+    if (current) {
+      parsed.push(current);
+      current = null;
+    }
+  } else {
+    if (current) current.answer += rawLine + "\n"; // 💡 여기에 원본 줄 그대로 써줘야 줄 구조 안 망가짐!
+  }
+});
+
 
         if (current) parsed.push(current);
+        console.log("파싱된 전체 FAQ answer 확인:", parsed.map(faq => faq.answer)); // 👈 여기!
         setFaqs(parsed);
       })
       .catch((err) => console.error("FAQ 불러오기 실패:", err));
@@ -148,6 +156,7 @@ function FAQList({ searchTerm }) {
         <p>검색 결과가 없습니다.</p>
       ) : (
         filteredList.map((faq) => (
+           
           <PostListInner key={faq.id}>
             <PostItem
               onClick={() => toggleItem(faq.id)}
@@ -161,7 +170,11 @@ function FAQList({ searchTerm }) {
   <>
     <FAQAuthor>{faq.author}의 답변이에요.</FAQAuthor>
     <Answer>
-      <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+      <ReactMarkdown remarkPlugins={[remarkGfm]}rehypePlugins={[rehypeRaw]} components={{
+    ol: ({ node, ...props }) => <ol style={{ listStyleType: 'decimal', paddingLeft: '1.5rem' }} {...props} />,
+    ul: ({ node, ...props }) => <ul style={{ listStyleType: 'disc', paddingLeft: '1.5rem' }} {...props} />,
+    li: ({ node, ...props }) => <li style={{ marginBottom: '0.3rem' }} {...props} />
+  }}>
         {faq.answer}
       </ReactMarkdown>
     </Answer>
