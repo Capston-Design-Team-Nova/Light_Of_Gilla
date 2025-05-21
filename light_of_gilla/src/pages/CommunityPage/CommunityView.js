@@ -66,11 +66,10 @@ const CommentsWrapper = styled.div`
 const Title = styled.h1`
     color: #000;
     font-family: Ourfont5;
-    font-size: 1.8rem;
+    font-size: 2rem;
      ${mobile} {
     font-size: 22px;
   }
-    
 `;
 
 const Meta = styled.div`
@@ -108,7 +107,7 @@ const Button = styled.button`
   margin-top: 5px;
   padding: 0.5rem 1rem;
   border: none;
-  background: #F8C743;
+  background: #be8600;
   color: black;
   border-radius: 6px;
   cursor: pointer;
@@ -185,7 +184,7 @@ const CommentForm = styled.form`
     bottom: 40px;
     left: 0;
     width: 95%;
-    z-index: 999;
+    z-index: 998;
     padding: 0.5rem 0.7rem;
     background: white;
     border-top: 1px solid #ccc;
@@ -366,37 +365,28 @@ const CommunityView = () => {
       });
       setHasLiked(response.data); // true or false
     } catch (error) {
-      console.error("좋아요 여부 확인 중 오류", error);
+        console.error('좋아요 업데이트 중 오류 발생:', error);
     }
+  
   };
-
-  checkIfLiked();
-}, [id, name]);
-
-
- 
-const handleLike = async () => {
+  checkIfLiked(); // ✅ 호출 잊지 말기
+  }, [id, name]);
+  
+  const handleLike = async () => {
   try {
-    const response = await axios.post(
-      `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like`,
-      { post_id: id, nickName: name }
-    );
-    console.log(response.data.liked);
-    if (response.data.liked) {
-      // 좋아요 추가
-      setLikes(prev => prev + 1);
+    const response = await axios.post(`https://www.thegilla.com/post/like`, {
+      post_id: id,
+      nickName: name
+    });
+
+    if (response.status === 200) {
       setHasLiked(true);
-    } else {
-      // 좋아요 취소
-      setLikes(prev => Math.max(0, prev - 1));
-      setHasLiked(false);
+      setLikes((prev) => prev + 1);
     }
   } catch (error) {
-    console.error("좋아요 토글 중 오류", error);
+    console.error("좋아요 처리 오류:", error);
   }
 };
-
-
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     console.log("댓글 제출 클릭됨");
@@ -431,6 +421,14 @@ const handleLike = async () => {
     console.error("댓글 추가 오류 또는 새로고침 오류:", error);
   });
   };
+
+  const handleCommentKeyPress = (e) => {
+    // Check if the Enter key was pressed (keyCode 13 or e.key === "Enter")
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault(); // Prevent the default behavior of creating a new line
+        handleCommentSubmit(e); // Submit the comment
+    }
+};
   const handleDelete = async (postId) => {
     const confirmDelete = window.confirm("정말 이 글을 삭제하시겠습니까?");
     if (!confirmDelete) return;
@@ -535,8 +533,9 @@ const handleCommentDelete = async (commentId) => {
                                 rows="3"
                                 value={newComment.text}
                                 onChange={(e) =>
-                                setNewComment({ ...newComment, text: e.target.value })
-                                }   
+                                setNewComment({ ...newComment, text: e.target.value })}
+                                onKeyDown={handleCommentKeyPress}
+                          
                             />
                             <Button type="submit">⬆</Button>
                     </CommentForm>                 
@@ -545,8 +544,6 @@ const handleCommentDelete = async (commentId) => {
             </Center>
         </Main>    
   );
-};
+}
 
 export default CommunityView;
-
-

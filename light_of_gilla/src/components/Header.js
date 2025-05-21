@@ -87,7 +87,7 @@ function Header() {
                 }
               }}
             >
-              <Button>병원&약국 찾기</Button>
+              <Button>병원 찾기</Button>
             </Link>
 
             <Link
@@ -100,6 +100,18 @@ function Header() {
               }}
             >
               <Button>Q&A</Button>
+            </Link>
+
+            <Link
+              to={isLoggedIn ? "/faq" : "#"}
+              onClick={(e) => {
+                if (!isLoggedIn) {
+                  e.preventDefault();
+                  setShowModal(true);
+                }
+              }}
+            >
+              <Button>FAQ</Button>
             </Link>
 
             {!isLoggedIn ? (

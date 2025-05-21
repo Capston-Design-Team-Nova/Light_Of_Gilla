@@ -57,8 +57,11 @@ export const Content = styled.div`
   height: auto;
   background-color: white;
   border-radius: 15px;
-
-  overflow: visible; // 자식 요소 넘침 방지
+box-shadow: 0 2px 4px rgba(124, 124, 124, 0.3),   /* 아래 */
+    0 -2px 4px rgba(124, 124, 124, 0.3),  /* 위 */
+    2px 0 4px rgba(124, 124, 124, 0.3),   /* 오른쪽 */
+    -2px 0 4px rgba(124, 124, 124, 0.3);  /* 왼쪽 */
+  overflow: hidden; // 자식 요소 넘침 방지
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -91,7 +94,7 @@ export const Button = styled.button`
   padding: 2px;
   width: 85px;
   height: 34px;
-  background-color: #F8C743;
+  background-color:#cd9b3f;  /* #D9A441;#be8600; #B0721E;  #E0A93A; #E8A334 #F0AD3D;*/
   color: white;
   font-family: 'OurFont1';
   font-size: 16px;
@@ -256,7 +259,7 @@ export const PaginationWrapper = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 98%;
+  width: 100%;
   height: 50px;
   display: flex;
   justify-content: center;

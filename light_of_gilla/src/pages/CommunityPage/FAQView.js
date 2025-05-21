@@ -1,127 +1,115 @@
-import React, { useState } from "react";
-
-import { useEffect } from 'react';
-import { useParams, useNavigate, Await } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { Main,Center,ToggleButton,Content } from "../../styles/CommunityStyles";
 import Header from "../../components/Header";
-import Sidebar from '../../components/Sidebar';
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
-
-// 모바일 기준 (갤럭시 S24)
 const mobile = '@media screen and (max-width: 480px)';
-// 태블릿 ~ 작은 데스크탑
-const tablet = '@media screen and (max-width: 1024px)';
 
-const Wrapper = styled.div`
-  width: 90%;
-  margin: 0.5rem auto;
+const Main = styled.main`
+  width: 100%;
+  height: 100%; // ✅ 추가
+  background-color: #fdf6ec;
 `;
 
-const TitleLine = styled.h1`
+const Center = styled.div`
+  padding-top: 90px;
+  display: flex;
+  justify-content: center;
 
-    color: #000;
-    font-family: Ourfont5;
-    font-size: 1.6rem;
+   height:auto;
+  background-color: #fdf6ec;
+`;
+
+const Content = styled.div`
+  max-width: 800px;
+  width: 78%;
+  background-color: white;
+  min-height:70vh;
+  height:auto;
+  padding: 2rem 2rem;
+  font-family:Ourfont8;
+  font-size: 1.3rem;
+  line-height: 1.6;
+  border-radius: 15px;
+
+  ${mobile} {
+    width: 85%;
+    margin-left: 0;
     
-  margin-bottom: 1.5rem;
-  margin-top: 1.5rem;
+    border-radius: 0;
+    height:100%;
+  }
 
-  white-space: normal;       // ✅ 줄바꿈 허용
-  overflow: visible;         // ✅ 잘리지 않도록
-  text-overflow: unset;      // ✅ 생략 (...) 없애기
-
-    line-height: 1.3;
-
-`;
-
-const Meta = styled.div`
-  color: #00000080;
-  font-size: 1.15rem;
-  margin-bottom: 1rem;
-`;
-
-const Content1 = styled.p`
-  line-height: 1.4;
-  font-size: 1.4rem;
-  font-family: Ourfont5;
-  
   `;
 
-function splitByCustomDelimiter(text, delimiter = "\n") {
-  return text
-    .split(delimiter)
-    .map(line => line.trim())
-    .filter(line => line.length > 0);
-}
-
-
-
 const FAQView = () => {
-  
-    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480); 
-    const { id } = useParams();
-    const [faq, setFaq] = useState(null);
+  const { id } = useParams();
+  const [entry, setEntry] = useState(null);
 
-    const toggleSidebar = () => {
-        setSidebarOpen(!isSidebarOpen);
-    };
+  useEffect(() => {
+    fetch("/data/faqs.md")
+      .then(res => res.text())
+      .then(text => {
+        const lines = text.split("\n");
+        const parsed = [];
+        let current = null;
 
-useEffect(() => {
-    fetch("/data/faqs.json")
-      .then((res) => res.json())
-      .then((data) => {
-        const found = data.find((item) => item.id === parseInt(id));
-        setFaq(found);
-      });
+        lines.forEach((line) => {
+          line = line.trim();
+
+          if (line.startsWith("## [")) {
+            if (current) parsed.push(current);
+            const match = line.match(/^## \[(\d+)] (.+)$/);
+            if (match) {
+              current = {
+                id: parseInt(match[1]),
+                question: match[2],
+                author: "",
+                answer: "",
+              };
+            }
+          } else if (line.startsWith("**작성자:**")) {
+            if (current) {
+              current.author = line.replace("**작성자:**", "").trim();
+            }
+          } else if (line === "---") {
+            if (current) {
+              parsed.push(current);
+              current = null;
+            }
+          } else {
+            if (current) {
+              current.answer += line + "\n";
+            }
+          }
+        });
+
+        if (current) parsed.push(current); // 마지막 항목
+
+        const found = parsed.find(item => item.id === parseInt(id));
+        setEntry(found);
+      })
+      .catch(err => console.error("FAQ 로딩 실패:", err));
   }, [id]);
 
-if (!faq) return <div>해당 FAQ를 찾을 수 없습니다.</div>;
-  //const navigate = useNavigate();
-   const lines = splitByCustomDelimiter(faq.answer, "\n");
-   const titleLines = splitByCustomDelimiter(faq.question, "\n"); 
-
+  if (!entry) return <div>FAQ를 불러오는 중이거나 없습니다.</div>;
 
   return (
     <Main>
-        <Header />
-            {/* Sidebar */}
-            <Center>
-                <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />    
-                {/* ✅ 사이드바가 닫혀 있을 때만 버튼 보이게 하기 */}
-                {window.innerWidth <= 480 && !isSidebarOpen && (
-                  <ToggleButton onClick={toggleSidebar}>
-                    <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
-                  </ToggleButton>
-                )}
-                
-                <Content isSidebarOpen={isSidebarOpen}>
-                
-
-                <Wrapper>
-                    {splitByCustomDelimiter(faq.question, "\n").map((line, idx) => (
-    <TitleLine key={idx}>{line}</TitleLine>
-  ))}
-                    <Meta>                   
-                        {faq.author}의 답변이에요.
-                    </Meta>
-                    {lines.map((line, index) => (
-                      
-      
-                    <Content1 key={index}>{index === 0 ? `A. ${line}` : line}</Content1>))}
-                     
-                  
-                </Wrapper>
-                </Content>
-                
-                
-            </Center>
-        </Main>
-
-    
+      <Header />
+      <Center>
+        <Content>
+          <h1>Q. {entry.question}</h1>
+          <p><em>{entry.author}의 답변입니다</em></p>
+          <h2>A.</h2>
+          <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+  {entry.answer}</ReactMarkdown>
+        </Content>
+      </Center>
+    </Main>
   );
 };
 
 export default FAQView;
-
-

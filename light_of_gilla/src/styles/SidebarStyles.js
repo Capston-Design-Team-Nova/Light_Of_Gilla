@@ -11,12 +11,14 @@ export const SidebarContainer = styled.div`
   padding-top: 60px;
   z-index: 999;
 
+ box-shadow: 2px 0 4px rgba(124, 124, 124, 0.3);   /* 오른쪽 */
+
   @media screen and (max-width: 480px) {
   top: 0;
     left: ${({ isOpen }) => (isOpen ? '0' : '-100%')};
     width: 80%;
     height: 100%;
-    
+     z-index: 999;
   }
 
   @media screen and (min-width: 481px) {
@@ -42,7 +44,8 @@ export const SidebarButton = styled.button`
     font-size: 16px;
     cursor: pointer;
     border: none;
-    width: 160px;
+    border-radius:7px;
+    width: 225px;
     text-align: center;
     transition: background-color 0.2s ease-in-out;
 

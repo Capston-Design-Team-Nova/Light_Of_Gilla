@@ -59,7 +59,7 @@ const CustomSelect = ({ onChange, menuPlacement= "bottom"}) => {
 
   const handleChange = (option) => {
     setSelectedOption(option);            // ✅ 선택한 옵션 전체 저장
-    onChange(option.value);               // ✅ 부모에 값만 전달
+    onChange(option);               // ✅ 부모에 값만 전달
   };
 
   return (

@@ -98,7 +98,7 @@ function MyArticles() {
       }}>
         {isSearching
       ? "검색 결과가 없습니다 😥"
-      : "아직 좋아요를 누른 글이 없습니다. 글에 좋아요를 눌러보세요!"}
+      : "아직 작성한 글이 없습니다. 글을 작성해보세요!"}
       </div>
     ) : (
       <CommunityList posts={currentPosts} />

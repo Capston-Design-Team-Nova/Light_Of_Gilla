@@ -70,7 +70,7 @@ function CommunityWS() {
         console.log("선택한 증상:", selectedOption);
       
         try {
-          await axios.post('https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/save', postData);
+          await axios.post('https://www.thegilla.com/post/save', postData);
           alert('글을 정상적으로 올렸습니다!');
           navigate('/Community');
         } catch (error) {
@@ -82,8 +82,8 @@ function CommunityWS() {
         setSidebarOpen(!isSidebarOpen);
     };
 
-    const handleSelectChange = (value) => {
-        setSelectedOption(value);
+    const handleSelectChange = (option) => {
+        setSelectedOption(option.value);
     };
     return (
         <Main>

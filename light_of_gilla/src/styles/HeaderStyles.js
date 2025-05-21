@@ -43,9 +43,9 @@ export const NavRight = styled.nav`
 
   @media screen and (max-width: 480px) {
     justify-content: center;
-    gap: 10px;
+    gap: 4px;
     flex-wrap: nowrap; // 필요 시 wrap으로 바꿔도 돼
-    overflow-x: auto;   // 버튼이 많다면 좌우 스크롤 허용    
+    overflow-x: visible;     
   }
 `;
 
@@ -71,8 +71,8 @@ export const Button = styled.button`
   @media screen and (max-width: 480px) {
   padding: 4px 6px;
   font-size: 10px;
-  min-width: 70px;
-  margin: 0 4px;
+  min-width: 60px;
+  margin: 0 2px;
 }
 `;
 
@@ -93,7 +93,7 @@ export const ImageButton1 = styled.button`
 
   @media screen and (max-width: 480px) {
   img {
-    margin-left: 10px;
+    margin-left: 5px;
     width: 36px;
     height: 36px;
   }
