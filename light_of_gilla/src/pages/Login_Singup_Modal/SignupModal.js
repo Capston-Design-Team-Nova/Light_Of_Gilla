@@ -189,7 +189,7 @@ const SignupModal = ({ onClose, onSwitch }) => {
         userId: formData.userId,
         password: formData.password,
         email: formData.email,
-        phone: "01000000000",
+        phone: formData.phone,
         nickname: formData.nickname,
         profileImage: "https://example.com/default-profile.jpg", // 디폴트
         residentNumber: formData.residentNumber
@@ -275,6 +275,13 @@ const SignupModal = ({ onClose, onSwitch }) => {
               placeholder="비밀번호 재입력"
               value={formData.confirmPassword}
               onChange={(e) => updateField("confirmPassword", e.target.value)}
+            />
+
+            <InputField
+              type="tel"
+              placeholder="전화번호 입력 (예: 01012345678)"
+              value={formData.phone}
+              onChange={(e) => updateField("phone", e.target.value)}
             />
 
             <EmailRow>
