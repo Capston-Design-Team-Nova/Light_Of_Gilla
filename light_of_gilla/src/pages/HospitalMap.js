@@ -5,7 +5,6 @@ import {
   Main,
   MapContainer,
   Sidebar,
-  SearchBox,
   HospitalItem,
   DropdownWrapper,
   Column,
@@ -27,6 +26,7 @@ import {
   SearchIcon,
 } from "../styles/HospitalMapStyles";
 import { Map, MapMarker, CustomOverlayMap } from "react-kakao-maps-sdk";
+import AuthModalManager from "../pages/Login_Singup_Modal/AuthModalManager";
 
 function HospitalMap() {
   const [state, setState] = useState({
@@ -65,9 +65,25 @@ function HospitalMap() {
   const inputWrapperRef = useRef(null);
   const [dropdownStyle, setDropdownStyle] = useState({});
   const [showDepartments, setShowDepartments] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const ensureLogin = () => {
+    if (!isLoggedIn) {
+      setShowModal(true);
+      return false;
+    }
+    return true;
+  };
 
   // 좋아요 토글
   const toggleLike = async (reviewId) => {
+    if (!ensureLogin()) return;
     const userNickname = localStorage.getItem("nickname");
     if (!userNickname || !reviewId) return;
 
@@ -78,7 +94,7 @@ function HospitalMap() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "X-User-Name": userNickname,
+            "X-User-Name": encodeURIComponent(userNickname),
           },
         }
       );
@@ -89,7 +105,7 @@ function HospitalMap() {
           {
             headers: {
               "Content-Type": "application/json",
-              "X-User-Name": userNickname,
+              "X-User-Name": encodeURIComponent(userNickname),
             },
           }
         );
@@ -103,6 +119,7 @@ function HospitalMap() {
 
   // 즐겨찾기 토글
   const toggleFavorite = async (hospitalName) => {
+    if (!ensureLogin()) return;
     const hospitalDetail = getHospitalDetails(hospitalName);
     const hospitalId = hospitalDetail?.id;
     if (!hospitalId) {
@@ -124,7 +141,7 @@ function HospitalMap() {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
-              "X-User-Name": userNickname,
+              "X-User-Name": encodeURIComponent(userNickname),
             },
           }
         );
@@ -138,7 +155,7 @@ function HospitalMap() {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              "X-User-Name": userNickname,
+              "X-User-Name": encodeURIComponent(userNickname),
             },
           }
         );
@@ -187,7 +204,7 @@ function HospitalMap() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "X-User-Name": userNickname,
+              "X-User-Name": encodeURIComponent(userNickname),
             },
           }
         );
@@ -308,7 +325,9 @@ function HospitalMap() {
               {
                 headers: {
                   "Content-Type": "application/json",
-                  "X-User-Name": localStorage.getItem("nickname") || "",
+                  "X-User-Name": encodeURIComponent(
+                    localStorage.getItem("nickname") || ""
+                  ),
                 },
               }
             );
@@ -386,51 +405,88 @@ function HospitalMap() {
   // 병원 정렬
   const getSortedHospitals = () => {
     const sorted = [...hospitals];
-    if (sortOption === "rating") {
-      sorted.sort((a, b) => {
-        const aScore = parseFloat(getHospitalDetails(a.place_name).score || 0);
-        const bScore = parseFloat(getHospitalDetails(b.place_name).score || 0);
-        return bScore - aScore;
-      });
-    } else if (sortOption === "recommend") {
-      sorted.sort((a, b) => {
-        const aScore = parseFloat(getHospitalDetails(a.place_name).score || 0);
-        const bScore = parseFloat(getHospitalDetails(b.place_name).score || 0);
-        const aDist = getDistance(
-          state.center.lat,
-          state.center.lng,
-          parseFloat(a.y),
-          parseFloat(a.x)
-        );
-        const bDist = getDistance(
-          state.center.lat,
-          state.center.lng,
-          parseFloat(b.y),
-          parseFloat(b.x)
-        );
-        // 거리: 낮을수록 좋음 → 역수 사용
-        const aWeighted = 8 * (1 / (aDist + 1)) + 2 * aScore;
-        const bWeighted = 8 * (1 / (bDist + 1)) + 2 * bScore;
-        return bWeighted - aWeighted;
-      });
-    } else {
-      sorted.sort((a, b) => {
-        const aDist = getDistance(
-          state.center.lat,
-          state.center.lng,
-          parseFloat(a.y),
-          parseFloat(a.x)
-        );
-        const bDist = getDistance(
-          state.center.lat,
-          state.center.lng,
-          parseFloat(b.y),
-          parseFloat(b.x)
-        );
-        return aDist - bDist;
-      });
+
+    // 병원들의 영업 상태 분류
+    const open = [];
+    const closed = [];
+    const unknown = [];
+
+    sorted.forEach((h) => {
+      const detail = getHospitalDetails(h.place_name);
+      const status = isHospitalOpen(detail?.openHour);
+
+      if (status === "open") open.push(h);
+      else if (status === "closed") closed.push(h);
+      else unknown.push(h);
+    });
+
+    // 정렬 함수 정의
+    const applySorting = (list) => {
+      if (sortOption === "rating") {
+        list.sort((a, b) => {
+          const aScore = parseFloat(
+            getHospitalDetails(a.place_name).score || 0
+          );
+          const bScore = parseFloat(
+            getHospitalDetails(b.place_name).score || 0
+          );
+          return bScore - aScore;
+        });
+      } else if (sortOption === "recommend") {
+        list.sort((a, b) => {
+          const aScore = parseFloat(
+            getHospitalDetails(a.place_name).score || 0
+          );
+          const bScore = parseFloat(
+            getHospitalDetails(b.place_name).score || 0
+          );
+          const aDist = getDistance(
+            state.center.lat,
+            state.center.lng,
+            parseFloat(a.y),
+            parseFloat(a.x)
+          );
+          const bDist = getDistance(
+            state.center.lat,
+            state.center.lng,
+            parseFloat(b.y),
+            parseFloat(b.x)
+          );
+          const aWeighted = 8 * (1 / (aDist + 1)) + 2 * aScore;
+          const bWeighted = 8 * (1 / (bDist + 1)) + 2 * bScore;
+          return bWeighted - aWeighted;
+        });
+      } else {
+        list.sort((a, b) => {
+          const aDist = getDistance(
+            state.center.lat,
+            state.center.lng,
+            parseFloat(a.y),
+            parseFloat(a.x)
+          );
+          const bDist = getDistance(
+            state.center.lat,
+            state.center.lng,
+            parseFloat(b.y),
+            parseFloat(b.x)
+          );
+          return aDist - bDist;
+        });
+      }
+      return list;
+    };
+
+    // 만약 영업 중인 병원이 있다면 우선적으로 출력
+    if (open.length > 0) {
+      return [
+        ...applySorting(open),
+        ...applySorting(closed),
+        ...applySorting(unknown),
+      ];
     }
-    return sorted;
+
+    // 영업 중 없음 → 기존 방식 유지
+    return applySorting(sorted);
   };
 
   // 정렬 옵션 설정
@@ -479,7 +535,7 @@ function HospitalMap() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "X-User-Name": userNickname,
+            "X-User-Name": encodeURIComponent(userNickname),
           },
           body: JSON.stringify({
             author: userNickname,
@@ -775,7 +831,9 @@ function HospitalMap() {
         `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/${details.id}`,
         {
           headers: {
-            "X-User-Name": localStorage.getItem("nickname"),
+            "X-User-Name": encodeURIComponent(
+              localStorage.getItem("nickname") || ""
+            ),
           },
         }
       );
@@ -846,22 +904,21 @@ function HospitalMap() {
 
     // 병원 이름/주소 검색
     const ps = new window.kakao.maps.services.Places();
-    ps.categorySearch(
-      "HP8",
-      (data, status) => {
+    ps.keywordSearch(
+      trimmedTerm,
+      async (data, status) => {
         if (status === window.kakao.maps.services.Status.OK) {
-          const filtered = data.filter(
-            (item) =>
-              item.place_name.includes(trimmedTerm) ||
-              item.road_address_name?.includes(trimmedTerm) ||
-              item.address_name?.includes(trimmedTerm)
+          // 병원 필터링
+          const hospitalResults = data.filter(
+            (item) => item.category_group_code === "HP8"
           );
-          const nearby = filterHospitalsWithin2km(filtered);
-          setHospitals(nearby);
 
-          if (mapRef.current && nearby.length > 0) {
-            const lat = parseFloat(nearby[0].y);
-            const lng = parseFloat(nearby[0].x);
+          const filtered = filterHospitalsWithin3km(hospitalResults);
+          setHospitals(filtered);
+
+          if (mapRef.current && filtered.length > 0) {
+            const lat = parseFloat(filtered[0].y);
+            const lng = parseFloat(filtered[0].x);
             mapRef.current.panTo(new window.kakao.maps.LatLng(lat, lng));
           }
         } else {
@@ -887,13 +944,20 @@ function HospitalMap() {
       category,
       async (data, status) => {
         if (status === window.kakao.maps.services.Status.OK) {
-          const nearby = filterHospitalsWithin2km(data);
+          const nearby = filterHospitalsWithin3km(data);
           setHospitals(nearby);
           await fetchRatingsForHospitals(nearby);
           setState((prev) => ({ ...prev, isLoading: false }));
         } else {
           setHospitals([]);
           setState((prev) => ({ ...prev, isLoading: false }));
+        }
+
+        // 카테고리 검색 후 내 위치로 지도 이동
+        if (mapRef.current && mapRef.current.panTo) {
+          mapRef.current.panTo(
+            new window.kakao.maps.LatLng(state.center.lat, state.center.lng)
+          );
         }
       },
       {
@@ -941,7 +1005,7 @@ function HospitalMap() {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "X-User-Name": userNickname,
+            "X-User-Name": encodeURIComponent(userNickname),
           },
         }
       );
@@ -958,6 +1022,7 @@ function HospitalMap() {
 
   // 리뷰 등록 및 수정
   const handleReviewSubmit = async () => {
+    if (!ensureLogin()) return;
     const userNickname = localStorage.getItem("nickname");
     const hospitalId = getHospitalDetails(selectedHospital.name)?.id;
     if (!userNickname || !hospitalId || !reviewContent) return;
@@ -977,7 +1042,7 @@ function HospitalMap() {
         method: editingReviewId ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-User-Name": userNickname,
+          "X-User-Name": encodeURIComponent(userNickname),
         },
         body: JSON.stringify(payload),
       });
@@ -1024,7 +1089,7 @@ function HospitalMap() {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "X-User-Name": userNickname,
+            "X-User-Name": encodeURIComponent(userNickname),
           },
         }
       );
@@ -1040,7 +1105,7 @@ function HospitalMap() {
         {
           headers: {
             "Content-Type": "application/json",
-            "X-User-Name": userNickname,
+            "X-User-Name": encodeURIComponent(userNickname),
           },
         }
       );
@@ -1104,7 +1169,9 @@ function HospitalMap() {
         {
           headers: {
             "Content-Type": "application/json",
-            "X-User-Name": localStorage.getItem("nickname") || "",
+            "X-User-Name": encodeURIComponent(
+              localStorage.getItem("nickname") || ""
+            ),
           },
         }
       );
@@ -1195,7 +1262,7 @@ function HospitalMap() {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
-              "X-User-Name": userNickname,
+              "X-User-Name": encodeURIComponent(userNickname),
             },
           }
         )
@@ -1251,16 +1318,30 @@ function HospitalMap() {
                 (data, status) => {
                   if (status === window.kakao.maps.services.Status.OK) {
                     const matched = data.find(
-                      (item) => item.place_name === hospital.name
+                      (item) =>
+                        item.place_name === hospital.name ||
+                        item.place_name.includes(hospital.name) ||
+                        hospital.name.includes(item.place_name)
                     );
+
                     if (matched) {
-                      handleHospitalClick(matched); // 안에서 다시 로딩 시작 → 중복 OK
+                      handleHospitalClick(matched);
                     } else {
-                      alert("위치 정보를 불러올 수 없습니다.");
-                      setSelectedHospitalLoading(false); // 실패 시 종료
+                      // fallback 검색 추가
+                      ps.keywordSearch(hospital.name, (res, stat) => {
+                        if (
+                          stat === window.kakao.maps.services.Status.OK &&
+                          res.length > 0
+                        ) {
+                          handleHospitalClick(res[0]);
+                        } else {
+                          alert("위치 정보를 불러올 수 없습니다.");
+                          setSelectedHospitalLoading(false);
+                        }
+                      });
                     }
                   } else {
-                    setSelectedHospitalLoading(false); // 실패 시 종료
+                    setSelectedHospitalLoading(false);
                   }
                 },
                 {
@@ -1601,7 +1682,7 @@ function HospitalMap() {
     return () => el.removeEventListener("wheel", handleWheel);
   }, []);
 
-  const filterHospitalsWithin2km = (list) =>
+  const filterHospitalsWithin3km = (list) =>
     list.filter((h) => {
       const distance = getDistance(
         state.center.lat,
@@ -1609,7 +1690,7 @@ function HospitalMap() {
         parseFloat(h.y),
         parseFloat(h.x)
       );
-      return distance <= 2000;
+      return distance <= 3000;
     });
 
   useEffect(() => {
@@ -1641,7 +1722,7 @@ function HospitalMap() {
             {
               role: "system",
               content:
-                "사용자가 증상을 입력하면, 그에 해당하는 진료과를 한국어로 대답하세요. 예: '배가 아파요' → '내과'. 다른 설명은 하지 마세요.",
+                "사용자가 증상을 입력하면, 그에 해당하는 진료과를 한국어로 대답하세요. 예: '배가 아파요' → '내과'. 다른 설명은 하지 마세요. 단, 응급실, 내과, 가정의학과, 치과, 이비인후과, 소아과, 피부과, 산부인과, 안과, 정형외과, 비뇨기과, 신경외과, 외과, 성형외과, 정신건강의학과, 마취통증의학과 중 하나로면 대답하세요.",
             },
             {
               role: "user",
@@ -2429,6 +2510,7 @@ function HospitalMap() {
           </div>
         </Sidebar>
       ) : null}
+      {showModal && <AuthModalManager onCloseAll={() => setShowModal(false)} />}
     </Main>
   );
 }
