@@ -7,7 +7,7 @@ import font3 from '../assets/fonts/DavidLibre-Regular.ttf';
 import font4 from '../assets/fonts/Fustat-VariableFont_wght.ttf';
 import font5 from '../assets/fonts/Roboto-VariableFont_wdth,wght.ttf';
 import font6 from '../assets/fonts/Roboto-Italic-VariableFont_wdth,wght.ttf';
-import font7 from '../assets/fonts/NanumGothicBold.ttf';
+//import font7 from '../assets/fonts/NanumGothicBold.ttf';
 import font8 from '../assets/fonts/OpenSans-VariableFont_wdth,wght.ttf';
 import font9 from '../assets/fonts/GmarketSansTTFBold.ttf';
 import font10 from '../assets/fonts/GmarketSansTTFMedium.ttf';
@@ -18,6 +18,9 @@ import font14 from '../assets/fonts/GmarketSansTTFLight.ttf';
 
 export const GlobalStyle = createGlobalStyle`
 ${reset}
+
+@import url('https://hangeul.pstatic.net/hangeul_static/css/nanum-gothic.css');
+
 
 @font-face {
     font-family: 'OurFont1';
@@ -65,7 +68,7 @@ ${reset}
 
   @font-face {
     font-family: 'OurFont7';
-    src: url(${font7}) format('truetype');
+    src: local('NanumGothicBold'); 
     font-weight: normal;
     font-style: normal;
   }

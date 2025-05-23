@@ -38,7 +38,8 @@ display: flex;
 
 const PostTitle = styled.h2`
   margin: 0;
-  font-family: Ourfont5;
+  font-family: OurFont5;
+  font-weight:bold;
   font-size: 1.1rem;
   color: #1D1B20;
   flex: 2; /* 공간을 더 많이 차지하도록 설정 */
@@ -52,7 +53,7 @@ const PostTitle = styled.h2`
 `;
 
 const PostAuthor = styled.div`
-  font-family: Ourfont5;
+  font-family: OurFont5;
   font-size: 1.1rem;
   font-weight:bold;
   color: #000;
@@ -68,7 +69,7 @@ const PostAuthor = styled.div`
 `;
 
 const PostTime = styled.div`
-  font-family: Ourfont5;
+  font-family: OurFont5;
   font-size: 1.1rem;
   font-weight:bold;
   color: #000;
@@ -84,7 +85,7 @@ const PostTime = styled.div`
 `;
 
 const PostLikes = styled.div`
-  font-family: Ourfont5;
+  font-family: OurFont5;
   font-size: 1.1rem;
   font-weight:bold;
   color: #000;

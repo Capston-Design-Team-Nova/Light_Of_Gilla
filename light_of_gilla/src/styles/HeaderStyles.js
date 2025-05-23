@@ -133,7 +133,7 @@ export const DropdownMenu = styled.div`
   position: absolute;
   top: 100%;
   right: 0;
-  width: 85px;
+  width: 5.5rem;
   background-color: #444;
   border-radius: 4px;
   overflow: hidden;
@@ -167,7 +167,8 @@ export const DropdownMenu = styled.div`
 export const DropdownItem = styled.div`
   padding: 5px 10px 5px;
   color: white;
-  font-size: 13.5px;
+  
+  font-size: 0.92rem;
   text-align: center;
   cursor: pointer;
   border-bottom: none;

@@ -39,9 +39,9 @@ export const SidebarButton = styled.button`
     color: black;
     background-color: ${({ isActive }) => (isActive ? "#FFE2B1" : "#FAF2E8")};
     
-    font-family: Ourfont4;
+    font-family: OurFont4;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 1.2rem;
     cursor: pointer;
     border: none;
     border-radius:7px;

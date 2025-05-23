@@ -23,7 +23,9 @@ export const Center = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-family: Ourfont4;
+margin-top:3rem;
+  font-family: OurFont5;
+  font-weight:bold;
   font-size: 36px;
 `;
 
@@ -49,25 +51,26 @@ export const UserInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 `;
 
 export const UserEmail = styled.h4`
-  font-family: Ourfont4;
+  font-family: OurFont5;
   font-size: 20px;
   margin: 0;
 `;
 
 export const Birthday = styled.h4`
-  font-family: Ourfont4;
+  font-family: OurFont5;
   font-size: 18px;
   margin: 5px 0 0 0;
 `;
 
-
-
-
+export const PhoneNumber = styled.h4`
+  font-family: OurFont5;
+  font-size: 18px;
+  margin: 5px 0 0 0;
+`;
 
 export const ReviewButton = styled.button`
   padding: 8px 16px;
@@ -211,7 +214,10 @@ export const SuccessMessage = styled(ErrorMessage)`
 
 export const P = styled.h3`
   color: rgb(69, 62, 62) ;
+  font-family:OurFont5;
   font-size:25px;
+  font-weight:bold;
+  margin-bottom:20px;
 `;
 
 
