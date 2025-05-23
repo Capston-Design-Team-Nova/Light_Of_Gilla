@@ -68,7 +68,6 @@ function HospitalMap() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [showModal, setShowModal] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
-  const [isComposing, setIsComposing] = useState(false);
 
   const renderStars = (score) => {
     const full = Math.floor(score);
@@ -937,7 +936,9 @@ function HospitalMap() {
 
     if (!trimmedTerm) return;
 
-    saveSearchKeyword(trimmedTerm);
+    if (mode === "keyword") {
+      saveSearchKeyword(trimmedTerm);
+    }
 
     if (["약국", "응급실"].includes(trimmedTerm)) {
       handleCategoryClick(trimmedTerm);
