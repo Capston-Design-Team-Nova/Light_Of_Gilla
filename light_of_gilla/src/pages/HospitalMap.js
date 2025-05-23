@@ -915,7 +915,7 @@ function HospitalMap() {
 
       const seen = new Set();
       const unique = results.filter((h) => {
-        const key = `${h.id}_${h.name}_${h.address}`;
+        const key = `${h.name}_${h.address}`;
         if (seen.has(key)) return false;
         seen.add(key);
         return true;
@@ -968,9 +968,10 @@ function HospitalMap() {
           );
 
           const filtered = filterHospitalsWithin3km(hospitalResults);
-          setHospitals(filtered);
+          const uniqueHospitals = deduplicateHospitals(filtered);
+          setHospitals(uniqueHospitals);
 
-          await fetchRatingsForHospitals(filtered);
+          await fetchRatingsForHospitals(uniqueHospitals);
 
           if (mapRef.current && filtered.length > 0) {
             const lat = parseFloat(filtered[0].y);
@@ -1745,7 +1746,7 @@ function HospitalMap() {
             {
               role: "system",
               content:
-                "사용자가 증상을 입력하면, 그에 해당하는 진료과를 한국어로 대답하세요. 예: '배가 아파요' → '내과'. 다른 설명은 하지 마세요. 단, 응급실, 내과, 가정의학과, 치과, 이비인후과, 소아과, 피부과, 산부인과, 안과, 정형외과, 비뇨기과, 신경외과, 외과, 성형외과, 정신건강의학과, 마취통증의학과 중 하나로면 대답하세요.",
+                "사용자가 증상을 입력하면, 그에 해당하는 진료과를 한국어로 대답하세요. 예: '배가 아파요' → '내과'. 다른 설명은 하지 마세요. 단, 내과, 가정의학과, 치과, 이비인후과, 소아과, 피부과, 산부인과, 안과, 정형외과, 비뇨기과, 신경외과, 외과, 성형외과, 정신건강의학과, 마취통증의학과 중 하나로면 대답하세요.",
             },
             {
               role: "user",
@@ -1838,6 +1839,16 @@ function HospitalMap() {
         radius: 3000,
       }
     );
+  };
+
+  const deduplicateHospitals = (list) => {
+    const seen = new Set();
+    return list.filter((h) => {
+      const key = `${h.place_name}_${h.address_name}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
   };
 
   return (
@@ -2393,7 +2404,12 @@ function HospitalMap() {
           })}
 
           {selectedHospital && selectedPosition && (
-            <CustomOverlayMap position={selectedPosition} zIndex={10}>
+            <CustomOverlayMap
+              position={selectedPosition}
+              xAnchor={0.43} // 왼쪽으로 이동 (기본값은 0.5)
+              yAnchor={1.6} // 마커보다 위로 이동 (기본값은 0.5)
+              zIndex={10}
+            >
               <div
                 style={{
                   background: "#fff",
@@ -2403,7 +2419,6 @@ function HospitalMap() {
                   width: "250px",
                   boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
                   fontSize: "14px",
-                  position: "relative",
                 }}
               >
                 <div style={{ fontWeight: "bold", marginBottom: "5px" }}>
