@@ -62,8 +62,8 @@ function EditPost() {
     setSidebarOpen(!isSidebarOpen);
   };
 
-  const handleSelectChange = (value) => {
-    setSelectedOption(value);
+  const handleSelectChange = (option) => {
+    setSelectedOption(option.value);
   };
 
   return (
