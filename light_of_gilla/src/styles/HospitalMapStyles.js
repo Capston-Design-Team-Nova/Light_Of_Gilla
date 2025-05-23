@@ -126,6 +126,7 @@ export const Sidebar = styled.div`
   overflow-y: auto;
   border-right: 1px solid #ddd;
   z-index: 3;
+  line-height: 1.6;  /* 줄 간격 */
 
   h2 {
     font-size: 18px;
