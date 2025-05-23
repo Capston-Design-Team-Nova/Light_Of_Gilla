@@ -52,7 +52,7 @@
 
 | 게시판 게시글/댓글 작성 시연영상                             | 게시판 수정/삭제 댓글 삭제 시연           | FAQ 시연영상                                | 
 | ---------------------------------------------- |---------------------------------------------- | ---------------------------------------------- | 
-|<img src="https://github.com/user-attachments/assets/47b1582d-3b2d-4249-a869-a0303533b9986" width="600" /> |<img src="https://github.com/user-attachments/assets/47b1582d-3b2d-4249-a869-a0303533b9986" width="600" /> | <img src="https://github.com/user-attachments/assets/fc451c72-f9c9-4876-abb8-948cbf2c9d88" width="600" />               |
+|<img src="https://github.com/user-attachments/assets/47b1582d-3b2d-4249-a869-a0303533b9986" width="600" /> |<img src="https://github.com/user-attachments/assets/132fb7f8-a79a-42d8-a8c1-93e9cacc8136" width="600" /> | <img src="https://github.com/user-attachments/assets/fc451c72-f9c9-4876-abb8-948cbf2c9d88" width="600" />               |
 ---
 
 ## 📥 기대 효과
