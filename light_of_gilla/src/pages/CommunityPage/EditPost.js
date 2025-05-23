@@ -17,6 +17,7 @@ function EditPost() {
   const [content, setContent] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
   const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480);
+   const [postData, setPostData] = useState(null); 
   const name = localStorage.getItem("nickname");
 
   useEffect(() => {
@@ -24,6 +25,7 @@ function EditPost() {
     axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/${id}`)
       .then((response) => {
         const { post } = response.data;
+        setPostData(post);
         setTitle(post.title);
         setContent(post.content);
         setSelectedOption(post.category);
