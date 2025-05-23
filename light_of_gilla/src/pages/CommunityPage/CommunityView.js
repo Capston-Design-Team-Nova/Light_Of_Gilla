@@ -360,7 +360,7 @@ const CommunityView = () => {
  useEffect(() => {
   const checkIfLiked = async () => {
     try {
-      const response = await axios.get(`https://www.thegilla.com/post/hasliked`, {
+      const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/hasliked`, {
         params: { post_id: id, nickName: name }
       });
       setHasLiked(response.data); // true or false
@@ -373,20 +373,24 @@ const CommunityView = () => {
   }, [id, name]);
   
   const handleLike = async () => {
-  try {
-    const response = await axios.post(`https://www.thegilla.com/post/like`, {
-      post_id: id,
-      nickName: name
-    });
-
-    if (response.status === 200) {
-      setHasLiked(true);
-      setLikes((prev) => prev + 1);
+    try {
+      const response = await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/like`, {
+        post_id: id,
+        nickName: name
+      });
+  
+      const liked = response.data.liked; // ✅ 실제 boolean 값 추출
+      console.log("좋아요 응답:", liked);
+  
+      setHasLiked(liked);
+      setLikes((prev) => liked ? prev + 1 : prev - 1);
+  
+    } catch (error) {
+      console.error("좋아요 처리 오류:", error);
     }
-  } catch (error) {
-    console.error("좋아요 처리 오류:", error);
-  }
-};
+  };
+  
+  
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     console.log("댓글 제출 클릭됨");
