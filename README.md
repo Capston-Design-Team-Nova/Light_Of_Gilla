@@ -52,7 +52,7 @@
 
 | 게시판 시연영상                                  | FAQ 시연영상                                | 
 | ---------------------------------------------- |---------------------------------------------- | 
-|<img src="https://github.com/user-attachments/assets/47b1582d-3b2d-4249-a869-a0303533b9986" width="600" />           | <img src="https://github.com/user-attachments/assets/fc451c72-f9c9-4876-abb8-948cbf2c9d88" width="600" />               |
+|<img src="https://github.com/user-attachments/assets/47b1582d-3b2d-4249-a869-a0303533b9986" width="300" />           | <img src="https://github.com/user-attachments/assets/fc451c72-f9c9-4876-abb8-948cbf2c9d88" width="600" />               |
 ---
 
 ## 📥 기대 효과
