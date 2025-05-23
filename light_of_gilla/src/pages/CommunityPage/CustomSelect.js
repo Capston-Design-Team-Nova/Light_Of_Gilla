@@ -25,7 +25,7 @@ const customStyles = {
       : '1px solid #999999',   // 일반 상태의 테두리
     borderRadius: '5px',
     padding: '2px',
-    fontSize: '16px',
+    fontSize: '1rem',
     fontFamily: 'Arial',
     cursor: 'pointer',
     boxShadow: 'none', // ✅ react-select가 기본으로 넣는 파란 glow 제거
@@ -38,7 +38,7 @@ const customStyles = {
     backgroundColor: state.isFocused ? '#FFD89C' : 'white',
     color: 'black',
     cursor: 'pointer',
-    fontSize: '15px',
+    fontSize: '1.1rem',
     
   }),
   placeholder: (provided) => ({

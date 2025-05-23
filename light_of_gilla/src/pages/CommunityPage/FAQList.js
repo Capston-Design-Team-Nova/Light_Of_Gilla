@@ -17,19 +17,27 @@ const PostListInner = styled.div`
   width: 96%;
   margin: 0 auto;
 `;
-
 const PostItem = styled.div`
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #A09F9F;
+  border-bottom: 1px solid #A09F9F; // 질문 항목 아래 선은 그대로 유지
+  background-color: ${({ expanded }) => (expanded ? "#fff9ef" : "transparent")};
   cursor: pointer;
   transition: background-color 0.3s;
-  background-color: white;
-   background-color: ${({ expanded }) => (expanded ? "#fff9ef" : "transparent")};
-  
-   &:hover {
+
+  &:hover {
     background-color: #fdf4e6;
   }
 `;
+
+const AnswerWrapper = styled.div`
+  max-height: ${({ expanded }) => (expanded ? '1000px' : '0')};
+  overflow: hidden;
+  transition: max-height 2s ease-in-out;
+  padding: ${({ expanded }) => (expanded ? '1rem 1.5rem' : '0 1.5rem')}; 
+  background-color: #fff9ef;
+  border-bottom: 1px solid #A09F9F; // 답변에도 구분선 추가해서 자연스럽게
+`;
+
 
 /*
    
@@ -86,12 +94,20 @@ const Answer = styled.div`
     font-size: 14px;
   }
 `;
+const ToggleArrow = styled.span`
+  font-size: 1.2rem;
+  margin-left: 1rem;
+  transform: ${({ expanded }) => (expanded ? 'scaleY(1)' : 'scaleY(-1)')};
+  transition: transform 0.1s ease;
+`;
+
 
 //  white-space: pre-wrap;
 
 function FAQList({ searchTerm }) {
   const [faqs, setFaqs] = useState([]);
-  const [expandedId, setExpandedId] = useState(null); // ✅ 열려 있는 항목 id
+  const [expandedIds, setExpandedIds] = useState([]); // ✅ 열려 있는 항목 id
+  const Up=require("../../assets/images/화살표.png");
 
   useEffect(() => {
     fetch("/data/faqs.md")
@@ -147,7 +163,10 @@ function FAQList({ searchTerm }) {
   });
 
   const toggleItem = (id) => {
-    setExpandedId(prev => (prev === id ? null : id));
+    setExpandedIds(prev => prev.includes(id) 
+      ? prev.filter(itemId => itemId !== id)  // 이미 열려있으면 닫기
+      : [...prev, id]                          // 안 열려있으면 추가
+    );
   };
 
   return (
@@ -160,27 +179,42 @@ function FAQList({ searchTerm }) {
           <PostListInner key={faq.id}>
             <PostItem
               onClick={() => toggleItem(faq.id)}
-              expanded={expandedId === faq.id}
+              expanded={expandedIds.includes(faq.id)}
             >
               <PostRow>
                 <FAQTitle>Q. {faq.question}</FAQTitle>
-                
+                <ToggleArrow expanded={expandedIds.includes(faq.id)}>
+  <img
+    src={Up}
+    alt="화살표"
+    style={{
+      width: "1.3rem",
+      height: "1rem",
+      
+    }}
+  />
+</ToggleArrow>
               </PostRow>
-              {expandedId === faq.id && (
-  <>
+            </PostItem>  
+              {expandedIds.includes(faq.id) && (
+  <AnswerWrapper expanded={true}>
     <FAQAuthor>{faq.author}의 답변이에요.</FAQAuthor>
     <Answer>
-      <ReactMarkdown remarkPlugins={[remarkGfm]}rehypePlugins={[rehypeRaw]} components={{
-    ol: ({ node, ...props }) => <ol style={{ listStyleType: 'decimal', paddingLeft: '1.5rem' }} {...props} />,
-    ul: ({ node, ...props }) => <ul style={{ listStyleType: 'disc', paddingLeft: '1.5rem' }} {...props} />,
-    li: ({ node, ...props }) => <li style={{ marginBottom: '0.3rem' }} {...props} />
-  }}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
+        components={{
+          ol: ({ node, ...props }) => <ol style={{ listStyleType: 'decimal', paddingLeft: '1.5rem' }} {...props} />,
+          ul: ({ node, ...props }) => <ul style={{ listStyleType: 'disc', paddingLeft: '1.5rem' }} {...props} />,
+          li: ({ node, ...props }) => <li style={{ marginBottom: '0.3rem' }} {...props} />,
+        }}
+      >
         {faq.answer}
       </ReactMarkdown>
     </Answer>
-  </>
+  </AnswerWrapper>
 )}
-            </PostItem>
+            
           </PostListInner>
         ))
       )}

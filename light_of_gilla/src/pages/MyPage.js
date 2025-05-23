@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Header from "../components/Header";
 import {
-  Main, Center, Title, ProfileImageWrapper, ProfileImage, UserEmail,
+  Main, Center, Title, ProfileImageWrapper, ProfileImage, UserEmail,PhoneNumber,
   FormGroup, Label, Input, Button, SaveButton, ErrorMessage,TitleRow,
   UserInfoWrapper, HiddenFileInput, SuccessMessage, Birthday,WithdrawButton, 
   ReviewButton,ReviewButtonRow
@@ -22,11 +22,14 @@ function MyPage() {
   const [profileImage, setProfileImage] = useState(require("../assets/images/ProfileImage.png"));
 
   const [birthday, setBirthday] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const token = localStorage.getItem("token");
 
+  const [originalNickname, setOriginalNickname] = useState("");
+  
   const handleProfileClick = () => {
     document.getElementById("fileInput").click();
   };
@@ -53,6 +56,9 @@ function MyPage() {
           setUserId(data.userId);
           setEmail(data.email);
           setNickname(data.nickname);
+          setPhoneNumber(data.phone);
+          setOriginalNickname(data.nickname); // 원본 닉네임 저장
+          
           console.log("👉 서버에서 받은 프로필 이미지:", data.profileImage);
           const baseImageUrl = "http://3.37.188.91:8080";
 
@@ -64,6 +70,9 @@ function MyPage() {
         if (data.residentNumber) {
             setBirthday(formatBirth(data.residentNumber));
           }
+        if(data.phone){
+          setPhoneNumber(formatPhoneNumber(data.phone));
+        }
         })
         .catch((err) => {
           console.error("유저 정보 불러오기 실패", err);
@@ -75,8 +84,20 @@ function MyPage() {
     return `${residentNumber.slice(0, 2)}.${residentNumber.slice(2, 4)}.${residentNumber.slice(4, 6)}`;
   };
 
+  const formatPhoneNumber = (phone) => {
+    return `${phone.slice(0, 3)}-${phone.slice(3, 7)}-${phone.slice(7, 11)}`;
+  };
+
   const handleNicknameChange = (e) => {
-    setNickname(e.target.value);
+    const newNickname = e.target.value;
+    setNickname(newNickname);
+
+    // 닉네임이 바뀌면 중복 확인 상태 초기화
+    if (newNickname !== originalNickname) {
+      setIsNicknameValid(false);
+      setNicknameMessage("");
+    }
+
   };
 
   const handleCheckNickname = async () => {
@@ -117,7 +138,7 @@ function MyPage() {
   
 
   const handleSave = async () => {
-    if (!isNicknameValid) {
+    if (nickname !== "" && nickname !== originalNickname && !isNicknameValid) {
       alert("닉네임 중복 확인을 해주세요.");
       return;
     }
@@ -238,6 +259,7 @@ function MyPage() {
 
         <UserInfoWrapper>
           <UserEmail>{email}</UserEmail>
+          <PhoneNumber>{phoneNumber}</PhoneNumber>
           <Birthday>{birthday}</Birthday>
         </UserInfoWrapper>
 
@@ -281,3 +303,7 @@ function MyPage() {
 }
 
 export default MyPage;
+{/*        <FormGroup>
+          <Label>연락처</Label>
+          <Input type="text" value={phoneNumber} disabled />
+        </FormGroup>*/}

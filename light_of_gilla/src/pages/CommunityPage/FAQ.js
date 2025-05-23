@@ -1,15 +1,27 @@
 import React,{useState} from 'react';
 import Header from '../../components/Header';
-import { CommunityListWrapper } from '../../styles/CommunityStyles';
+//import { CommunityListWrapper } from '../../styles/CommunityStyles';
 import FAQList from './FAQList';
 import SearchField from '../../components/SearchField';
 //import Pagination from "../../components/Pagination";
 import styled from 'styled-components';
 const mobile = "@media screen and (max-width: 480px)";
 
+export const CommunityListWrapper = styled.div`
+  flex: 1;
+  width: 100%;
+  
+  padding: 0 5px 60px; /* 아래 패딩으로 페이지네이션 안 가려지게 */
+
+  ${mobile} {
+    
+    padding-bottom: 70px;
+  }
+`;
 export const Center = styled.div`
   width: 100%;
-  height: 100%; /* 높이를 명시적으로 설정 */
+  min-height:100vh;
+  height:auto;
   display: flex; /* Flexbox 활성화 */
   flex-direction: column; /* 세로 정렬 */
   justify-content: flex-start; /* 가로 정렬: 중앙 */
@@ -26,7 +38,7 @@ export const Center = styled.div`
 
 export const Main = styled.main`
   width: 100%;
-  height: 100%;
+  
   background-color:#fdf6ec;/*#ffece3;*/
 `;
 
@@ -54,8 +66,7 @@ export const Content = styled.div`
   width: 80%;
    
   transition: margin-left 0.3s ease;
-  min-height: 70vh; /* 내용이 너무 적을 때는 최소 높이 보장 */
-  height: auto;
+  
   background-color: white;
   border-radius: 15px;
 
