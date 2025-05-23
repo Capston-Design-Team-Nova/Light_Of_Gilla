@@ -40,11 +40,14 @@ function EditPost() {
       title: title,
       content: content,
       category: selectedOption,
-      nickName: name
+      nickName: name,
+      commentCounts:postData.commentCounts,
+      likes:postData.likes
+       
     };
     console.log(updatedPost.nickName);
     try {
-      await axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/update`, updatedPost);
+      await axios.post(`http://localhost:8082/post/update`, updatedPost);
       alert("글이 성공적으로 수정되었습니다.");
       navigate('/Community');
     } catch (error) {
