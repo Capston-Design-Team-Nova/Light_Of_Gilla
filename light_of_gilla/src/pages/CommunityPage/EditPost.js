@@ -17,6 +17,7 @@ function EditPost() {
   const [content, setContent] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
   const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480);
+   const [postData, setPostData] = useState(null); 
   const name = localStorage.getItem("nickname");
 
   useEffect(() => {
@@ -24,6 +25,7 @@ function EditPost() {
     axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/${id}`)
       .then((response) => {
         const { post } = response.data;
+        setPostData(post);
         setTitle(post.title);
         setContent(post.content);
         setSelectedOption(post.category);
@@ -40,7 +42,10 @@ function EditPost() {
       title: title,
       content: content,
       category: selectedOption,
-      nickName: name
+      nickName: name,
+      commentCounts:postData.commentCounts,
+      likes:postData.likes
+       
     };
     console.log(updatedPost.nickName);
     try {
@@ -57,8 +62,8 @@ function EditPost() {
     setSidebarOpen(!isSidebarOpen);
   };
 
-  const handleSelectChange = (value) => {
-    setSelectedOption(value);
+  const handleSelectChange = (option) => {
+    setSelectedOption(option.value);
   };
 
   return (
