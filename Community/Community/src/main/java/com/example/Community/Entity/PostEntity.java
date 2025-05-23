@@ -41,7 +41,7 @@ public class PostEntity extends BaseEntity{
     @Column
     private String userid;
 
-    @OneToMany(mappedBy="postEntity",cascade = CascadeType.REMOVE,orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="postEntity",cascade = CascadeType.REMOVE,orphanRemoval = false,fetch = FetchType.LAZY)
     private List<CommentEntity> commentEntityList=new ArrayList<>();
 
     public static PostEntity toSaveEntity(PostDTO postDTO){
