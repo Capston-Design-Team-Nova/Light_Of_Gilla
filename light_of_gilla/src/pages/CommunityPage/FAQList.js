@@ -69,7 +69,7 @@ const FAQTitle = styled.h2`
 
 const FAQAuthor = styled.div`
 margin-top: 1.1rem;
-  font-family: OurFont13;
+  font-family: OurFont12;
   font-size: 1.1rem;
   color: #000;
   white-space: nowrap;

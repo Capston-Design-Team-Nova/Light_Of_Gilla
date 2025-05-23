@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+//import axios from "../api/axiosInstance";
 import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
 
 const BASE_URL = "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api";
@@ -120,16 +121,18 @@ function ReviewList() {
         // 1. 리뷰 가져오기
         const res = await axios.get(`${BASE_URL}/reviews/my`, {
           headers: {
-            "X-User-Name": userName,
+            "X-User-Name": encodeURIComponent(userName),
+
           },
         });
         console.log(res.data); 
         const reviewData = res.data;
         setReviews(reviewData);
-
+        console.log("유저명:", userName);
+        console.log("리뷰 데이터:", reviews);
         // 2. 병원 ID 목록 뽑기
         const uniqueHospitalIds = [...new Set(reviewData.map(r => r.hospitalId))];
-
+        
         // 3. 병원 정보 요청
         const hospitalDataMap = {};
         await Promise.all(
@@ -137,7 +140,7 @@ function ReviewList() {
             try {
               const response = await axios.get(`${BASE_URL}/hospitals/${id}`, {
                 headers: {
-                  "X-User-Name": userName,
+                  "X-User-Name": encodeURIComponent(userName),
                 },
               });
               const { name, department, address } = response.data;
@@ -152,7 +155,7 @@ function ReviewList() {
             }
           })
         );
-
+console.log("병원 매핑 데이터:", hospitalMap);
         setHospitalMap(hospitalDataMap);
 
       } catch (err) {

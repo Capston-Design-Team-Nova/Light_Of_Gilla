@@ -20,7 +20,11 @@ width: calc(97% - 250px);
   background-color: white;
   padding: 2rem 0; // ✅ 위아래 여백 추가
   border-radius: 15px;
-  box-shadow: 0 0 4px rgba(0,0,0,0.05); // ✅ 자연스러운 경계 추천
+
+  box-shadow: 0 2px 4px rgba(187, 187, 187, 0.3),   /* 아래 */
+    0 -2px 4px rgba(187, 187, 187, 0.3),  /* 위 */
+    2px 0 4px rgba(187, 187, 187, 0.3),   /* 오른쪽 */
+    -2px 0 4px rgba(187, 187, 187, 0.3);  /* 왼쪽 */
   overflow: visible;
  overflow-x: hidden; // 양옆으로 삐져나온 거 안 보이게
 box-sizing: border-box; // 내부 패딩, 보더 포함해서 계산
@@ -33,7 +37,7 @@ box-sizing: border-box; // 내부 패딩, 보더 포함해서 계산
     height:100%;
   }
 `;
-
+//  box-shadow: 0 0 4px rgba(0,0,0,0.05); // ✅ 자연스러운 경계 
 export const Center = styled.div`
   width: 100%;
   height: 100%; /* 높이를 명시적으로 설정 */
@@ -65,8 +69,9 @@ const CommentsWrapper = styled.div`
 `;
 const Title = styled.h1`
     color: #000;
-    font-family: Ourfont5;
-    font-size: 2rem;
+    font-family: OurFont11;
+    font-size: 2.3rem;
+    margin-bottom: 1rem;
      ${mobile} {
     font-size: 22px;
   }
@@ -75,6 +80,7 @@ const Title = styled.h1`
 const Meta = styled.div`
   color: #00000080;
   font-size: 1.3rem;
+  font-family: OurFont12;
   margin-bottom: 1rem;
 
    ${mobile} {
@@ -85,7 +91,7 @@ const Meta = styled.div`
 const Content1 = styled.p`
   line-height: 1.6;
   font-size: 1.6rem;
-  font-family: Ourfont5;
+  font-family: OurFont12;
 
    ${mobile} {
     font-size: 18px;
@@ -94,9 +100,10 @@ const Content1 = styled.p`
 
 const Category = styled.p`
   line-height: 1.6;
+  font-family: OurFont12;
   font-size: 1.3rem;
-  font-family: Ourfont3;
   color: #FF710B;
+  margin-top:20px;
 
    ${mobile} {
     font-size: 15px;
@@ -107,12 +114,12 @@ const Button = styled.button`
   margin-top: 5px;
   padding: 0.5rem 1rem;
   border: none;
-  background: #be8600;
+  background: #F8C743;
   color: black;
   border-radius: 6px;
   cursor: pointer;
   width:60px;
-  height:32px;
+  height:45px;
 `;
 
 const LikeButton = styled.button`
@@ -159,7 +166,7 @@ const CommentForm = styled.form`
   width: 100%;
   display: flex;
   align-items: center;
-  padding: 0.6rem 1rem;
+  padding: 0;
   gap: 0.5rem;
   background: white;
   border:none;
@@ -175,6 +182,7 @@ const CommentForm = styled.form`
   }
 
   button {
+
     font-size: 15px;
     padding-bottom: 20px;
   }
@@ -195,6 +203,7 @@ const CommentForm = styled.form`
 
     button {
       font-size: 18px;
+
     }
   }
 `;
@@ -236,8 +245,8 @@ const H3 = styled.h3`
 
 
 const AuthorImg = styled.img`
-  width: 17px;
-  height: 17px;
+  width: 23px;
+  height: 23px;
   border-radius: 50%;
   object-fit: cover;
   margin-right: 4px;

@@ -38,7 +38,7 @@ display: flex;
 
 const PostTitle = styled.h2`
   margin: 0;
-  font-family: OurFont5;
+  font-family: OurFont11;
   font-weight:bold;
   font-size: 1.1rem;
   color: #1D1B20;
@@ -53,7 +53,7 @@ const PostTitle = styled.h2`
 `;
 
 const PostAuthor = styled.div`
-  font-family: OurFont5;
+  font-family: OurFont11;
   font-size: 1.1rem;
   font-weight:bold;
   color: #000;
@@ -69,7 +69,7 @@ const PostAuthor = styled.div`
 `;
 
 const PostTime = styled.div`
-  font-family: OurFont5;
+  font-family: OurFont11;
   font-size: 1.1rem;
   font-weight:bold;
   color: #000;
@@ -85,7 +85,7 @@ const PostTime = styled.div`
 `;
 
 const PostLikes = styled.div`
-  font-family: OurFont5;
+  font-family: OurFont11;
   font-size: 1.1rem;
   font-weight:bold;
   color: #000;

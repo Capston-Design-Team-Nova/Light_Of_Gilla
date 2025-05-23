@@ -19,6 +19,10 @@ export const Content = styled.div`
   height: auto;
   background-color: white;
   border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(187, 187, 187, 0.3),   /* 아래 */
+    0 -2px 4px rgba(187, 187, 187, 0.3),  /* 위 */
+    2px 0 4px rgba(187, 187, 187, 0.3),   /* 오른쪽 */
+    -2px 0 4px rgba(187, 187, 187, 0.3);  /* 왼쪽 */
   overflow: visible; // 자식 요소 넘침 방지
   display: flex;
   flex-direction: column;
@@ -26,7 +30,7 @@ export const Content = styled.div`
   align-items: center;
 padding-top: 20px;
   ${mobile} {
-    width: 98%;
+    width: 97%;
     height: auto;
     margin-top: 5px;
     margin-left: 0;

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+//import axios from "../api/axiosInstance";
 import Header from "../components/Header";
 import {
   Main, Center, Title, ProfileImageWrapper, ProfileImage, UserEmail,PhoneNumber,
