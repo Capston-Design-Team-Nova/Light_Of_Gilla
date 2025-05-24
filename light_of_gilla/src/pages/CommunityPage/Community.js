@@ -31,7 +31,7 @@ function Community() {
     setSidebarOpen(!isSidebarOpen);
   };
   useEffect(() => {
-    console.log("Email:",Email);
+
     const fetchPosts = async () => {
       try {
         const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/view`);
