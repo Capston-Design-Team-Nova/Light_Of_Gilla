@@ -52,7 +52,7 @@ const PostTitle = styled.h2`
   text-overflow: ellipsis;
 
    ${mobile} {
-    font-size: 13px;
+    font-size: 12px;
   }
 `;
 

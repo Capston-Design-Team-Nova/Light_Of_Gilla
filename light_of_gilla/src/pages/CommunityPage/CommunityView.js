@@ -84,7 +84,7 @@ const Meta = styled.div`
   margin-bottom: 1rem;
 
    ${mobile} {
-    font-size: 14px;
+    font-size: 13px;
   }
 `;
 
@@ -94,7 +94,7 @@ const Content1 = styled.p`
   font-family: OurFont12;
 
    ${mobile} {
-    font-size: 18px;
+    font-size: 17px;
   }
   `;
 
