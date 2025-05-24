@@ -262,6 +262,13 @@ function HospitalMap() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
+          const newLatLng = new window.kakao.maps.LatLng(
+            pos.coords.latitude,
+            pos.coords.longitude
+          );
+
+          mapRef.current?.panTo(newLatLng); // 먼저 지도 이동
+
           setState({
             center: {
               lat: pos.coords.latitude,
@@ -270,6 +277,7 @@ function HospitalMap() {
             isLoading: false,
             errMsg: null,
           });
+
           fetchHospitals(pos.coords.latitude, pos.coords.longitude);
         },
         (err) => {
@@ -1007,13 +1015,26 @@ function HospitalMap() {
           await fetchRatingsForHospitals(nearby);
           setState((prev) => ({ ...prev, isLoading: false }));
 
-          // 모든 병원이 보이도록 지도 범위 조정
           if (mapRef.current && window.kakao && nearby.length > 0) {
-            const bounds = new window.kakao.maps.LatLngBounds();
-            nearby.forEach((h) => {
-              bounds.extend(new window.kakao.maps.LatLng(h.y, h.x));
-            });
-            mapRef.current.setBounds(bounds);
+            // 중심점 계산
+            const avgLat =
+              nearby.reduce((sum, h) => sum + parseFloat(h.y), 0) /
+              nearby.length;
+            const avgLng =
+              nearby.reduce((sum, h) => sum + parseFloat(h.x), 0) /
+              nearby.length;
+
+            // 중심점으로 부드럽게 이동
+            smoothPanTo(avgLat, avgLng);
+
+            // 일정 시간 후 setBounds 호출 (애니메이션 후 확대 조정)
+            setTimeout(() => {
+              const bounds = new window.kakao.maps.LatLngBounds();
+              nearby.forEach((h) => {
+                bounds.extend(new window.kakao.maps.LatLng(h.y, h.x));
+              });
+              mapRef.current.setBounds(bounds);
+            }, 600); // smoothPanTo와 동일한 duration 고려
           }
         } else {
           setHospitals([]);
@@ -1852,6 +1873,45 @@ function HospitalMap() {
     });
   };
 
+  const smoothPanTo = (targetLat, targetLng) => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const currentCenter = map.getCenter();
+    const currentLat = currentCenter.getLat();
+    const currentLng = currentCenter.getLng();
+
+    const distance = getDistance(currentLat, currentLng, targetLat, targetLng);
+
+    if (distance < 1000) {
+      // 가까우면 panTo로 충분
+      map.panTo(new window.kakao.maps.LatLng(targetLat, targetLng));
+      return;
+    }
+
+    // 멀면 직접 보간 이동
+    const steps = 30;
+    const duration = 500; // 총 0.5초
+    const delay = duration / steps;
+
+    let step = 0;
+
+    const deltaLat = (targetLat - currentLat) / steps;
+    const deltaLng = (targetLng - currentLng) / steps;
+
+    const interval = setInterval(() => {
+      step++;
+      const newLat = currentLat + deltaLat * step;
+      const newLng = currentLng + deltaLng * step;
+
+      map.setCenter(new window.kakao.maps.LatLng(newLat, newLng));
+
+      if (step >= steps) {
+        clearInterval(interval);
+      }
+    }, delay);
+  };
+
   return (
     <Main>
       <Header />
@@ -2323,17 +2383,12 @@ function HospitalMap() {
                   lat: pos.coords.latitude,
                   lng: pos.coords.longitude,
                 };
+
+                smoothPanTo(newCenter.lat, newCenter.lng);
                 setState((prev) => ({
                   ...prev,
                   center: newCenter,
                 }));
-
-                const mapInstance = mapRef.current;
-                if (mapInstance && mapInstance.panTo) {
-                  mapInstance.panTo(
-                    new window.kakao.maps.LatLng(newCenter.lat, newCenter.lng)
-                  );
-                }
               });
             }
           }}
