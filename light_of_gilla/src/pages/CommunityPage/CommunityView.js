@@ -395,9 +395,8 @@ const CommunityView = () => {
       console.error("좋아요 처리 오류:", error);
     }
   };
-
- 
- 
+  
+  
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     console.log("댓글 제출 클릭됨");
