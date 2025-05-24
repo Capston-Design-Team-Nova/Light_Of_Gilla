@@ -899,8 +899,8 @@ function HospitalMap() {
 
       // 지도를 선택 병원 위치로 이동
       const mapInstance = mapRef.current;
-      if (mapInstance && mapInstance.panTo) {
-        mapInstance.panTo(new window.kakao.maps.LatLng(h.y, h.x));
+      if (mapInstance) {
+        smoothPanTo(parseFloat(h.y), parseFloat(h.x));
       }
     } catch (err) {
       console.error("병원 상세 또는 리뷰 데이터 요청 실패", err);
