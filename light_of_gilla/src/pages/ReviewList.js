@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
+//import axios from "../api/axiosInstance";
 import { BsStarFill, BsStarHalf, BsStar } from "react-icons/bs";
 
-const BASE_URL = "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api";
+const BASE_URL =
+  "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api";
 
 // 스타일 정의
 const PostList = styled.div`
   width: 100%;
-   display: flex;
+  display: flex;
   flex-direction: column;
   align-items: center; // ✅ 아이템들을 수직 방향으로 가운데 정렬
   margin: 8px auto;
@@ -18,11 +20,9 @@ const PostItem = styled.div`
   width: 85%; // ✅ 카드 너비 고정
   max-width: 800px; // ✅ 너무 넓어지는 것 방지
   padding: 1rem;
-  border: 1px solid #A09F9F;
+  border: 1px solid #a09f9f;
   border-radius: 20px;
   margin-bottom: 0.5rem;
-
- 
 `;
 
 const PostRow = styled.div`
@@ -33,7 +33,7 @@ const PostRow = styled.div`
 
 const PostTitle = styled.h2`
   font-size: 16px;
-  color: #1D1B20;
+  color: #1d1b20;
   margin: 0;
   flex: 2;
   overflow: hidden;
@@ -51,14 +51,12 @@ const PostRating = styled.div`
   font-size: 14px;
   color: #000;
   flex: 1;
-  color: #F2B84B; // 별 색상
+  color: #f2b84b; // 별 색상
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 2px;
-
 `;
-
 
 const PostContent = styled.p`
   font-size: 15px;
@@ -81,37 +79,37 @@ const EmptyMessage = styled.div`
 function ReviewList() {
   const [reviews, setReviews] = useState([]);
   const [hospitalMap, setHospitalMap] = useState({});
-  
+
   const renderStars = (rating) => {
-  const stars = [];
-  const fullStars = Math.floor(rating); // 정수 부분
-  const hasHalfStar = rating % 1 >= 0.5; // 0.5 이상이면 반 개
-  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    const stars = [];
+    const fullStars = Math.floor(rating); // 정수 부분
+    const hasHalfStar = rating % 1 >= 0.5; // 0.5 이상이면 반 개
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
-  // 꽉 찬 별
-  for (let i = 0; i < fullStars; i++) {
-    stars.push(<BsStarFill key={`full-${i}`} />);
-  }
+    // 꽉 찬 별
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<BsStarFill key={`full-${i}`} />);
+    }
 
-  // 반 개 별
-  if (hasHalfStar) {
-    stars.push(<BsStarHalf key="half" />);
-  }
+    // 반 개 별
+    if (hasHalfStar) {
+      stars.push(<BsStarHalf key="half" />);
+    }
 
-  // 빈 별
-  for (let i = 0; i < emptyStars; i++) {
-    stars.push(<BsStar key={`empty-${i}`} />);
-  }
+    // 빈 별
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<BsStar key={`empty-${i}`} />);
+    }
 
-  return stars;
-};
+    return stars;
+  };
 
   useEffect(() => {
     const userName = localStorage.getItem("nickname");
-    
+
     if (!userName) {
       console.error("유저 이름이 없습니다. 로그인 필요.");
-      
+
       return;
     }
 
@@ -120,15 +118,18 @@ function ReviewList() {
         // 1. 리뷰 가져오기
         const res = await axios.get(`${BASE_URL}/reviews/my`, {
           headers: {
-            "X-User-Name": userName,
+            "X-User-Name": encodeURIComponent(userName),
           },
         });
-        console.log(res.data); 
+        console.log(res.data);
         const reviewData = res.data;
         setReviews(reviewData);
-
+        console.log("유저명:", userName);
+        console.log("리뷰 데이터:", reviews);
         // 2. 병원 ID 목록 뽑기
-        const uniqueHospitalIds = [...new Set(reviewData.map(r => r.hospitalId))];
+        const uniqueHospitalIds = [
+          ...new Set(reviewData.map((r) => r.hospitalId)),
+        ];
 
         // 3. 병원 정보 요청
         const hospitalDataMap = {};
@@ -137,7 +138,7 @@ function ReviewList() {
             try {
               const response = await axios.get(`${BASE_URL}/hospitals/${id}`, {
                 headers: {
-                  "X-User-Name": userName,
+                  "X-User-Name": encodeURIComponent(userName),
                 },
               });
               const { name, department, address } = response.data;
@@ -152,9 +153,8 @@ function ReviewList() {
             }
           })
         );
-
+        console.log("병원 매핑 데이터:", hospitalMap);
         setHospitalMap(hospitalDataMap);
-
       } catch (err) {
         console.error("리뷰 불러오기 실패:", err);
       }
@@ -163,10 +163,7 @@ function ReviewList() {
     fetchMyReviews();
   }, []);
 
-  
-
   return (
-
     <PostList>
       {reviews.length === 0 ? (
         <EmptyMessage>작성한 리뷰가 없습니다.</EmptyMessage>
@@ -174,18 +171,20 @@ function ReviewList() {
         reviews.map((review) => {
           const hospital = hospitalMap[review.hospitalId];
           return (
-            <PostItem key={review.id} >
+            <PostItem key={review.id}>
               <PostRow>
-  <PostTitle style={{ flex: 2 }}>{hospital ? hospital.name : "병원 이름 불러오는 중..."}</PostTitle>
-  <PostRating style={{ flex: 1, textAlign: "center" }}>{renderStars(review.rating)}</PostRating>
-  <PostTime style={{ flex: 1, textAlign: "right" }}>{new Date(review.createdAt).toLocaleDateString()}</PostTime>
-</PostRow>
-              
-              {hospital && (
-                <HospitalInfo>
-                  🏥  {hospital.address}
-                </HospitalInfo>
-              )}
+                <PostTitle style={{ flex: 2 }}>
+                  {hospital ? hospital.name : "병원 이름 불러오는 중..."}
+                </PostTitle>
+                <PostRating style={{ flex: 1, textAlign: "center" }}>
+                  {renderStars(review.rating)}
+                </PostRating>
+                <PostTime style={{ flex: 1, textAlign: "right" }}>
+                  {new Date(review.createdAt).toLocaleDateString()}
+                </PostTime>
+              </PostRow>
+
+              {hospital && <HospitalInfo>🏥 {hospital.address}</HospitalInfo>}
               <PostContent>"{review.content}"</PostContent>
             </PostItem>
           );

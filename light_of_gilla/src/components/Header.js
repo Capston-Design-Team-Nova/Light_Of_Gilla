@@ -21,7 +21,7 @@ function Header() {
   const [showModal, setShowModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState(defaultProfileImage); // ✅ 추가
+  const [profileImage, setProfileImage] = useState(defaultProfileImage);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -29,20 +29,23 @@ function Header() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-  
+
     if (token) {
       axios
-        .get("https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        .get(
+          "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/me",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then((res) => {
           const imageUrl = res.data.profileImage;
-          const baseImageUrl = "http://3.37.188.91:8080"; // ✅ 서버 이미지 주소
-  
+          const baseImageUrl = "http://3.37.188.91:8080"; // 서버 이미지 주소
+
           if (imageUrl && imageUrl !== "null" && imageUrl !== "") {
-            setProfileImage(`${baseImageUrl}${imageUrl}`); // ✅ 서버에서 바로 가져온 경로 사용
+            setProfileImage(`${baseImageUrl}${imageUrl}`); // 서버에서 바로 가져온 경로 사용
           } else {
             setProfileImage(defaultProfileImage); // 기본 이미지
           }
@@ -55,7 +58,7 @@ function Header() {
       setProfileImage(defaultProfileImage); // 로그인 안 된 경우
     }
   }, [showModal]);
-  
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("nickname");
@@ -78,15 +81,7 @@ function Header() {
             </ImageButton1>
           </Link>
           <NavRight>
-            <Link
-              to={isLoggedIn ? "/HospitalMap" : "#"}
-              onClick={(e) => {
-                if (!isLoggedIn) {
-                  e.preventDefault();
-                  setShowModal(true);
-                }
-              }}
-            >
+            <Link to={"/HospitalMap"}>
               <Button>병원 찾기</Button>
             </Link>
 
@@ -102,15 +97,7 @@ function Header() {
               <Button>Q&A</Button>
             </Link>
 
-            <Link
-              to={isLoggedIn ? "/faq" : "#"}
-              onClick={(e) => {
-                if (!isLoggedIn) {
-                  e.preventDefault();
-                  setShowModal(true);
-                }
-              }}
-            >
+            <Link to={"/faq"}>
               <Button>FAQ</Button>
             </Link>
 
@@ -120,15 +107,21 @@ function Header() {
               </ImageButton2>
             ) : (
               <DropdownWrapper>
-                <ImageButton2 onClick={() => setIsDropdownOpen(prev => !prev)}>
+                <ImageButton2
+                  onClick={() => setIsDropdownOpen((prev) => !prev)}
+                >
                   <img
                     src={profileImage}
                     alt="프로필"
-                    style={{ borderRadius: "50%", width: "36px", height: "36px" }} // 원형
+                    style={{
+                      borderRadius: "50%",
+                      width: "36px",
+                      height: "36px",
+                    }} // 원형
                     onError={(e) => {
-      e.target.onerror = null;
-      e.target.src = defaultProfileImage;
-    }}
+                      e.target.onerror = null;
+                      e.target.src = defaultProfileImage;
+                    }}
                   />
                 </ImageButton2>
                 {isDropdownOpen && (
