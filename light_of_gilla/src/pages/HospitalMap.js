@@ -2592,27 +2592,57 @@ function HospitalMap() {
               }}
             >
               <h2 style={{ margin: 0 }}>{selectedHospital.name}</h2>
-              <button
-                onClick={() => toggleFavorite(selectedHospital.name)}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: 0,
-                }}
-              >
-                <img
-                  src={
-                    !!favoriteHospitals[
-                      String(getHospitalDetails(selectedHospital.name)?.id)
-                    ]
-                      ? require("../assets/images/채운 별.png")
-                      : require("../assets/images/빈 별.png")
-                  }
-                  alt="즐겨찾기"
-                  style={{ width: "22px", height: "22px" }}
-                />
-              </button>
+              <div style={{ display: "flex", gap: "12px" }}>
+                {/* 길찾기 버튼 */}
+                <button
+                  onClick={() => {
+                    const lat =
+                      selectedHospital?.latitude || selectedPosition?.lat;
+                    const lng =
+                      selectedHospital?.longitude || selectedPosition?.lng;
+                    const name = selectedHospital?.name;
+                    const url = `https://map.kakao.com/link/to/${encodeURIComponent(
+                      name
+                    )},${lat},${lng}`;
+                    window.open(url, "_blank");
+                  }}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
+                  }}
+                >
+                  <img
+                    src={require("../assets/images/길찾기.png")}
+                    alt="길찾기"
+                    style={{ width: "24px", height: "24px" }}
+                  />
+                </button>
+
+                {/* 즐겨찾기 버튼 */}
+                <button
+                  onClick={() => toggleFavorite(selectedHospital.name)}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
+                  }}
+                >
+                  <img
+                    src={
+                      !!favoriteHospitals[
+                        String(getHospitalDetails(selectedHospital.name)?.id)
+                      ]
+                        ? require("../assets/images/채운 별.png")
+                        : require("../assets/images/빈 별.png")
+                    }
+                    alt="즐겨찾기"
+                    style={{ width: "22px", height: "22px" }}
+                  />
+                </button>
+              </div>
             </div>
             <div
               style={{
@@ -2623,10 +2653,11 @@ function HospitalMap() {
               }}
             >
               <p style={{ margin: 0 }}>{selectedHospital.address}</p>
+
+              {/* 영업 상태 텍스트만 표시 */}
               <span
                 style={{
                   display: "inline-block",
-                  width: "100px",
                   fontSize: "14px",
                   color:
                     isHospitalOpen(selectedHospital.openHour) === "open"
@@ -2645,7 +2676,6 @@ function HospitalMap() {
                 }
               </span>
             </div>
-
             <div>{renderRating(parseFloat(selectedHospital.score))}</div>
             {selectedHospital.imgUrl && (
               <img
@@ -2657,6 +2687,24 @@ function HospitalMap() {
             <hr style={{ margin: "16px 0", borderColor: "#eee" }} />
             <h3>운영 시간</h3>
             {formatOpenHours(selectedHospital.openHour)}
+            {isHospitalOpen(selectedHospital.openHour) === "none" && (
+              <a
+                href={`https://search.naver.com/search.naver?query=${encodeURIComponent(
+                  selectedHospital.name
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  fontSize: "14px",
+                  color: "#1E90FF",
+                  textDecoration: "underline",
+                  display: "inline-block",
+                  marginTop: "4px",
+                }}
+              >
+                영업 정보 검색하기
+              </a>
+            )}
             <hr style={{ margin: "16px 0", borderColor: "#eee" }} />
             <h3>리뷰</h3>
             <div
