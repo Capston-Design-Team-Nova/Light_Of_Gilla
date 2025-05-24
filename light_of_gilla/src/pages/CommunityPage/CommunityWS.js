@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React,{useState} from 'react';
 import Header from '../../components/Header';
-import { Main, Center, Button, TitleInput, ContentTextArea, LowRow,ToggleButton,FormRow,Label } from '../../styles/CommunityStyles';
+import {  Button, TitleInput, ContentTextArea, LowRow,ToggleButton,FormRow,Label } from '../../styles/CommunityStyles';
 import { useNavigate } from "react-router-dom";
 import CustomSelect from './CustomSelect';
 import Sidebar from '../../components/Sidebar';
@@ -9,6 +9,32 @@ import styled from 'styled-components';
 
 // 모바일 기준 (갤럭시 S24)
 const mobile = '@media screen and (max-width: 480px)';
+
+export const Center = styled.div`
+  width: 100%;
+  height: 100%; /* 높이를 명시적으로 설정 */
+  display: flex; /* Flexbox 활성화 */
+  flex-direction: column; /* 세로 정렬 */
+  justify-content: flex-start; /* 가로 정렬: 중앙 */
+  align-items: center; /* 세로 정렬: 중앙 */
+  background-position: center; /* 중앙에 위치 */
+  padding-top: 90px; /* PageHeader의 높이에 맞는 여백 추가 */
+  background-color: #FEF7FF;/*#ffece3;*/
+
+  ${mobile} {
+    padding-bottom: 50px;
+    overflow-x:hidden;
+
+  }
+`;
+//width: 100%;
+
+export const Main = styled.main`
+  width: 100%;
+  height: 100%;
+  background-color: #FEF7FF;/*#ffece3;*/
+ 
+`;
 
 export const Content = styled.div`
   position: relative; // 기준이 되는 부모
@@ -30,7 +56,8 @@ export const Content = styled.div`
   align-items: center;
 padding-top: 20px;
   ${mobile} {
-    width: 97%;
+  
+    width: 100%;
     height: auto;
     margin-top: 5px;
     margin-left: 0;
@@ -120,12 +147,16 @@ function CommunityWS() {
                             onChange={(e) => setContent(e.target.value)}
                         />
                     </FormRow>
-                    <LowRow>
+                    <FormRow>
+                      <Label $mobileHide></Label>
+                      <LowRow>  
                         <CustomSelect onChange={handleSelectChange }menuPlacement="top"/>
                         {/*<CustomSelect />, CustomSelect 에서 선택한거 보내는 코드 작성*/}
                         <Button onClick={handleSubmit}>올리기</Button>
                         
-                    </LowRow>    
+                      </LowRow>    
+                    </FormRow>
+                      
                     
                 </Content>
                 

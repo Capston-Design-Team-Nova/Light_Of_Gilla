@@ -209,16 +209,16 @@ export const LowRow = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;  // Align vertically in the center
-    gap: 40%;  // Space between the SelectBox and Button
+    gap:40%;  // Space between the SelectBox and Button
     margin-bottom: 10px;  // Optional: Add space below the row
     width:90%;
 
     ${mobile} {
-      flex-direction: row;
-      gap: 3px;              // ✅ 버튼과 셀렉트 사이 약간의 간격
-      width: 100%;
-      justify-content: space-between;
-      padding: 0 10px;
+     flex-direction: row; /* 세로로 쌓기 */
+    align-items: center;     /* 중앙 정렬 */
+    gap: 10px;               /* 위아래 간격 */
+    width: 100%;
+    padding: 0 10px;
     }
 `;
 // CommunityStyles.js 등에 추가
@@ -251,7 +251,9 @@ export const Label = styled.label`
      ${mobile} {
     padding-top: 3px;         // ✅ 모바일에서 좀 더 위로 올림
     align-self: flex-start;   // ✅ 입력창보다 위 정렬
-     margin-left: 1px;
+     margin-left: 1px; 
+     margin-right: 0;
+     ${({ $mobileHide }) => $mobileHide && `display: none;`}
   }
 `;
 
