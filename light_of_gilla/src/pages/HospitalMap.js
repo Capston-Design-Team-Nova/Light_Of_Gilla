@@ -392,15 +392,24 @@ function HospitalMap() {
 
   const fetchHospitals = (lat, lng, category = "HP8") => {
     const ps = new window.kakao.maps.services.Places();
-    setState((prev) => ({ ...prev, isLoading: true })); // 로딩 시작
+    setState((prev) => ({ ...prev, isLoading: true }));
+
+    setSelectedHospital(null); // ← 추가
+    setSelectedPosition(null); // ← 추가
 
     ps.categorySearch(
       category,
       async (data, status) => {
         if (status === window.kakao.maps.services.Status.OK) {
           setHospitals(data);
+          if (mapRef.current && window.kakao && data.length > 0) {
+            const bounds = new window.kakao.maps.LatLngBounds();
+            data.forEach((h) => {
+              bounds.extend(new window.kakao.maps.LatLng(h.y, h.x));
+            });
+            mapRef.current.setBounds(bounds);
+          }
 
-          // 병원 데이터 저장 후 평점까지 받아오고 로딩 종료
           await fetchRatingsForHospitals(data);
           setState((prev) => ({ ...prev, isLoading: false }));
         } else {
@@ -544,11 +553,28 @@ function HospitalMap() {
         return <p style={{ color: "#888" }}>운영시간 정보가 없어요</p>;
       }
 
-      return Object.entries(parsed)
-        .filter(([day]) => day !== "휴무일")
-        .map(([day, time]) => <p key={day}>{`${day}: ${time}`}</p>);
+      const dayOrder = ["월", "화", "수", "목", "금", "토", "일"];
+      const todayIndex = new Date().getDay();
+      const todayLabel = ["일", "월", "화", "수", "목", "금", "토"][todayIndex];
+
+      return dayOrder.map((day) => {
+        const time = parsed[day];
+        const isToday = day === todayLabel;
+
+        return (
+          <p
+            key={day}
+            style={{
+              fontWeight: isToday ? "bold" : "normal",
+              margin: "2px 0",
+            }}
+          >
+            {day}: {time ?? "휴무일"}
+          </p>
+        );
+      });
     } catch (e) {
-      console.error("openHour 파싱 오류:", e);
+      console.error("운영시간 파싱 오류:", e);
       return <p style={{ color: "#888" }}>운영시간 정보가 없어요</p>;
     }
   };
@@ -608,8 +634,8 @@ function HospitalMap() {
             key={r.id}
             style={{ padding: "10px", borderBottom: "1px solid #ccc" }}
           >
-            <h4>{r.author}</h4>
-            <div>{renderRating(r.rating)}</div>
+            <h4 style={{ margin: 0 }}>{r.author}</h4>
+            <div style={{ marginTop: "6px" }}>{renderRating(r.rating)}</div>
 
             {editingReviewIndex === i ? (
               <>
@@ -899,7 +925,6 @@ function HospitalMap() {
     "성형외과",
     "신경외과",
     "가정의학과",
-    "마취통증의학과",
   ];
 
   const handleSearchInputChange = async (e) => {
@@ -942,6 +967,9 @@ function HospitalMap() {
     const rawTerm = customTerm ?? searchTerm;
     const trimmedTerm = typeof rawTerm === "string" ? rawTerm.trim() : "";
 
+    setSelectedHospital(null); // ← 추가
+    setSelectedPosition(null); // ← 선택 마커도 제거
+
     if (!trimmedTerm) return;
 
     if (mode === "keyword") {
@@ -976,7 +1004,7 @@ function HospitalMap() {
               item.category_group_code === "PM9"
           );
 
-          const filtered = filterHospitalsWithin3km(hospitalResults);
+          const filtered = filterHospitalsWithin2km(hospitalResults);
           const uniqueHospitals = deduplicateHospitals(filtered);
           setHospitals(uniqueHospitals);
 
@@ -1006,17 +1034,19 @@ function HospitalMap() {
     const ps = new window.kakao.maps.services.Places();
     setState((prev) => ({ ...prev, isLoading: true }));
 
+    setSelectedHospital(null); // ← 추가
+    setSelectedPosition(null); // ← 추가
+
     ps.keywordSearch(
       category,
       async (data, status) => {
         if (status === window.kakao.maps.services.Status.OK) {
-          const nearby = filterHospitalsWithin3km(data);
+          const nearby = filterHospitalsWithin2km(data);
           setHospitals(nearby);
           await fetchRatingsForHospitals(nearby);
           setState((prev) => ({ ...prev, isLoading: false }));
 
           if (mapRef.current && window.kakao && nearby.length > 0) {
-            // 중심점 계산
             const avgLat =
               nearby.reduce((sum, h) => sum + parseFloat(h.y), 0) /
               nearby.length;
@@ -1024,17 +1054,10 @@ function HospitalMap() {
               nearby.reduce((sum, h) => sum + parseFloat(h.x), 0) /
               nearby.length;
 
-            // 중심점으로 부드럽게 이동
-            smoothPanTo(avgLat, avgLng);
+            const map = mapRef.current;
 
-            // 일정 시간 후 setBounds 호출 (애니메이션 후 확대 조정)
-            setTimeout(() => {
-              const bounds = new window.kakao.maps.LatLngBounds();
-              nearby.forEach((h) => {
-                bounds.extend(new window.kakao.maps.LatLng(h.y, h.x));
-              });
-              mapRef.current.setBounds(bounds);
-            }, 600); // smoothPanTo와 동일한 duration 고려
+            map.setLevel(5); // 먼저 레벨 조정
+            smoothPanTo(avgLat, avgLng); // 이후 부드럽게 이동
           }
         } else {
           setHospitals([]);
@@ -1669,10 +1692,6 @@ function HospitalMap() {
       label: "정신건강의학과",
       icon: require("../assets/icons/정신건강의학과.png"),
     },
-    {
-      label: "마취통증의학과",
-      icon: require("../assets/icons/마취통증의학과.png"),
-    },
   ];
 
   useEffect(() => {
@@ -1728,7 +1747,7 @@ function HospitalMap() {
     return () => el.removeEventListener("wheel", handleWheel);
   }, []);
 
-  const filterHospitalsWithin3km = (list) =>
+  const filterHospitalsWithin2km = (list) =>
     list.filter((h) => {
       const distance = getDistance(
         state.center.lat,
@@ -1736,7 +1755,7 @@ function HospitalMap() {
         parseFloat(h.y),
         parseFloat(h.x)
       );
-      return distance <= 3000;
+      return distance <= 2000;
     });
 
   useEffect(() => {
@@ -1768,7 +1787,7 @@ function HospitalMap() {
             {
               role: "system",
               content:
-                "사용자가 증상을 입력하면, 그에 해당하는 진료과를 한국어로 대답하세요. 예: '배가 아파요' → '내과'. 다른 설명은 하지 마세요. 단, 내과, 가정의학과, 치과, 이비인후과, 소아과, 피부과, 산부인과, 안과, 정형외과, 비뇨기과, 신경외과, 외과, 성형외과, 정신건강의학과, 마취통증의학과 중 하나로면 대답하세요.",
+                "사용자가 증상을 입력하면, 그에 해당하는 진료과를 한국어로 대답하세요. 예: '배가 아파요' → '내과'. 다른 설명은 하지 마세요. 단, 내과, 가정의학과, 치과, 이비인후과, 소아과, 피부과, 산부인과, 안과, 정형외과, 비뇨기과, 신경외과, 외과, 성형외과, 정신건강의학과 중 하나로면 대답하세요.",
             },
             {
               role: "user",
@@ -1811,10 +1830,6 @@ function HospitalMap() {
     return Array.from(deptSet); // ['피부과', '정형외과', ...]
   };
 
-  const toggleDepartments = () => {
-    setShowDepartments((prev) => !prev);
-  };
-
   const categoryIconMap = Object.fromEntries(
     categoryList.map((item) => [item.label, item.icon])
   );
@@ -1836,6 +1851,7 @@ function HospitalMap() {
 
           if (matched) {
             handleHospitalClick(matched);
+            smoothPanTo(parseFloat(matched.y), parseFloat(matched.x));
           } else {
             ps.keywordSearch(hospitalName, (res, stat) => {
               if (
@@ -1843,6 +1859,7 @@ function HospitalMap() {
                 res.length > 0
               ) {
                 handleHospitalClick(res[0]);
+                smoothPanTo(parseFloat(res[0].y), parseFloat(res[0].x));
               } else {
                 alert("병원 위치를 찾을 수 없습니다.");
                 setSelectedHospitalLoading(false);
@@ -2685,7 +2702,7 @@ function HospitalMap() {
               />
             )}
             <hr style={{ margin: "16px 0", borderColor: "#eee" }} />
-            <h3>운영 시간</h3>
+            <h3 style={{ fontWeight: "bold" }}>운영 시간</h3>
             {formatOpenHours(selectedHospital.openHour)}
             {isHospitalOpen(selectedHospital.openHour) === "none" && (
               <a
@@ -2706,31 +2723,74 @@ function HospitalMap() {
               </a>
             )}
             <hr style={{ margin: "16px 0", borderColor: "#eee" }} />
-            <h3>리뷰</h3>
+            <h3 style={{ fontWeight: "bold" }}>리뷰</h3>
             <div
               style={{
                 border: "1px solid #ddd",
                 borderRadius: "10px",
-                padding: "10px",
-                marginBottom: "0px",
+                padding: "12px",
+                marginBottom: "5px",
+                marginTop: "15px",
                 background: "#fdfdfd",
+                boxShadow: "0 2px 6px rgba(0, 0, 0, 0.05)",
               }}
             >
-              <textarea
-                placeholder="리뷰를 남겨보세요"
-                value={reviewContent}
-                onChange={(e) => setReviewContent(e.target.value)}
+              <div
                 style={{
-                  width: "94%",
-                  minHeight: "60px",
-                  padding: "8px",
-                  border: "1px solid #ccc",
-                  borderRadius: "6px",
                   marginBottom: "10px",
+                  fontWeight: "bold",
+                  fontSize: "15px",
+                  display: "flex",
+                  alignItems: "center",
                 }}
-              />
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+              >
+                <span style={{ marginRight: "6px" }}>✏️</span>리뷰 작성
+              </div>
+
+              {/* 입력창 */}
+              <div style={{ position: "relative" }}>
+                <textarea
+                  placeholder="내용을 입력하세요 (최대 300자)"
+                  value={reviewContent}
+                  onChange={(e) => setReviewContent(e.target.value)}
+                  maxLength={300}
+                  style={{
+                    width: "100%",
+                    height: "80px",
+                    padding: "10px 10px 10px 10px", // 하단 패딩 확보
+                    border: "1px solid #ccc",
+                    borderRadius: "8px",
+                    resize: "none",
+                    fontSize: "14px",
+                    fontFamily: "inherit",
+                    boxSizing: "border-box",
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "6px",
+                    right: "10px",
+                    fontSize: "12px",
+                    color: "#999",
+                    pointerEvents: "none",
+                  }}
+                >
+                  {reviewContent.length} / 300
+                </div>
+              </div>
+
+              {/* 별점 + 버튼 */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginTop: "8px",
+                  marginBottom: "0px",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                   {[1, 2, 3, 4, 5].map((val) => (
                     <span
                       key={val}
@@ -2738,26 +2798,38 @@ function HospitalMap() {
                       style={{
                         cursor: "pointer",
                         fontSize: "22px",
-                        color: val <= reviewRating ? "red" : "lightgray",
+                        color: val <= reviewRating ? "red" : "#ddd",
                       }}
                     >
                       <BsStarFill />
                     </span>
                   ))}
                   <span
-                    style={{ marginLeft: 8, fontSize: "14px", color: "#333" }}
+                    style={{ fontSize: "14px", color: "#333", marginLeft: 6 }}
                   >
-                    {reviewRating.toFixed(1)}
+                    {reviewRating.toFixed(1)}점
                   </span>
                 </div>
+
                 <button
                   onClick={handleReviewSubmit}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.backgroundColor = "#e14e4e";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.backgroundColor = "#ff6b6b";
+                  }}
                   style={{
                     backgroundColor: "#ff6b6b",
                     color: "white",
-                    padding: "6px 12px",
+                    padding: "6px 14px",
                     border: "none",
                     borderRadius: "6px",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                    cursor: "pointer",
+                    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                    transition: "background-color 0.2s ease",
                   }}
                 >
                   {editingReviewId ? "수정" : "등록"}
