@@ -8,6 +8,8 @@ const BASE_URL =
   "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api";
 
 // 스타일 정의
+const mobile = '@media screen and (max-width: 480px)';
+
 const PostList = styled.div`
   width: 100%;
   display: flex;
@@ -18,7 +20,7 @@ const PostList = styled.div`
 
 const PostItem = styled.div`
   width: 85%; // ✅ 카드 너비 고정
-  max-width: 800px; // ✅ 너무 넓어지는 것 방지
+  max-width: 820px; // ✅ 너무 넓어지는 것 방지
   padding: 1rem;
   border: 1px solid #a09f9f;
   border-radius: 20px;
@@ -32,23 +34,32 @@ const PostRow = styled.div`
 `;
 
 const PostTitle = styled.h2`
-  font-size: 16px;
+  font-size: 1.3rem;
+  font-family:OurFont8;
   color: #1d1b20;
   margin: 0;
   flex: 2;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  ${mobile} {
+    font-size: 15px;
+     
+    }
 `;
 
 const PostTime = styled.div`
-  font-size: 14px;
+  font-size: 1.2rem;
   color: #555;
   flex: 1;
+  ${mobile} {
+    font-size: 12px;
+     
+    }
 `;
 
 const PostRating = styled.div`
-  font-size: 14px;
+  font-size: 1.2rem;
   color: #000;
   flex: 1;
   color: #f2b84b; // 별 색상
@@ -56,18 +67,30 @@ const PostRating = styled.div`
   justify-content: center;
   align-items: center;
   gap: 2px;
+  ${mobile} {
+    font-size: 12px;
+     
+    }
 `;
 
 const PostContent = styled.p`
-  font-size: 15px;
+  font-size: 1.2rem;
   color: #333;
   margin-top: 15px;
+  ${mobile} {
+    font-size: 14px;
+     
+    }
 `;
 
 const HospitalInfo = styled.div`
-  font-size: 13px;
+  font-size: 1rem;
   color: #666;
   margin-top: 0.5rem;
+  ${mobile} {
+    font-size: 11px;
+     
+    }
 `;
 
 const EmptyMessage = styled.div`

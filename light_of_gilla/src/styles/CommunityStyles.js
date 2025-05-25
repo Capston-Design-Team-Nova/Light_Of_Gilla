@@ -43,8 +43,8 @@ export const TopRow = styled.div`
     width: 90%;
     flex-direction: column;
     margin-left: 0;
-    align-items: stretch;
-     gap: 1px; /*  모바일에서 간격만 좁게 조절 */
+    align-items: center;
+     gap: 10px; /*  모바일에서 간격만 좁게 조절 */
   }
 `;
 
@@ -88,8 +88,6 @@ export const CommunityListWrapper = styled.div`
   }
 `;
 
-
-
 export const Button = styled.button`
   padding: 2px;
   width: 85px;
@@ -105,10 +103,14 @@ export const Button = styled.button`
 
     ${mobile} {
     
-    width: 95%;
+   
+   width:230px; /* ✅ 모바일에서 고정 너비 */
+    max-width: 90%; /* ✅ 혹시 너무 작을 때 대비 */
+    margin: 0 auto; /* ✅ 가운데 정렬! */
+  display: block;
   }
 `;
-
+{/*min-width: 60px; width: 90%;*/}
 export const ToggleButton =styled.button`
   padding: 0; /* 이미지 버튼은 패딩이 필요 없으므로 0으로 설정 */
   background: none;
@@ -233,7 +235,7 @@ export const FormRow = styled.div`
     flex-direction: row;     // ✅ 모바일에서도 가로 정렬 유지
     align-items: center;     // ✅ 세로 정렬 중앙
     justify-content: flex-start;
-    width: 100%;
+    width: 95%;
     padding: 0 10px;
   }
   }

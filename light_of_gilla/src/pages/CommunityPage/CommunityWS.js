@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React,{useState} from 'react';
 import Header from '../../components/Header';
-import {  Button, TitleInput, ContentTextArea, LowRow,ToggleButton,FormRow,Label } from '../../styles/CommunityStyles';
+import { TitleInput, ContentTextArea, LowRow,ToggleButton,FormRow,Label } from '../../styles/CommunityStyles';
 import { useNavigate } from "react-router-dom";
 import CustomSelect from './CustomSelect';
 import Sidebar from '../../components/Sidebar';
@@ -57,10 +57,30 @@ export const Content = styled.div`
 padding-top: 20px;
   ${mobile} {
   
-    width: 100%;
+    width: 97%;
     height: auto;
     margin-top: 5px;
     margin-left: 0;
+  }
+`;
+
+export const Button = styled.button`
+  padding: 2px;
+  width: 85px;
+  height: 34px;
+  background-color:#cd9b3f;  /* #D9A441;#be8600; #B0721E;  #E0A93A; #E8A334 #F0AD3D;*/
+  color: white;
+  font-family: 'OurFont1';
+  font-size: 16px;
+  font-weight:bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+
+    ${mobile} {
+    
+   min-width: 60px; 
+   width: 90%;
   }
 `;
 

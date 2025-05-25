@@ -217,7 +217,9 @@ export const P = styled.h3`
   font-family:OurFont5;
   font-size:25px;
   font-weight:bold;
-  margin-bottom:20px;
+  margin-top:20px;
+  margin-bottom:25px;
+
 `;
 
 
@@ -241,4 +243,10 @@ export const ReviewHeaderRow = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  font-size:1.2rem;
+
+  ${mobile} {
+    font-size: 14.5px;
+     
+    }
 `;
