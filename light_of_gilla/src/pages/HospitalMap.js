@@ -68,6 +68,8 @@ function HospitalMap() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [showModal, setShowModal] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const inputRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const renderStars = (score) => {
     const full = Math.floor(score);
@@ -602,6 +604,7 @@ function HospitalMap() {
       );
 
       const result = await response.json();
+      alert("리뷰가 수정되었습니다.");
       console.log("✏️ 리뷰 수정 완료", result);
 
       setEditingReviewIndex(null);
@@ -1088,13 +1091,19 @@ function HospitalMap() {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (!e.target.closest(".search-container")) {
+      if (
+        inputRef.current &&
+        dropdownRef.current &&
+        !inputRef.current.contains(e.target) &&
+        !dropdownRef.current.contains(e.target)
+      ) {
         setIsDropdownOpen(false);
         setSuggestions([]);
       }
     };
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // 즐겨찾기 삭제
@@ -1176,6 +1185,7 @@ function HospitalMap() {
             },
           };
         });
+        alert("리뷰가 등록되었습니다.");
       }
     } catch (e) {
       console.error("❌ 리뷰 저장 실패:", e);
@@ -1186,6 +1196,9 @@ function HospitalMap() {
   const handleDeleteReview = async (reviewId) => {
     const userNickname = localStorage.getItem("nickname");
     if (!userNickname || !reviewId) return;
+
+    const confirmed = window.confirm("리뷰를 삭제하시겠습니까?");
+    if (!confirmed) return;
 
     try {
       await fetch(
@@ -1198,8 +1211,6 @@ function HospitalMap() {
           },
         }
       );
-      console.log("🗑️ 리뷰 삭제 완료");
-
       // 최신 리뷰 및 평균 평점 다시 반영
       await refreshSelectedHospital();
 
@@ -1226,6 +1237,7 @@ function HospitalMap() {
           reviewCount: updatedCount,
         },
       }));
+      alert("리뷰가 삭제되었습니다.");
     } catch (e) {
       console.error("❌ 리뷰 삭제 실패:", e);
     }
@@ -1337,6 +1349,9 @@ function HospitalMap() {
 
   // 검색기록 전체 삭제
   const handleClearSearchHistory = async () => {
+    const confirmed = window.confirm("검색기록을 모두 삭제하시겠습니까?");
+    if (!confirmed) return;
+
     const token = localStorage.getItem("token");
     if (!token) return;
 
@@ -1349,6 +1364,7 @@ function HospitalMap() {
         }
       );
       setSearchHistory([]);
+      alert("검색기록이 모두 삭제되었습니다.");
     } catch (e) {
       console.error("검색기록 전체 삭제 실패", e);
     }
@@ -1356,6 +1372,9 @@ function HospitalMap() {
 
   // 즐겨찾기 전체 삭제
   const handleClearFavorites = () => {
+    const confirmed = window.confirm("즐겨찾기를 모두 삭제하시겠습니까?");
+    if (!confirmed) return;
+
     const userNickname = localStorage.getItem("nickname");
     if (!userNickname) return;
 
@@ -1373,7 +1392,10 @@ function HospitalMap() {
         )
       )
     )
-      .then(() => setFavoriteHospitals({}))
+      .then(() => {
+        setFavoriteHospitals({});
+        alert("즐겨찾기가 모두 삭제되었습니다.");
+      })
       .catch((e) => console.error("전체 즐겨찾기 삭제 실패", e));
   };
 
@@ -1951,6 +1973,7 @@ function HospitalMap() {
         </ModeSwitcher>
         <SearchBoxWrapper ref={inputWrapperRef}>
           <SearchInput
+            ref={inputRef}
             value={searchTerm}
             onChange={handleSearchInputChange}
             onKeyPress={handleKeyPress}
@@ -1977,6 +2000,7 @@ function HospitalMap() {
           {isDropdownOpen && (
             <div
               className="search-dropdown"
+              ref={dropdownRef}
               style={{
                 position: "absolute",
                 top: "100%",

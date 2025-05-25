@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const mobile = '@media screen and (max-width: 480px)';
+const mobile = "@media screen and (max-width: 480px)";
 
 export const Main = styled.main`
   width: 100%;
@@ -23,9 +23,9 @@ export const Center = styled.div`
 `;
 
 export const Title = styled.h2`
-margin-top:3rem;
+  margin-top: 3rem;
   font-family: OurFont5;
-  font-weight:bold;
+  font-weight: bold;
   font-size: 36px;
 `;
 
@@ -88,16 +88,16 @@ export const ReviewButton = styled.button`
 
 export const TitleRow = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: left;
+  justify-content: space-between; // 좌측 Title, 우측 버튼
+  align-items: center;
   width: 90%;
-  margin-bottom: 0.3rem;
-  margin-left: 2.5rem;
+  margin: 3rem auto 1.5rem; // 여백 재조정
 
   ${mobile} {
-    justify-content: center;
-    margin-left: 0;
-    padding: 0 1rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 2rem auto 1rem;
   }
 `;
 
@@ -115,8 +115,6 @@ export const ReviewButtonRow = styled.div`
     padding: 0 1rem;
   }
 `;
-
-
 
 export const FormGroup = styled.div`
   display: flex;
@@ -144,7 +142,7 @@ export const Label = styled.label`
 `;
 
 export const Input = styled.input`
-  width: calc(100% - 160px);  /* 기본 넓이 조절 */
+  width: calc(100% - 160px); /* 기본 넓이 조절 */
   height: 36px;
   padding: 5px 10px;
   font-size: 16px;
@@ -180,7 +178,7 @@ export const SaveButton = styled.button`
   padding: 7px 20px;
   background-color: white;
   color: black;
-  font-family: 'OurFont2';
+  font-family: "OurFont2";
   font-size: 18px;
   cursor: pointer;
   border: solid black 0.1rem;
@@ -213,22 +211,19 @@ export const SuccessMessage = styled(ErrorMessage)`
 `;
 
 export const P = styled.h3`
-  color: rgb(69, 62, 62) ;
-  font-family:OurFont5;
-  font-size:25px;
-  font-weight:bold;
-  margin-top:20px;
-  margin-bottom:25px;
-
+  color: rgb(69, 62, 62);
+  font-family: OurFont5;
+  font-size: 25px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 25px;
 `;
-
 
 export const RowList = styled.div`
   width: 100%;
-   display: flex;
+  display: flex;
   flex-direction: column;
   align-items: center; // ✅ 아이템들을 수직 방향으로 가운데 정렬
-  
 `;
 
 export const RowItem = styled.div`
@@ -236,17 +231,15 @@ export const RowItem = styled.div`
   max-width: 800px; // ✅ 너무 넓어지는 것 방지
   padding: 0.05rem;
   border: none;
-  
 `;
 
 export const ReviewHeaderRow = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
-  font-size:1.2rem;
+  font-size: 1.2rem;
 
   ${mobile} {
     font-size: 14.5px;
-     
-    }
+  }
 `;
