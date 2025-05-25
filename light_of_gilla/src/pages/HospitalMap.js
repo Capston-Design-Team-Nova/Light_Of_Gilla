@@ -1755,7 +1755,7 @@ function HospitalMap() {
         parseFloat(h.y),
         parseFloat(h.x)
       );
-      return distance <= 2000;
+      return distance <= 2500;
     });
 
   useEffect(() => {
