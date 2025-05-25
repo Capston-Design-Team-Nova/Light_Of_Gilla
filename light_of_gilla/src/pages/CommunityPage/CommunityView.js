@@ -111,7 +111,22 @@ const Category = styled.p`
   `;
 
 const Button = styled.button`
-  margin-top: 5px;
+  margin-top: 3px;
+  padding: 0.5rem 1rem;
+  font-family: 'OurFont10';
+  font-size:0.9rem;
+  border: none;
+  background: #F8C743;
+  color: black;
+  border-radius: 6px;
+  cursor: pointer;
+  width:60px;
+  height:45px;
+  margin-right:1rem;
+`;
+
+const Button2 = styled.button`
+  margin-top: 3px;
   padding: 0.5rem 1rem;
   border: none;
   background: #F8C743;
@@ -120,6 +135,7 @@ const Button = styled.button`
   cursor: pointer;
   width:60px;
   height:45px;
+
 `;
 
 const LikeButton = styled.button`
@@ -276,6 +292,7 @@ const DeleteButton = styled.button`
 const CommentContent = styled.div`
   flex: 1;  // ✅ 가능한 공간 모두 차지
   display: flex;
+  font-size: 1.2rem;
   flex-direction: column;
   word-break: break-word;
   overflow-wrap: break-word;
@@ -293,6 +310,7 @@ font-size:1.35rem;
 
 
 const CommentText = styled.div`
+  font-family:'OurFont12';
   font-size: 1.2rem;
   line-height: 1.4;
   word-break: break-word;       // ✅ 긴 단어도 줄바꿈
@@ -488,10 +506,10 @@ const handleCommentDelete = async (commentId) => {
                 
                 <Content isSidebarOpen={isSidebarOpen}>
                 {postData.nickName === name && ( // 닉네임이 같을 경우에만 수정, 삭제 버튼 보여줌
-                  <div style={{ display: "flex", gap: "10px", marginTop: "10px",marginRight: "30px", justifyContent: "flex-end",  // 오른쪽 정렬
+                  <div style={{ display: "flex", gap: "10px", marginTop: "10px",marginRight: "20px", justifyContent: "flex-end",  // 오른쪽 정렬
   alignItems: "center",width: "100%" }}>
-                  <Button onClick={() => navigate(`/edit/${postData.post_Id}`)}>수정</Button>
-                  <Button onClick={() => handleDelete(postData.post_Id)}>삭제</Button>
+                    <Button onClick={() => navigate(`/edit/${postData.post_Id}`)}>수정</Button>
+                    <Button onClick={() => handleDelete(postData.post_Id)}>삭제</Button>
                   </div>
                 )}
 
@@ -547,7 +565,7 @@ const handleCommentDelete = async (commentId) => {
                                 onKeyDown={handleCommentKeyPress}
                           
                             />
-                            <Button type="submit">⬆</Button>
+                            <Button2 type="submit">⬆</Button2>
                     </CommentForm>                 
                 </Wrapper>
               </Content>                

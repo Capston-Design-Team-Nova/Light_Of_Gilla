@@ -20,7 +20,7 @@ export const Center = styled.div`
   background-position: center; /* 중앙에 위치 */
   padding-top: 90px; /* PageHeader의 높이에 맞는 여백 추가 */
   background-color: #FEF7FF;/*#ffece3;*/
-
+margin-top:1rem;
   ${mobile} {
     padding-bottom: 50px;
     overflow-x:hidden;
@@ -54,7 +54,7 @@ export const Content = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-padding-top: 20px;
+padding-top: 30px;
   ${mobile} {
   
     width: 97%;
@@ -66,11 +66,11 @@ padding-top: 20px;
 
 export const Button = styled.button`
   padding: 2px;
-  width: 85px;
-  height: 34px;
+  width: 90px;
+  height: 38px;
   background-color:#cd9b3f;  /* #D9A441;#be8600; #B0721E;  #E0A93A; #E8A334 #F0AD3D;*/
   color: white;
-  font-family: 'OurFont1';
+  font-family: 'OurFont10';
   font-size: 16px;
   font-weight:bold;
   cursor: pointer;
@@ -81,6 +81,29 @@ export const Button = styled.button`
     
    min-width: 60px; 
    width: 90%;
+  }
+`;
+export const Title = styled.div`
+  position: relative; // 기준이 되는 부모
+  width:  calc(97% - 250px);
+  margin-left: 250px;  
+  font-family:OurFont10;
+  color:#2F2F2F;
+  font-weight:bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 1rem;
+  line-height:1.5;
+  font-size:2rem;
+
+  ${mobile} {
+    width: 95%;
+    height: auto;
+    margin-left: 0;
+    font-size: 28px;
+    
   }
 `;
 
@@ -148,7 +171,7 @@ function CommunityWS() {
                         <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
                     </ToggleButton>
                 )}
-                           
+                <Title isSidebarOpen={isSidebarOpen}>글쓰기 화면</Title>           
                 <Content isSidebarOpen={isSidebarOpen}>
                     <FormRow>
                         <Label>제목:</Label>

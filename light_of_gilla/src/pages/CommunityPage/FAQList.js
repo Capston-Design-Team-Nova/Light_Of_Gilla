@@ -32,7 +32,7 @@ const PostItem = styled.div`
 const AnswerWrapper = styled.div`
   max-height: ${({ expanded }) => (expanded ? '1000px' : '0')};
   overflow: hidden;
-  transition: max-height 2s ease-in-out;
+  transition: max-height 3s ease-in-out;
   padding: ${({ expanded }) => (expanded ? '1rem 1.5rem' : '0 1.5rem')}; 
   background-color: #fff9ef;
   border-bottom: 1px solid #A09F9F; // 답변에도 구분선 추가해서 자연스럽게
