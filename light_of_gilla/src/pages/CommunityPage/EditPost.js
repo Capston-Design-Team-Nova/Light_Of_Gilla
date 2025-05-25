@@ -49,7 +49,7 @@ function EditPost() {
     };
     console.log(updatedPost.nickName);
     try {
-      await axios.post(`http://localhost:8082/post/update`, updatedPost);
+      await axios.post(`https://www.thegilla.com/post/update`, updatedPost);
       alert("글이 성공적으로 수정되었습니다.");
       navigate('/Community');
     } catch (error) {
