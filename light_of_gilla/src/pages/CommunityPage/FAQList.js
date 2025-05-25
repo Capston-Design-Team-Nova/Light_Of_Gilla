@@ -64,6 +64,7 @@ const FAQTitle = styled.h2`
      white-space: normal;   // ✅ 줄바꿈 허용
     overflow: visible;     // ✅ 전체 표시
     text-overflow: initial;
+        line-height:1.4;
   }
 `;
 
@@ -73,11 +74,12 @@ margin-top: 1.1rem;
   font-size: 1.1rem;
   color: #000;
   white-space: nowrap;
-
+  font-style:italic;
   
 
   ${mobile} {
     font-size: 12px;
+
   }
 `;
 
@@ -99,6 +101,10 @@ const ToggleArrow = styled.span`
   margin-left: 1rem;
   transform: ${({ expanded }) => (expanded ? 'scaleY(1)' : 'scaleY(-1)')};
   transition: transform 0.1s ease;
+
+  ${mobile} {
+    font-size: 11px;
+  }
 `;
 
 
@@ -106,7 +112,7 @@ const ToggleArrow = styled.span`
 
 function FAQList({ searchTerm }) {
   const [faqs, setFaqs] = useState([]);
-  const [expandedIds, setExpandedIds] = useState([]); // ✅ 열려 있는 항목 id
+  const [expandedId, setExpandedId] = useState(null); // ✅ 열려 있는 항목 id
   const Up=require("../../assets/images/화살표.png");
 
   useEffect(() => {
@@ -163,10 +169,7 @@ function FAQList({ searchTerm }) {
   });
 
   const toggleItem = (id) => {
-    setExpandedIds(prev => prev.includes(id) 
-      ? prev.filter(itemId => itemId !== id)  // 이미 열려있으면 닫기
-      : [...prev, id]                          // 안 열려있으면 추가
-    );
+    setExpandedId(prev => (prev === id ? null : id));
   };
 
   return (
@@ -179,11 +182,11 @@ function FAQList({ searchTerm }) {
           <PostListInner key={faq.id}>
             <PostItem
               onClick={() => toggleItem(faq.id)}
-              expanded={expandedIds.includes(faq.id)}
+              expanded={expandedId===faq.id}
             >
               <PostRow>
                 <FAQTitle>Q. {faq.question}</FAQTitle>
-                <ToggleArrow expanded={expandedIds.includes(faq.id)}>
+                <ToggleArrow expanded={expandedId===faq.id}>
   <img
     src={Up}
     alt="화살표"
@@ -196,7 +199,7 @@ function FAQList({ searchTerm }) {
 </ToggleArrow>
               </PostRow>
             </PostItem>  
-              {expandedIds.includes(faq.id) && (
+              {expandedId===faq.id && (
   <AnswerWrapper expanded={true}>
     <FAQAuthor>{faq.author}의 답변이에요.</FAQAuthor>
     <Answer>
@@ -204,9 +207,12 @@ function FAQList({ searchTerm }) {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         components={{
-          ol: ({ node, ...props }) => <ol style={{ listStyleType: 'decimal', paddingLeft: '1.5rem' }} {...props} />,
-          ul: ({ node, ...props }) => <ul style={{ listStyleType: 'disc', paddingLeft: '1.5rem' }} {...props} />,
-          li: ({ node, ...props }) => <li style={{ marginBottom: '0.3rem' }} {...props} />,
+          strong: ({ node, ...props }) => (
+      <strong style={{ fontWeight: 'bold', color: '#000' }} {...props} />
+    ),
+          ol: ({ node, ...props }) => <ol style={{ listStyleType: 'decimal', paddingLeft: '1.5rem', marginBottom: '1rem'}} {...props} />,
+          ul: ({ node, ...props }) => <ul style={{ listStyleType: 'disc', paddingLeft: '1.5rem', marginBottom: '1rem'}} {...props} />,
+          li: ({ node, ...props }) => <li style={{ marginBottom: '0.3rem', lineHeight: '1.9'}} {...props} />,
         }}
       >
         {faq.answer}

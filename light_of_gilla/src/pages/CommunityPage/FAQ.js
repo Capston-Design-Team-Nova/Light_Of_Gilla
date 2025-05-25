@@ -31,6 +31,7 @@ export const Center = styled.div`
   background-color:#fdf6ec;/*#ffece3;*/
 
   ${mobile} {
+    padding-top: 20px;
     padding-bottom: 50px;
   }
 `;
@@ -88,6 +89,37 @@ box-shadow: 0 2px 4px rgba(202, 201, 201, 0.3),   /* 아래 */
     margin-left: 0;
   }
 `;
+
+{/*export const Title = styled.div`
+  position: relative; // 기준이 되는 부모
+  width: 80%;  
+  font-family:OurFont7;
+  font-weight:bold;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  line-height:1.5;
+
+  p{
+    font-size:1.3rem;
+  }
+    strong{
+    font-size:2.6rem;
+    }
+
+  ${mobile} {
+    width: 95%;
+    height: auto;
+    margin-left: 0;
+
+    strong{
+    font-size:29px;
+    }
+  }
+`;
+*/}
 
 function FAQ() {
     const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480);
@@ -147,6 +179,9 @@ function FAQ() {
         <Main>
             <Header />           
             <Center>
+                {/*<Title>
+                  <strong>자주 묻는 질문</strong>
+                </Title>*/}
                 <TopRow >
                     <SearchField onSearch={handleSearch}/>
                     <div style={{ flex: 1 }} /> {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}
