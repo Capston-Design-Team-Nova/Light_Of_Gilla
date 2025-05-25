@@ -33,7 +33,7 @@ box-sizing: border-box; // 내부 패딩, 보더 포함해서 계산
     width: 95%;
     margin-left: 0;
     
-    border-radius: 0;
+    border-radius: 15px;
     height:100%;
   }
 `;

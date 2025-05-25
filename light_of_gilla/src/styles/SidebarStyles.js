@@ -56,7 +56,7 @@ export const SidebarButton = styled.button`
 
 
      @media screen and (max-width: 480px) {
-        width: 100%;
+        width: 225px;
         font-size: 15px;
     }
 `;

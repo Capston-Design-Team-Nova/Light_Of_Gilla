@@ -31,7 +31,7 @@ export const Center = styled.div`
   background-color:#fdf6ec;/*#ffece3;*/
 
   ${mobile} {
-    padding-top: 20px;
+        padding-top: 40px;
     padding-bottom: 50px;
   }
 `;
@@ -51,7 +51,7 @@ export const TopRow = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 
     ${mobile} {
     width: 90%;

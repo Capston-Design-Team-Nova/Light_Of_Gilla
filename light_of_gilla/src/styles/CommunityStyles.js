@@ -44,7 +44,7 @@ export const TopRow = styled.div`
     flex-direction: column;
     margin-left: 0;
     align-items: center;
-     gap: 10px; /*  모바일에서 간격만 좁게 조절 */
+     gap: 2px; /*  모바일에서 간격만 좁게 조절 */
   }
 `;
 
