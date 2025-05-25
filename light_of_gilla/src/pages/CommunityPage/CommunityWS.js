@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React,{useState} from 'react';
 import Header from '../../components/Header';
-import { Main, Center, Button, TitleInput, ContentTextArea, LowRow,ToggleButton,FormRow,Label } from '../../styles/CommunityStyles';
+import { TitleInput, ContentTextArea, LowRow,ToggleButton,FormRow,Label } from '../../styles/CommunityStyles';
 import { useNavigate } from "react-router-dom";
 import CustomSelect from './CustomSelect';
 import Sidebar from '../../components/Sidebar';
@@ -9,6 +9,32 @@ import styled from 'styled-components';
 
 // 모바일 기준 (갤럭시 S24)
 const mobile = '@media screen and (max-width: 480px)';
+
+export const Center = styled.div`
+  width: 100%;
+  height: 100%; /* 높이를 명시적으로 설정 */
+  display: flex; /* Flexbox 활성화 */
+  flex-direction: column; /* 세로 정렬 */
+  justify-content: flex-start; /* 가로 정렬: 중앙 */
+  align-items: center; /* 세로 정렬: 중앙 */
+  background-position: center; /* 중앙에 위치 */
+  padding-top: 90px; /* PageHeader의 높이에 맞는 여백 추가 */
+  background-color: #FEF7FF;/*#ffece3;*/
+
+  ${mobile} {
+    padding-bottom: 50px;
+    overflow-x:hidden;
+
+  }
+`;
+//width: 100%;
+
+export const Main = styled.main`
+  width: 100%;
+  height: 100%;
+  background-color: #FEF7FF;/*#ffece3;*/
+ 
+`;
 
 export const Content = styled.div`
   position: relative; // 기준이 되는 부모
@@ -19,6 +45,10 @@ export const Content = styled.div`
   height: auto;
   background-color: white;
   border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(187, 187, 187, 0.3),   /* 아래 */
+    0 -2px 4px rgba(187, 187, 187, 0.3),  /* 위 */
+    2px 0 4px rgba(187, 187, 187, 0.3),   /* 오른쪽 */
+    -2px 0 4px rgba(187, 187, 187, 0.3);  /* 왼쪽 */
   overflow: visible; // 자식 요소 넘침 방지
   display: flex;
   flex-direction: column;
@@ -26,10 +56,31 @@ export const Content = styled.div`
   align-items: center;
 padding-top: 20px;
   ${mobile} {
-    width: 98%;
+  
+    width: 97%;
     height: auto;
     margin-top: 5px;
     margin-left: 0;
+  }
+`;
+
+export const Button = styled.button`
+  padding: 2px;
+  width: 85px;
+  height: 34px;
+  background-color:#cd9b3f;  /* #D9A441;#be8600; #B0721E;  #E0A93A; #E8A334 #F0AD3D;*/
+  color: white;
+  font-family: 'OurFont1';
+  font-size: 16px;
+  font-weight:bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+
+    ${mobile} {
+    
+   min-width: 60px; 
+   width: 90%;
   }
 `;
 
@@ -116,12 +167,16 @@ function CommunityWS() {
                             onChange={(e) => setContent(e.target.value)}
                         />
                     </FormRow>
-                    <LowRow>
+                    <FormRow>
+                      <Label $mobileHide></Label>
+                      <LowRow>  
                         <CustomSelect onChange={handleSelectChange }menuPlacement="top"/>
                         {/*<CustomSelect />, CustomSelect 에서 선택한거 보내는 코드 작성*/}
                         <Button onClick={handleSubmit}>올리기</Button>
                         
-                    </LowRow>    
+                      </LowRow>    
+                    </FormRow>
+                      
                     
                 </Content>
                 

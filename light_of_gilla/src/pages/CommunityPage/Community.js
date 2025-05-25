@@ -31,7 +31,7 @@ function Community() {
     setSidebarOpen(!isSidebarOpen);
   };
   useEffect(() => {
-    console.log("Email:",Email);
+
     const fetchPosts = async () => {
       try {
         const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/view`);
@@ -122,7 +122,7 @@ function Community() {
           <div style={{ flex: 1 }} />{" "}
           {/* 여백을 넣어서 오른쪽 요소들을 밀어냄 */}
           
-          <Link to="/Write">
+          <Link to="/Write" style={{ textDecoration: "none" }}>
             <Button>글쓰기</Button>
           </Link>
         </TopRow>

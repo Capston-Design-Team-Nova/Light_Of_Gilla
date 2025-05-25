@@ -43,8 +43,8 @@ export const TopRow = styled.div`
     width: 90%;
     flex-direction: column;
     margin-left: 0;
-    align-items: stretch;
-     gap: 1px; /*  모바일에서 간격만 좁게 조절 */
+    align-items: center;
+     gap: 2px; /*  모바일에서 간격만 좁게 조절 */
   }
 `;
 
@@ -88,8 +88,6 @@ export const CommunityListWrapper = styled.div`
   }
 `;
 
-
-
 export const Button = styled.button`
   padding: 2px;
   width: 85px;
@@ -105,10 +103,14 @@ export const Button = styled.button`
 
     ${mobile} {
     
-    width: 95%;
+   
+   width:230px; /* ✅ 모바일에서 고정 너비 */
+    max-width: 90%; /* ✅ 혹시 너무 작을 때 대비 */
+    margin: 0 auto; /* ✅ 가운데 정렬! */
+  display: block;
   }
 `;
-
+{/*min-width: 60px; width: 90%;*/}
 export const ToggleButton =styled.button`
   padding: 0; /* 이미지 버튼은 패딩이 필요 없으므로 0으로 설정 */
   background: none;
@@ -209,16 +211,16 @@ export const LowRow = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;  // Align vertically in the center
-    gap: 40%;  // Space between the SelectBox and Button
+    gap:40%;  // Space between the SelectBox and Button
     margin-bottom: 10px;  // Optional: Add space below the row
     width:90%;
 
     ${mobile} {
-      flex-direction: row;
-      gap: 3px;              // ✅ 버튼과 셀렉트 사이 약간의 간격
-      width: 100%;
-      justify-content: space-between;
-      padding: 0 10px;
+     flex-direction: row; /* 세로로 쌓기 */
+    align-items: center;     /* 중앙 정렬 */
+    gap: 10px;               /* 위아래 간격 */
+    width: 100%;
+    padding: 0 10px;
     }
 `;
 // CommunityStyles.js 등에 추가
@@ -233,7 +235,7 @@ export const FormRow = styled.div`
     flex-direction: row;     // ✅ 모바일에서도 가로 정렬 유지
     align-items: center;     // ✅ 세로 정렬 중앙
     justify-content: flex-start;
-    width: 100%;
+    width: 95%;
     padding: 0 10px;
   }
   }
@@ -251,7 +253,9 @@ export const Label = styled.label`
      ${mobile} {
     padding-top: 3px;         // ✅ 모바일에서 좀 더 위로 올림
     align-self: flex-start;   // ✅ 입력창보다 위 정렬
-     margin-left: 1px;
+     margin-left: 1px; 
+     margin-right: 0;
+     ${({ $mobileHide }) => $mobileHide && `display: none;`}
   }
 `;
 

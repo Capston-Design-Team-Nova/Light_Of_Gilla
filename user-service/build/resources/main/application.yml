@@ -1,0 +1,17 @@
+server:
+  port: 8081  # 유저 서비스 포트
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/user_db  # MySQL DB 주소
+    username: user
+    password: userpw  # 본인의 MySQL 비밀번호 입력
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update  # 애플리케이션 실행 시 DB 자동 생성
+    show-sql: true  # 콘솔에 SQL 출력
+
+jwt:
+  secret: "your_secret_key_which_should_be_very_long"
+  expiration: 3600000 # 1시간 (밀리초 단위)
