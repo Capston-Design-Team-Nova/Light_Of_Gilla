@@ -566,7 +566,7 @@ function HospitalMap() {
             key={day}
             style={{
               fontWeight: isToday ? "bold" : "normal",
-              margin: "2px 0",
+              margin: "8px 0",
             }}
           >
             {day}: {time ?? "휴무일"}
@@ -2608,7 +2608,10 @@ function HospitalMap() {
                 justifyContent: "space-between",
               }}
             >
-              <h2 style={{ margin: 0 }}>{selectedHospital.name}</h2>
+              <h1 style={{ margin: 0, fontSize: "22px", fontWeight: "bold" }}>
+                {selectedHospital.name}
+              </h1>
+
               <div style={{ display: "flex", gap: "12px" }}>
                 {/* 길찾기 버튼 */}
                 <button
@@ -2702,7 +2705,15 @@ function HospitalMap() {
               />
             )}
             <hr style={{ margin: "16px 0", borderColor: "#eee" }} />
-            <h3 style={{ fontWeight: "bold" }}>운영 시간</h3>
+            <h1
+              style={{
+                fontWeight: "bold",
+                fontSize: "20px",
+                marginBottom: "10px",
+              }}
+            >
+              운영 시간
+            </h1>
             {formatOpenHours(selectedHospital.openHour)}
             {isHospitalOpen(selectedHospital.openHour) === "none" && (
               <a
@@ -2723,7 +2734,7 @@ function HospitalMap() {
               </a>
             )}
             <hr style={{ margin: "16px 0", borderColor: "#eee" }} />
-            <h3 style={{ fontWeight: "bold" }}>리뷰</h3>
+            <h1 style={{ fontWeight: "bold", fontSize: "20px" }}>리뷰</h1>
             <div
               style={{
                 border: "1px solid #ddd",
