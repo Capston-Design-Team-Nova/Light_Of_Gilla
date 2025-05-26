@@ -99,10 +99,8 @@ public class CommentService {
                 postDTOList.add(PostDTO.toPostDTO(postEntityOptional.get()));
             }
         }
-
-
+        postDTOList.sort(Comparator.comparing(PostDTO::getPostCreated_date).reversed());
         Collections.reverse(postDTOList);
-
         return postDTOList;
 
     }
