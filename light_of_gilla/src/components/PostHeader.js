@@ -108,10 +108,10 @@ function PostHeader(){
       
         
           <PostRow>
-            <PostTitle>제목(댓글수)</PostTitle>
+            <PostTitle>제목(댓글 수)</PostTitle>
             <PostAuthor>작성자</PostAuthor>
             <PostTime>작성일</PostTime>
-            <PostLikes>좋아요</PostLikes>
+            <PostLikes>좋아요 수</PostLikes>
           </PostRow>
         
     </PostList>    

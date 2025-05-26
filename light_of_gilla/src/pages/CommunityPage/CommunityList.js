@@ -116,7 +116,7 @@ function CommunityList({posts}){
               <PostTitle>{post.title}({post.commentCounts})</PostTitle>
               <PostAuthor>{post.nickName}</PostAuthor>
               <PostTime>{post.postCreated_date}</PostTime>
-              <PostLikes>♡{post.likes}</PostLikes>
+              <PostLikes>💗{post.likes}</PostLikes>
             </PostRow>
           
           </PostItem>

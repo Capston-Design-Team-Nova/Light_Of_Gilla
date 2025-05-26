@@ -90,12 +90,12 @@ export const CommunityListWrapper = styled.div`
 
 export const Button = styled.button`
   padding: 2px;
-  width: 85px;
-  height: 34px;
-  background-color:#cd9b3f;  /* #D9A441;#be8600; #B0721E;  #E0A93A; #E8A334 #F0AD3D;*/
+  width: 145px;
+  height: 41px;
+  background-color:#F9A825;  /* #D9A441;#be8600;#FFB536;#FFC86A;#F0AD3D;#FFC87B; #B0721E;  #E0A93A; #E8A334 #F0AD3D;*/
   color: white;
-  font-family: 'OurFont1';
-  font-size: 16px;
+  font-family: 'OurFont10';
+  font-size: 1.4rem;
   font-weight:bold;
   cursor: pointer;
   border: none;
@@ -163,7 +163,7 @@ export const SearchInput = styled.input`
   padding: 10px;
   width: 96%;
   font-size: 16px;
-  font-family: 'OurFont2';
+  font-family: 'OurFont12';
   border:none;
   border-radius:20px;
   background: #D9D9D9;
@@ -177,7 +177,9 @@ export const SearchInput = styled.input`
 
 export const TitleInput = styled.input`
   width: 90%;
+  
   padding: 10px;
+  font-family: 'OurFont12';
   font-size: 16px;
   margin-bottom: 20px;
   border: none;                    /* ✅ 기본 테두리 제거 */
@@ -193,7 +195,9 @@ export const TitleInput = styled.input`
 export const ContentTextArea = styled.textarea`
   width: 90%;
   height: 300px;
+  
   padding: 10px;
+  font-family: 'OurFont12';
   font-size: 16px;
   margin-bottom: 10px;
   border: 1px solid #00000059;
@@ -242,14 +246,15 @@ export const FormRow = styled.div`
 `;
 
 export const Label = styled.label`
-  width: 60px;
+  width: 60px; 
   font-size: 16px;
-  font-family: 'Ourfont6';
+  font-family: 'Ourfont12';
   color: black;
  
   margin-right: 1px;
   padding-top: 9px; 
-
+max-width: 100px;    /* ✅ 과도하게 늘어나지 않게 */
+  flex-shrink: 0;      /* ✅ 줄어들지 않도록 방지 */
      ${mobile} {
     padding-top: 3px;         // ✅ 모바일에서 좀 더 위로 올림
     align-self: flex-start;   // ✅ 입력창보다 위 정렬
@@ -306,7 +311,4 @@ export const ActivePageButton = styled(PageButton)`
   color: white;
   border-color: #FFC86A;
 `;
-
-
-
 
