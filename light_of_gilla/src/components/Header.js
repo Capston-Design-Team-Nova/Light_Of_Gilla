@@ -11,7 +11,7 @@ import {
   DropdownWrapper,
   DropdownMenu,
   DropdownItem,
-  LogoWrapper
+  LogoWrapper,
 } from "../styles/HeaderStyles";
 import AuthModalManager from "../pages/Login_Singup_Modal/AuthModalManager";
 
@@ -52,18 +52,21 @@ function Header() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-  
+
     if (token) {
       axios
-        .get("https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        .get(
+          "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/me",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then((res) => {
           const imageUrl = res.data.profileImage;
           const baseImageUrl = "http://3.37.188.91:8080"; // ✅ 서버 이미지 주소
-  
+
           if (imageUrl && imageUrl !== "null" && imageUrl !== "") {
             setProfileImage(`${baseImageUrl}${imageUrl}`); // ✅ 서버에서 바로 가져온 경로 사용
           } else {
@@ -78,7 +81,7 @@ function Header() {
       setProfileImage(defaultProfileImage); // 로그인 안 된 경우
     }
   }, [showModal]);
-  
+
   const handleLogout = () => {
     const confirmLogout = window.confirm("로그아웃 하시겠습니까?");
     if (confirmLogout) {
@@ -108,19 +111,11 @@ function Header() {
         <Nav>
           <Link to="/">
             <LogoWrapper>
-              <img src={defaultLogoImage} alt="길라의 빛 로고"/>
+              <img src={defaultLogoImage} alt="길라의 빛 로고" />
             </LogoWrapper>
           </Link>
           <NavRight>
-            <Link
-              to={isLoggedIn ? "/HospitalMap" : "#"}
-              onClick={(e) => {
-                if (!isLoggedIn) {
-                  e.preventDefault();
-                  setShowModal(true);
-                }
-              }}
-            >
+            <Link to={"/HospitalMap"}>
               <Button>병원 찾기</Button>
             </Link>
 
@@ -154,7 +149,9 @@ function Header() {
               </ImageButton2>
             ) : (
               <DropdownWrapper>
-                <ImageButton2 onClick={() => setIsDropdownOpen(prev => !prev)}>
+                <ImageButton2
+                  onClick={() => setIsDropdownOpen((prev) => !prev)}
+                >
                   <img
                     src={profileImage}
                     alt="프로필"
