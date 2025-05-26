@@ -48,7 +48,7 @@
 - **프론트엔드**: React  
 - **백엔드**: Spring Boot  
 - **클라우드/인프라**: AWS RDS, API Gateway, EC2  
-- **외부 API**: Kakao Map API, Kakao Login API, ChatGPT API
+- **외부 API**: Kakao Map API, ChatGPT API
 
 
 ## 📷 시연영상
