@@ -57,7 +57,7 @@
 
 | 병원/약국 검색 시연영상                                 | 병원/약국 상세보기 시연영상                                  | 
 | ---------------------------------------------- |---------------------------------------------- | 
-|<img src="https://github.com/user-attachments/assets/45280ab9-e330-4486-8cf1-0e0dd4a44754" width="600" />             |  <img src="https://github.com/user-attachments/assets/6a57e5fd-b1ff-4674-9c43-2fde6f0e4e19" width="600" />               |
+|<img src="https://github.com/user-attachments/assets/efb22bcd-3ca9-42da-b7ee-39022f7ad4d4" width="600" />             |  <img src="https://github.com/user-attachments/assets/a7175ad9-9b51-4588-a387-bd63a71cb4" width="600" />               |
 
 | 게시판 게시글/댓글 작성 시연영상                             | 게시판 수정/삭제 댓글 삭제 시연           | FAQ 시연영상                                | 
 | ---------------------------------------------- |---------------------------------------------- | ---------------------------------------------- | 
