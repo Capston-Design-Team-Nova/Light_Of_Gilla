@@ -122,59 +122,15 @@ box-shadow: 0 2px 4px rgba(202, 201, 201, 0.3),   /* 아래 */
 */}
 
 function FAQ() {
-    const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth > 480);
-    // Toggle sidebar visibility
-    const toggleSidebar = () => {
-        setSidebarOpen(!isSidebarOpen);
-    };
 
   const [searchTerm, setSearchTerm] = useState('');
     const handleSearch = (term) => {
         console.log("검색어:", term);
         setSearchTerm(term);
-        // 여기에 검색 요청 로직 추가 가능
+        
     };
 
-    {/*const handleSearch = async (term) => {
-        setSearchTerm(term);
-        const searchString = encodeURIComponent(term);
-        if (term && searchString !== "") {
-          try {
-           
-            const response = await axios.get(
-              `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/search/${searchString}`
-            );
-            setPosts(response.data);
-          } catch (error) {
-            console.error("검색 오류:", error);
-          }
-        } else {
-          try {
-            const response = await axios.get(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/post/`);
-            console.log("게시글 데이터를 불러오는 중");
-            setPosts(response.data);
-          } catch (error) {
-            console.error("게시글 데이터를 불러오는 중 오류 발생:", error);
-          }
-        }
-      }; */}
-  // 페이지네이션 상태와 로직 추가
-  //const [currentPage, setCurrentPage] = useState(1);
-  //const postsPerPage = 10; /*한 페이지에 글 10개씩 보여주기*/
-  
-  // 현재 페이지의 게시글 계산
- {/*} const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-  
-  // 총 페이지 수
-  const totalPages = Math.max(1, Math.ceil(posts.length / postsPerPage));
-  
-  // 페이지 변경 함수
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-    window.scrollTo(0, 0); // 선택 시 스크롤 맨 위로
-  };*/}
+   
     return (
         <Main>
             <Header />           
@@ -192,17 +148,7 @@ function FAQ() {
                 <Content >
                   <CommunityListWrapper>
                     <FAQList searchTerm={searchTerm}/>
-                  </CommunityListWrapper>
-                    
-                    
-                    {/* 페이지네이션 */}
-                    {/*{totalPages > 0 && (
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            onPageChange={handlePageChange}
-                        />
-                    )}*/}           
+                  </CommunityListWrapper>                             
                 </Content>
             </Center>
         </Main>
