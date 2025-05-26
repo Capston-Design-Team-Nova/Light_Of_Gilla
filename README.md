@@ -34,7 +34,7 @@
 ```
 
 ## 🚀 기술 스택
-<img src="https://github.com/user-attachments/assets/443c2fc0-256e-4466-8bb6-c1761ff35d95" width="600" />
+<img src="https://github.com/user-attachments/assets/63ea693c-7077-4473-a818-8aaf87491ae8" width="600" />
 
 - **개발 환경**: IntelliJ IDEA, VS Code  
 - **프론트엔드**: React  
