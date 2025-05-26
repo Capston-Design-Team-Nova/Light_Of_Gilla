@@ -49,7 +49,6 @@ function MyPage() {
   const token = localStorage.getItem("token");
 
   const [originalNickname, setOriginalNickname] = useState("");
-
   const handleProfileClick = () => {
     document.getElementById("fileInput").click();
   };
@@ -81,7 +80,6 @@ function MyPage() {
           setNickname(data.nickname);
           setPhoneNumber(data.phone);
           setOriginalNickname(data.nickname); // 원본 닉네임 저장
-
           console.log("👉 서버에서 받은 프로필 이미지:", data.profileImage);
           const baseImageUrl = "http://3.37.188.91:8080";
 
@@ -131,7 +129,6 @@ function MyPage() {
       setNicknameMessage("닉네임을 입력해주세요.");
       return;
     }
-
     try {
       const config = {
         headers: {
@@ -149,7 +146,6 @@ function MyPage() {
       const isDuplicated = userList.some(
         (user) => user.nickname === nickname && user.userId !== userId
       );
-
       if (isDuplicated) {
         setIsNicknameValid(false);
         setNicknameMessage("이미 사용 중인 닉네임입니다.");
@@ -189,7 +185,6 @@ function MyPage() {
       if (profileImageFile) {
         const formData = new FormData();
         formData.append("profileImage", profileImageFile);
-
         await axios.patch(
           `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/${userId}/profile-image`,
           formData,
@@ -216,13 +211,11 @@ function MyPage() {
       );
       const data = res.data;
       const baseImageUrl = "http://3.37.188.91:8080";
-
       setProfileImage(
         data.profileImage && data.profileImage !== "null"
           ? `${baseImageUrl}${data.profileImage}`
           : defaultProfileImage
       );
-
       alert("회원 정보가 성공적으로 변경되었습니다!");
     } catch (err) {
       console.error("저장 실패", err);
@@ -242,7 +235,6 @@ function MyPage() {
           Authorization: `Bearer ${token}`,
         },
       };
-
       await axios.delete(
         `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/${userId}`,
         config
@@ -259,7 +251,6 @@ function MyPage() {
       alert("회원 탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
-
   return (
     <Main>
       <Header />
