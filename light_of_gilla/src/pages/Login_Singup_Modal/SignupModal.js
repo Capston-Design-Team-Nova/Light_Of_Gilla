@@ -26,6 +26,19 @@ const SignupModal = ({ onClose, onSwitch }) => {
   const [checkingId, setCheckingId] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
+  const [passwordTouched, setPasswordTouched] = useState(false);
+  const [confirmTouched, setConfirmTouched] = useState(false);
+  const [emailAvailable, setEmailAvailable] = useState(null);
+  const [nicknameAvailable, setNicknameAvailable] = useState(null);
+  const [nicknameTouched, setNicknameTouched] = useState(false);
+  const [phoneAvailable, setPhoneAvailable] = useState(null);
+
+  const [passwordValid, setPasswordValid] = useState({
+    length: false,
+    letter: false,
+    number: false,
+    special: false,
+  });
 
   const [formData, setFormData] = useState({
     userId: "",
@@ -35,16 +48,7 @@ const SignupModal = ({ onClose, onSwitch }) => {
     nickname: "",
     profileImage: "",
     residentNumber: "",
-  });
-
-  const [formDataState, setFormDataState] = useState({
-    userId: "",
-    password: "",
-    confirmPassword: "",
-    email: "",
-    nickname: "",
-    profileImage: "", // 사용 안함
-    residentNumber: "",
+    phone: "",
   });
 
   const [profileImageFile, setProfileImageFile] = useState(null);
@@ -54,6 +58,16 @@ const SignupModal = ({ onClose, onSwitch }) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handlePasswordChange = (value) => {
+    updateField("password", value);
+    setPasswordValid({
+      length: value.length >= 8,
+      letter: /[A-Za-z]/.test(value),
+      number: /[0-9]/.test(value),
+      special: /[^A-Za-z0-9]/.test(value),
+    });
+  };
+
   const handleCheckUserId = async () => {
     if (!formData.userId) {
       alert("아이디를 입력해주세요.");
@@ -61,7 +75,7 @@ const SignupModal = ({ onClose, onSwitch }) => {
     }
     setCheckingId(true);
     try {
-      const res = await axios.get(
+      await axios.get(
         `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/${formData.userId}`
       );
       setUserIdAvailable(false);
@@ -85,25 +99,54 @@ const SignupModal = ({ onClose, onSwitch }) => {
     setEmailSending(true);
 
     try {
-      await axios.post(
-        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/send-verification-email",
-        { email: formData.email }
+      // 1. 이메일 존재 여부 확인
+      await axios.get(
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/email/${formData.email}`
       );
-      alert("인증 이메일이 전송되었습니다. 메일함을 확인하세요.");
-      setTimerActive(true);
-      setTimeLeft(300);
-      setVerificationCode("");
+
+      // 2. 존재하면 사용 중이므로 중단
+      setEmailAvailable(false);
+      alert("이미 사용 중인 이메일입니다.");
     } catch (err) {
-      alert("인증 이메일 전송 실패");
+      setEmailAvailable(true);
+      try {
+        await axios.post(
+          "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/send-verification-email",
+          { email: formData.email }
+        );
+        alert("인증 이메일이 전송되었습니다. 메일함을 확인하세요.");
+        setTimerActive(true);
+        setTimeLeft(300);
+        setVerificationCode("");
+      } catch {
+        alert("인증 이메일 전송 실패");
+      }
     } finally {
       setEmailSending(false);
+    }
+  };
+
+  const checkPhoneAvailability = async () => {
+    if (!formData.phone) {
+      setPhoneAvailable(null);
+      return;
+    }
+
+    try {
+      const res = await axios.get(
+        "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users"
+      );
+      const exists = res.data.some((u) => u.phone === formData.phone);
+      setPhoneAvailable(!exists);
+    } catch (err) {
+      console.error("전화번호 중복 확인 실패:", err);
+      setPhoneAvailable(null);
     }
   };
 
   const handleVerifyCode = async () => {
     if (verifyingCode) return;
     setVerifyingCode(true);
-
     try {
       await axios.post(
         "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/verify-email",
@@ -135,14 +178,11 @@ const SignupModal = ({ onClose, onSwitch }) => {
 
   const handleNext = () => {
     if (step === 1) {
-      const password = formData.password;
-
-      // 비밀번호 형식 검사
       const pwValid =
-        /[A-Za-z]/.test(password) && // 영문
-        /[0-9]/.test(password) && // 숫자
-        /[^A-Za-z0-9]/.test(password) && // 특수문자
-        password.length >= 8;
+        passwordValid.length &&
+        passwordValid.letter &&
+        passwordValid.number &&
+        passwordValid.special;
 
       if (!formData.userId || !formData.password || !formData.email) {
         alert("필수 정보를 입력해주세요.");
@@ -170,6 +210,33 @@ const SignupModal = ({ onClose, onSwitch }) => {
         alert("아이디 중복 확인을 해주세요.");
         return;
       }
+
+      if (phoneAvailable === false) {
+        alert("이미 사용 중인 전화번호입니다.");
+        return;
+      }
+
+      if (phoneAvailable === null) {
+        alert("전화번호 중복 확인이 필요합니다.");
+        return;
+      }
+    }
+
+    if (step === 2) {
+      if (!formData.nickname) {
+        alert("닉네임을 입력해주세요.");
+        return;
+      }
+
+      if (nicknameAvailable === false) {
+        alert("이미 사용 중인 닉네임입니다.");
+        return;
+      }
+
+      if (nicknameAvailable === null) {
+        alert("닉네임 중복 확인이 필요합니다.");
+        return;
+      }
     }
 
     setStep((prev) => prev + 1);
@@ -183,26 +250,53 @@ const SignupModal = ({ onClose, onSwitch }) => {
     }
   };
 
-  const handleSignup = async () => {
-    try {
-      const payload = {
-        userId: formData.userId,
-        password: formData.password,
-        email: formData.email,
-        phone: formData.phone,
-        nickname: formData.nickname,
-        profileImage: "https://example.com/default-profile.jpg", // 디폴트
-        residentNumber: formData.residentNumber
-          .replace(/[^0-9]/g, "")
-          .slice(2, 8),
-      };
+  const checkNicknameAvailability = async () => {
+    setNicknameTouched(true);
 
+    if (!formData.nickname) {
+      setNicknameAvailable(null);
+      return;
+    }
+
+    try {
+      const res = await axios.get(
+        `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/search?nickname=${encodeURIComponent(
+          formData.nickname
+        )}`
+      );
+
+      console.log("닉네임 확인 응답:", res.data);
+
+      const dataArray = Object.values(res.data);
+
+      // 정확히 일치하는 닉네임이 있는지만 검사
+      const isUsed = dataArray.some(
+        (user) => user.nickname === formData.nickname
+      );
+
+      setNicknameAvailable(!isUsed);
+    } catch (error) {
+      console.error("닉네임 중복 확인 오류:", error);
+      setNicknameAvailable(null);
+    }
+  };
+
+  const handleSignup = async () => {
+    const payload = {
+      userId: formData.userId,
+      password: formData.password,
+      email: formData.email,
+      phone: formData.phone,
+      nickname: formData.nickname,
+      profileImage: "https://example.com/default-profile.jpg",
+      residentNumber: formData.residentNumber
+        .replace(/[^0-9]/g, "")
+        .slice(2, 8),
+    };
+    try {
       await axios.post(
         "https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/signup",
-        payload,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+        payload
       );
 
       const loginRes = await axios.post(
@@ -218,7 +312,6 @@ const SignupModal = ({ onClose, onSwitch }) => {
       if (profileImageFile) {
         const formDataImage = new FormData();
         formDataImage.append("profileImage", profileImageFile);
-
         await axios.patch(
           `https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/${formData.userId}/profile-image`,
           formDataImage,
@@ -233,6 +326,7 @@ const SignupModal = ({ onClose, onSwitch }) => {
       alert("회원가입 및 프로필 사진 등록이 완료되었습니다!");
       onClose();
     } catch (error) {
+      console.log("회원가입 전송 payload:", payload);
       console.error(
         "회원가입 또는 프로필 업데이트 오류:",
         error.response || error
@@ -244,55 +338,290 @@ const SignupModal = ({ onClose, onSwitch }) => {
     }
   };
 
+  const handleUserIdChange = (e) => {
+    const input = e.target.value;
+    const noKorean = input.replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, "");
+    updateField("userId", noKorean);
+    setUserIdAvailable(null); // 아이디 변경 시 사용 가능 상태 초기화
+  };
+
   const renderStep = () => {
     switch (step) {
       case 1:
         return (
           <>
             <Title>회원가입을 진행합니다</Title>
-            <EmailRow>
-              <TimerInput>
+            <EmailRow style={{ position: "relative", width: "86%" }}>
+              <TimerInput style={{ position: "relative", width: "100%" }}>
                 <EmailInput
                   type="text"
-                  placeholder="아이디 입력"
+                  placeholder="아이디 입력 (한글 제외)"
                   value={formData.userId}
-                  onChange={(e) => updateField("userId", e.target.value)}
+                  onChange={handleUserIdChange}
+                  style={{ paddingRight: "30px" }} // 아이콘 공간 확보
                 />
+                {userIdAvailable && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "green",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ✓
+                  </span>
+                )}
               </TimerInput>
+
               <EmailButton onClick={handleCheckUserId} disabled={checkingId}>
                 {checkingId ? "확인 중" : "중복확인"}
               </EmailButton>
             </EmailRow>
 
-            <InputField
-              type="password"
-              placeholder="비밀번호(영문, 숫자, 특수문자) 8자리 이상"
-              value={formData.password}
-              onChange={(e) => updateField("password", e.target.value)}
-            />
-            <InputField
-              type="password"
-              placeholder="비밀번호 재입력"
-              value={formData.confirmPassword}
-              onChange={(e) => updateField("confirmPassword", e.target.value)}
-            />
+            <EmailRow style={{ position: "relative", width: "86%" }}>
+              <TimerInput style={{ position: "relative", width: "100%" }}>
+                <EmailInput
+                  type="password"
+                  placeholder="비밀번호 (영문/숫자/특수문자 포함, 8자 이상)"
+                  value={formData.password}
+                  onChange={(e) => handlePasswordChange(e.target.value)}
+                  onBlur={() => setPasswordTouched(true)}
+                  style={{ paddingRight: "30px" }}
+                />
 
-            <InputField
-              type="tel"
-              placeholder="전화번호 입력 (예: 01012345678)"
-              value={formData.phone}
-              onChange={(e) => updateField("phone", e.target.value)}
-            />
+                {passwordTouched &&
+                  passwordValid.length &&
+                  passwordValid.letter &&
+                  passwordValid.number &&
+                  passwordValid.special && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "10px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "green",
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ✓
+                    </span>
+                  )}
+              </TimerInput>
+            </EmailRow>
+            {passwordTouched &&
+              (!passwordValid.length ||
+                !passwordValid.letter ||
+                !passwordValid.number ||
+                !passwordValid.special) && (
+                <div
+                  style={{
+                    fontSize: "12px",
+                    marginTop: "5px",
+                    textAlign: "left",
+                    marginLeft: "10%",
+                  }}
+                >
+                  <div
+                    style={{ color: passwordValid.length ? "green" : "red" }}
+                  >
+                    • 8자 이상
+                  </div>
+                  <div
+                    style={{ color: passwordValid.letter ? "green" : "red" }}
+                  >
+                    • 영문 포함
+                  </div>
+                  <div
+                    style={{ color: passwordValid.number ? "green" : "red" }}
+                  >
+                    • 숫자 포함
+                  </div>
+                  <div
+                    style={{ color: passwordValid.special ? "green" : "red" }}
+                  >
+                    • 특수문자 포함
+                  </div>
+                </div>
+              )}
 
-            <EmailRow>
-              <TimerInput>
+            <EmailRow style={{ position: "relative", width: "86%" }}>
+              <TimerInput style={{ position: "relative", width: "100%" }}>
+                <EmailInput
+                  type="password"
+                  placeholder="비밀번호 재입력"
+                  value={formData.confirmPassword}
+                  onChange={(e) =>
+                    updateField("confirmPassword", e.target.value)
+                  }
+                  onBlur={() => setConfirmTouched(true)}
+                  style={{ paddingRight: "30px" }}
+                />
+
+                {/* 일치 체크 아이콘 */}
+                {confirmTouched &&
+                  formData.confirmPassword &&
+                  formData.confirmPassword === formData.password && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "10px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "green",
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ✓
+                    </span>
+                  )}
+
+                {/* 불일치 X 아이콘 */}
+                {confirmTouched &&
+                  formData.confirmPassword &&
+                  formData.confirmPassword !== formData.password && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "10px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "red",
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ✕
+                    </span>
+                  )}
+              </TimerInput>
+            </EmailRow>
+            {confirmTouched &&
+              formData.confirmPassword !== formData.password && (
+                <div
+                  style={{
+                    fontSize: "12px",
+                    marginTop: "5px",
+                    color: "red",
+                    textAlign: "left",
+                    marginLeft: "10%",
+                  }}
+                >
+                  • 비밀번호가 일치하지 않습니다.
+                </div>
+              )}
+
+            <EmailRow style={{ position: "relative", width: "86%" }}>
+              <TimerInput style={{ position: "relative", width: "100%" }}>
+                <EmailInput
+                  type="tel"
+                  placeholder="전화번호 입력 (예: 01012345678)"
+                  value={formData.phone}
+                  onChange={(e) => {
+                    updateField("phone", e.target.value);
+                    setPhoneAvailable(null); // 입력 중 상태 초기화
+                  }}
+                  onBlur={checkPhoneAvailability}
+                  style={{ paddingRight: "30px" }} // 아이콘 공간 확보
+                />
+
+                {formData.phone && phoneAvailable === true && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "green",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ✓
+                  </span>
+                )}
+
+                {formData.phone && phoneAvailable === false && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "red",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ✕
+                  </span>
+                )}
+              </TimerInput>
+            </EmailRow>
+            {formData.phone && phoneAvailable === false && (
+              <div
+                style={{
+                  fontSize: "12px",
+                  marginTop: "5px",
+                  color: "red",
+                  textAlign: "left",
+                  marginLeft: "10%",
+                }}
+              >
+                • 이미 사용 중인 전화번호입니다.
+              </div>
+            )}
+
+            <EmailRow style={{ position: "relative", width: "86%" }}>
+              <TimerInput style={{ position: "relative", width: "100%" }}>
                 <EmailInput
                   type="email"
                   placeholder="이메일 입력"
                   value={formData.email}
-                  onChange={(e) => updateField("email", e.target.value)}
+                  onChange={(e) => {
+                    updateField("email", e.target.value);
+                    setEmailAvailable(null); // 이메일 변경 시 상태 초기화
+                  }}
+                  style={{ paddingRight: "30px" }}
                 />
+                {emailAvailable === true && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "green",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ✓
+                  </span>
+                )}
+                {emailAvailable === false && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      color: "red",
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ✕
+                  </span>
+                )}
               </TimerInput>
+
               <EmailButton
                 onClick={handleSendVerificationEmail}
                 disabled={emailSending}
@@ -369,12 +698,70 @@ const SignupModal = ({ onClose, onSwitch }) => {
                 onChange={handleImageChange}
               />
             </div>
-            <InputField
-              type="text"
-              placeholder="이름(닉네임) 입력"
-              value={formData.nickname}
-              onChange={(e) => updateField("nickname", e.target.value)}
-            />
+            <div style={{ position: "relative", width: "100%" }}>
+              <EmailRow style={{ position: "relative", width: "100%" }}>
+                <TimerInput style={{ position: "relative", width: "100%" }}>
+                  <EmailInput
+                    type="text"
+                    placeholder="이름(닉네임) 입력"
+                    value={formData.nickname}
+                    onChange={(e) => {
+                      updateField("nickname", e.target.value);
+                      setNicknameAvailable(null); // 입력 중에는 상태 초기화
+                    }}
+                    onBlur={() => setNicknameTouched(true)}
+                    style={{ paddingRight: "30px" }}
+                  />
+                  {nicknameAvailable === true && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "10px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "green",
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ✓
+                    </span>
+                  )}
+                  {nicknameAvailable === false && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        right: "10px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "red",
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      ✕
+                    </span>
+                  )}
+                </TimerInput>
+
+                <EmailButton onClick={checkNicknameAvailability}>
+                  중복확인
+                </EmailButton>
+              </EmailRow>
+            </div>
+            {nicknameTouched && nicknameAvailable === false && (
+              <div
+                style={{
+                  fontSize: "12px",
+                  marginTop: "5px",
+                  color: "red",
+                  textAlign: "left",
+                }}
+              >
+                이미 사용 중인 닉네임입니다.
+              </div>
+            )}
+
             <NextButton onClick={handleNext}>다음</NextButton>
           </>
         );
@@ -402,7 +789,6 @@ const SignupModal = ({ onClose, onSwitch }) => {
     <ModalBackground>
       <ModalContainer>
         <CloseButton onClick={onClose}>×</CloseButton>
-
         <img
           src={backIcon}
           alt="뒤로가기"
@@ -429,7 +815,6 @@ const SignupModal = ({ onClose, onSwitch }) => {
             e.currentTarget.style.transform = "scale(1)";
           }}
         />
-
         {renderStep()}
       </ModalContainer>
     </ModalBackground>
