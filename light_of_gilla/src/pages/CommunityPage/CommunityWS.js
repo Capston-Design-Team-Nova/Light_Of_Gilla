@@ -24,7 +24,7 @@ margin-top:1rem;
   ${mobile} {
     padding-bottom: 50px;
     overflow-x:hidden;
-
+    margin-top: 0;
   }
 `;
 //width: 100%;
@@ -66,12 +66,12 @@ padding-top: 30px;
 
 export const Button = styled.button`
   padding: 2px;
-  width: 90px;
-  height: 38px;
-  background-color:#cd9b3f;  /* #D9A441;#be8600; #B0721E;  #E0A93A; #E8A334 #F0AD3D;*/
+  width: 100px;
+  height: 40px;
+  background-color:#F9A825;  /* #FFB536;#D9A441;#be8600;#cd9b3f; #B0721E;  #E0A93A; #E8A334 #F0AD3D;*/
   color: white;
   font-family: 'OurFont10';
-  font-size: 16px;
+  font-size: 1.2rem;
   font-weight:bold;
   cursor: pointer;
   border: none;

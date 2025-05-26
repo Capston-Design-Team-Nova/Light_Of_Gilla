@@ -25,8 +25,8 @@ const customStyles = {
       : '1px solid #999999',   // 일반 상태의 테두리
     borderRadius: '5px',
     padding: '2px',
-    fontSize: '1rem',
-    fontFamily: 'Arial',
+    fontSize: '1.1rem',
+    fontFamily: 'OurFont12',
     cursor: 'pointer',
     boxShadow: 'none', // ✅ react-select가 기본으로 넣는 파란 glow 제거
     '&:hover': {

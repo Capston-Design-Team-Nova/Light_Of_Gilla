@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from "styled-components";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
 const mobile = '@media screen and (max-width: 480px)';
+const Up = require("../../assets/images/화살표.png");
 
 const PostList = styled.div`
   width: 100%;
@@ -17,9 +18,10 @@ const PostListInner = styled.div`
   width: 96%;
   margin: 0 auto;
 `;
+
 const PostItem = styled.div`
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid #A09F9F; // 질문 항목 아래 선은 그대로 유지
+  border-bottom: 1px solid #A09F9F;
   background-color: ${({ expanded }) => (expanded ? "#fff9ef" : "transparent")};
   cursor: pointer;
   transition: background-color 0.3s;
@@ -29,24 +31,22 @@ const PostItem = styled.div`
   }
 `;
 
-const AnswerWrapper = styled.div`
-  max-height: ${({ expanded }) => (expanded ? '1000px' : '0')};
+const AccordionContent = styled.div`
   overflow: hidden;
-  transition: max-height 3s ease-in-out;
-  padding: ${({ expanded }) => (expanded ? '1rem 1.5rem' : '0 1.5rem')}; 
+  transition: height 0.3s ease-in-out;
   background-color: #fff9ef;
-  border-bottom: 1px solid #A09F9F; // 답변에도 구분선 추가해서 자연스럽게
+  border-bottom: 1px solid #A09F9F;
+  padding: 0 1.5rem;
 `;
 
+const InnerContent = styled.div`
+  padding: 1rem 0;
+`;
 
-/*
-   
-*/
 const PostRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-    
 `;
 
 const FAQTitle = styled.h2`
@@ -61,102 +61,92 @@ const FAQTitle = styled.h2`
 
   ${mobile} {
     font-size: 14px;
-     white-space: normal;   // ✅ 줄바꿈 허용
-    overflow: visible;     // ✅ 전체 표시
+    white-space: normal;
+    overflow: visible;
     text-overflow: initial;
-        line-height:1.4;
+    line-height: 1.4;
   }
 `;
 
-const FAQAuthor = styled.div`
-margin-top: 1.1rem;
-  font-family: OurFont12;
-  font-size: 1.1rem;
-  color: #000;
-  white-space: nowrap;
-  font-style:italic;
-  
-
-  ${mobile} {
-    font-size: 12px;
-
-  }
-`;
-
-const Answer = styled.div`
-  margin-top: 1rem;
-  font-size: 1.23rem;
-  font-family: OurFont12;
-  line-height: 1.6;
-  color: #111;
-
-
-  
-  ${mobile} {
-    font-size: 14px;
-  }
-`;
 const ToggleArrow = styled.span`
   font-size: 1.2rem;
   margin-left: 1rem;
-  transform: ${({ expanded }) => (expanded ? 'scaleY(1)' : 'scaleY(-1)')};
-  transition: transform 0.1s ease;
+  transform: ${({ expanded }) => (expanded ? 'rotate(0deg)' : 'rotate(180deg)')};
+  transition: transform 0.2s ease;
 
   ${mobile} {
     font-size: 11px;
   }
 `;
 
+const FAQAuthor = styled.div`
+  font-family: OurFont12;
+  font-size: 1.1rem;
+  color: #000;
+  white-space: nowrap;
+  font-style: italic;
+  margin-bottom: 1rem;
+  margin-top:1rem;
 
-//  white-space: pre-wrap;
+  ${mobile} {
+    font-size: 12px;
+  }
+`;
+
+const Answer = styled.div`
+  font-size: 1.23rem;
+  font-family: OurFont12;
+  line-height: 1.7;
+  color: #111;
+
+  ${mobile} {
+    font-size: 14px;
+  }
+`;
 
 function FAQList({ searchTerm }) {
   const [faqs, setFaqs] = useState([]);
-  const [expandedId, setExpandedId] = useState(null); // ✅ 열려 있는 항목 id
-  const Up=require("../../assets/images/화살표.png");
+  const [expandedId, setExpandedId] = useState(null);
+  const contentRefs = useRef({});
 
   useEffect(() => {
     fetch("/data/faqs.md")
-      .then((res) => res.text())
-      .then((text) => {
+      .then(res => res.text())
+      .then(text => {
         const lines = text.split("\n");
         const parsed = [];
         let current = null;
 
         lines.forEach((line) => {
-  // 기존: line = line.trim();
-  const rawLine = line; // 원본 줄은 그대로 두고
-  const lineTrimmed = line.trim(); // 제목, 작성자 검사용
+          const rawLine = line;
+          const trimmed = line.trim();
 
-  if (lineTrimmed.startsWith("## [")) {
-    if (current) parsed.push(current);
-    const idMatch = lineTrimmed.match(/^## \[(\d+)] (.+)$/);
-    if (idMatch) {
-      current = {
-        id: parseInt(idMatch[1]),
-        question: idMatch[2].trim(),
-        author: "",
-        answer: "",
-      };
-    }
-  } else if (lineTrimmed.startsWith("**작성자:**")) {
-    if (current) current.author = lineTrimmed.replace("**작성자:**", "").trim();
-  } else if (lineTrimmed === "---") {
-    if (current) {
-      parsed.push(current);
-      current = null;
-    }
-  } else {
-    if (current) current.answer += rawLine + "\n"; // 💡 여기에 원본 줄 그대로 써줘야 줄 구조 안 망가짐!
-  }
-});
-
+          if (trimmed.startsWith("## [")) {
+            if (current) parsed.push(current);
+            const match = trimmed.match(/^## \[(\d+)] (.+)$/);
+            if (match) {
+              current = {
+                id: parseInt(match[1]),
+                question: match[2].trim(),
+                author: "",
+                answer: "",
+              };
+            }
+          } else if (trimmed.startsWith("**작성자:**")) {
+            if (current) current.author = trimmed.replace("**작성자:**", "").trim();
+          } else if (trimmed === "---") {
+            if (current) {
+              parsed.push(current);
+              current = null;
+            }
+          } else {
+            if (current) current.answer += rawLine + "\n";
+          }
+        });
 
         if (current) parsed.push(current);
-        console.log("파싱된 전체 FAQ answer 확인:", parsed.map(faq => faq.answer)); // 👈 여기!
         setFaqs(parsed);
-      })
-      .catch((err) => console.error("FAQ 불러오기 실패:", err));
+      });
   }, []);
 
   const filteredList = faqs.filter((item) => {
@@ -177,52 +167,49 @@ function FAQList({ searchTerm }) {
       {filteredList.length === 0 ? (
         <p>검색 결과가 없습니다.</p>
       ) : (
-        filteredList.map((faq) => (
-           
-          <PostListInner key={faq.id}>
-            <PostItem
-              onClick={() => toggleItem(faq.id)}
-              expanded={expandedId===faq.id}
-            >
-              <PostRow>
-                <FAQTitle>Q. {faq.question}</FAQTitle>
-                <ToggleArrow expanded={expandedId===faq.id}>
-  <img
-    src={Up}
-    alt="화살표"
-    style={{
-      width: "1.3rem",
-      height: "1rem",
-      
-    }}
-  />
-</ToggleArrow>
-              </PostRow>
-            </PostItem>  
-              {expandedId===faq.id && (
-  <AnswerWrapper expanded={true}>
-    <FAQAuthor>{faq.author}의 답변이에요.</FAQAuthor>
-    <Answer>
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
-        components={{
-          strong: ({ node, ...props }) => (
-      <strong style={{ fontWeight: 'bold', color: '#000' }} {...props} />
-    ),
-          ol: ({ node, ...props }) => <ol style={{ listStyleType: 'decimal', paddingLeft: '1.5rem', marginBottom: '1rem'}} {...props} />,
-          ul: ({ node, ...props }) => <ul style={{ listStyleType: 'disc', paddingLeft: '1.5rem', marginBottom: '1rem'}} {...props} />,
-          li: ({ node, ...props }) => <li style={{ marginBottom: '0.3rem', lineHeight: '1.9'}} {...props} />,
-        }}
-      >
-        {faq.answer}
-      </ReactMarkdown>
-    </Answer>
-  </AnswerWrapper>
-)}
-            
-          </PostListInner>
-        ))
+        filteredList.map((faq) => {
+          const isOpen = expandedId === faq.id;
+          return (
+            <PostListInner key={faq.id}>
+              <PostItem expanded={isOpen} onClick={() => toggleItem(faq.id)}>
+                <PostRow>
+                  <FAQTitle>Q. {faq.question}</FAQTitle>
+                  <ToggleArrow expanded={isOpen}>
+                    <img src={Up} alt="화살표" style={{ width: "1.3rem", height: "1rem" }} />
+                  </ToggleArrow>
+                </PostRow>
+              </PostItem>
+              <AccordionContent
+                ref={(el) => (contentRefs.current[faq.id] = el)}
+                style={{
+                  height: isOpen
+                    ? `${contentRefs.current[faq.id]?.scrollHeight}px`
+                    : "0px",
+                }}
+              >
+                <InnerContent>
+                  <FAQAuthor>{faq.author}의 답변이에요.</FAQAuthor>
+                  <Answer>
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      rehypePlugins={[rehypeRaw]}
+                      components={{
+                        strong: ({ node, ...props }) => (
+                          <strong style={{ fontWeight: 'bold', color: '#000' }} {...props} />
+                        ),
+                        ol: ({ node, ...props }) => <ol style={{ listStyleType: 'decimal', paddingLeft: '1.5rem', marginBottom: '1rem' }} {...props} />,
+                        ul: ({ node, ...props }) => <ul style={{ listStyleType: 'disc', paddingLeft: '1.5rem', marginBottom: '1rem' }} {...props} />,
+                        li: ({ node, ...props }) => <li style={{ marginBottom: '0.3rem', lineHeight: '1.9' }} {...props} />,
+                      }}
+                    >
+                      {faq.answer}
+                    </ReactMarkdown>
+                  </Answer>
+                </InnerContent>
+              </AccordionContent>
+            </PostListInner>
+          );
+        })
       )}
     </PostList>
   );

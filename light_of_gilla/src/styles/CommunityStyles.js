@@ -90,12 +90,12 @@ export const CommunityListWrapper = styled.div`
 
 export const Button = styled.button`
   padding: 2px;
-  width: 140px;
+  width: 145px;
   height: 41px;
-  background-color:#cd9b3f;  /* #D9A441;#be8600; #B0721E;  #E0A93A; #E8A334 #F0AD3D;*/
+  background-color:#F9A825;  /* #D9A441;#be8600;#FFB536;#FFC86A;#F0AD3D;#FFC87B; #B0721E;  #E0A93A; #E8A334 #F0AD3D;*/
   color: white;
   font-family: 'OurFont10';
-  font-size: 1.28rem;
+  font-size: 1.4rem;
   font-weight:bold;
   cursor: pointer;
   border: none;

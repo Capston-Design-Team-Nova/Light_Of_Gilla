@@ -7,7 +7,7 @@ const tablet = '@media screen and (max-width: 1024px)';
 
 export const Container = styled.div`
   margin: 20px;
-  font-family: Arial, sans-serif;
+  font-family:OurFont12;
 ${mobile} {
     
      margin:7px;
