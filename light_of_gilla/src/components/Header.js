@@ -133,7 +133,7 @@ function Header() {
                 }
               }}
             >
-              <Button>Q&A</Button>
+              <Button>게시판</Button>
             </Link>
 
             <Link
@@ -145,7 +145,7 @@ function Header() {
                 }
               }}
             >
-              <Button>FAQ</Button>
+              <Button>전문가 FAQ</Button>
             </Link>
 
             {!isLoggedIn ? (

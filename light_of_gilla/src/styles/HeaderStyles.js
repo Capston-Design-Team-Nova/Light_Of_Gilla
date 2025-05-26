@@ -149,8 +149,16 @@ export const Button = styled.button`
 
   @media screen and (max-width: 480px) {
     padding: 4px 6px;
-    font-size: 14px;
+    font-size: 10px;
     min-width: 60px;
+    height: 36px;
+    border-radius: 6px;
+    letter-spacing: 0.2px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    background: #FFD95A;
+    color: #222;
+    border: 1px solid rgba(255, 170, 0, 0.4);
+    
     margin: 0 2px;
   }
 `;
