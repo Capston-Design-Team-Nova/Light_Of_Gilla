@@ -52,7 +52,7 @@
 
 
 ## 📷 시연영상
-> [📺 시연 영상 보기 (YouTube)](https://www.youtube.com/watch?v=영상ID)
+> [📺 시연 영상 보기 (YouTube)](https://youtu.be/oEimd_xjvAA?si=DJpE7M_coUR3EduV)
 
 
 | 병원/약국 검색 시연영상                                 | 병원/약국 상세보기 시연영상                                  | 
