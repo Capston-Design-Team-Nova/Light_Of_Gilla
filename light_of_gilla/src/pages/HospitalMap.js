@@ -70,7 +70,6 @@ function HospitalMap() {
   const [suggestions, setSuggestions] = useState([]);
   const inputRef = useRef(null);
   const dropdownRef = useRef(null);
-
   const renderStars = (score) => {
     const full = Math.floor(score);
     const half = score % 1 >= 0.5;
