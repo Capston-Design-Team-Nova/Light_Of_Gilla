@@ -90,6 +90,7 @@ function HospitalMap() {
       </div>
     );
   };
+  const geocoder = new window.kakao.maps.services.Geocoder();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -1950,6 +1951,42 @@ function HospitalMap() {
     }, delay);
   };
 
+  const handleDirectionsClick = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+
+          const locPosition = new window.kakao.maps.LatLng(lat, lng);
+
+          geocoder.coord2Address(lng, lat, (result, status) => {
+            if (status === window.kakao.maps.services.Status.OK) {
+              const detailAddr =
+                result[0].road_address?.address_name ||
+                result[0].address?.address_name ||
+                "출발지";
+
+              const destName = selectedHospital?.name;
+              const url = `https://map.kakao.com/?sName=${encodeURIComponent(
+                detailAddr
+              )}&eName=${encodeURIComponent(destName)}`;
+
+              window.open(url, "_blank");
+            } else {
+              alert("현 위치 주소를 찾을 수 없습니다.");
+            }
+          });
+        },
+        () => {
+          alert("현 위치 정보를 가져올 수 없습니다.");
+        }
+      );
+    } else {
+      alert("브라우저가 위치 정보를 지원하지 않습니다.");
+    }
+  };
+
   return (
     <Main>
       <Header />
@@ -2638,17 +2675,7 @@ function HospitalMap() {
               <div style={{ display: "flex", gap: "12px" }}>
                 {/* 길찾기 버튼 */}
                 <button
-                  onClick={() => {
-                    const lat =
-                      selectedHospital?.latitude || selectedPosition?.lat;
-                    const lng =
-                      selectedHospital?.longitude || selectedPosition?.lng;
-                    const name = selectedHospital?.name;
-                    const url = `https://map.kakao.com/link/to/${encodeURIComponent(
-                      name
-                    )},${lat},${lng}`;
-                    window.open(url, "_blank");
-                  }}
+                  onClick={handleDirectionsClick}
                   style={{
                     background: "transparent",
                     border: "none",
