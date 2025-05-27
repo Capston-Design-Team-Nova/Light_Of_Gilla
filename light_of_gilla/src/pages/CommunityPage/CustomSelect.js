@@ -3,6 +3,8 @@ import React, {useState} from 'react';
 import Select from 'react-select';
 import { Container, Label } from '../../styles/CustomSelectStyles';
 
+const isMobile = window.innerWidth <= 480; // ✅ 모바일 체크
+
 const symptoms = [
   "두통", "기침", "발열", "목 아픔", "피로감",
   "구토", "설사", "식욕 부진", "어지러움", "근육통",
@@ -19,13 +21,14 @@ const options = symptoms.map(symptom => ({
 const customStyles = {
   control: (provided, state) => ({
     ...provided,
-    width: '200px',  
+    width: isMobile ? '180px' : '200px', 
+    minWidth: 0, 
     border: state.isFocused
       ? '2px solid #FFC86A' // ✅ 포커스 시 주황색 테두리
       : '1px solid #999999',   // 일반 상태의 테두리
     borderRadius: '5px',
     padding: '2px',
-    fontSize: '1.1rem',
+    fontSize: isMobile ? '15px' :'1.1rem',
     fontFamily: 'OurFont12',
     cursor: 'pointer',
     boxShadow: 'none', // ✅ react-select가 기본으로 넣는 파란 glow 제거

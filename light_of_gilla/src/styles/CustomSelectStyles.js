@@ -10,7 +10,7 @@ export const Container = styled.div`
   font-family:OurFont12;
 ${mobile} {
     
-     margin:7px;
+     margin:0;
     }
 
 `;
