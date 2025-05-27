@@ -363,13 +363,19 @@ const CommunityView = () => {
         res.data.forEach(user => {
           // profileImage가 절대 경로인지, 상대 경로인지 처리
           const raw = user.profileImage;
-          const url = raw
-          ? (raw.startsWith("http")
-          ? raw
-          : `http://3.37.188.91:8080${raw}`)
-      : defaultProfileImage;
+          let url;
 
-    map[user.nickname] = url;
+          if (!raw || raw === "null") {
+            url = defaultProfileImage;
+          } else if (raw.startsWith("http")) {
+            url = raw; // 이미 전체 URL이면 그대로
+          } else {
+            const fileName = raw.split("/").pop(); // 파일명만 추출
+            url = `https://ddo857ydmq0nf.cloudfront.net/profiles/${fileName}`;
+          }
+
+
+          map[user.nickname] = url;
         });
         setUserMap(map);
       })

@@ -33,6 +33,14 @@ function Header() {
   const navigate = useNavigate();
   const isMobile = window.innerWidth <= 480; // 모바일 여부 확인
 
+  const getCloudFrontProfileImage = (imagePath) => {
+  const baseImageUrl = "https://ddo857ydmq0nf.cloudfront.net/profiles/";
+  if (!imagePath || imagePath === "null") return defaultProfileImage;
+  if (imagePath.startsWith("http")) return imagePath;
+  const fileName = imagePath.split("/").pop();
+  return `${baseImageUrl}${fileName}`;
+};
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
@@ -65,13 +73,7 @@ function Header() {
         )
         .then((res) => {
           const imageUrl = res.data.profileImage;
-          const baseImageUrl = "http://3.37.188.91:8080"; // ✅ 서버 이미지 주소
-
-          if (imageUrl && imageUrl !== "null" && imageUrl !== "") {
-            setProfileImage(`${baseImageUrl}${imageUrl}`); // ✅ 서버에서 바로 가져온 경로 사용
-          } else {
-            setProfileImage(defaultProfileImage); // 기본 이미지
-          }
+          setProfileImage(getCloudFrontProfileImage(imageUrl));
         })
         .catch((err) => {
           console.error("프로필 이미지 로딩 실패:", err);

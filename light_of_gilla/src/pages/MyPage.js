@@ -61,6 +61,19 @@ function MyPage() {
       setProfileImage(imageUrl);
     }
   };
+
+
+  const getProfileImageUrl = (profileImage) => {
+  const defaultImage = require("../assets/images/ProfileImage.png");
+
+  if (!profileImage || profileImage === "null") return defaultImage;
+  if (profileImage.startsWith("http")) return profileImage;
+
+  const fileName = profileImage.split("/").pop();
+  return `https://ddo857ydmq0nf.cloudfront.net/profiles/${fileName}`;
+};
+
+
   const defaultProfileImage = require("../assets/images/ProfileImage.png");
   useEffect(() => {
     if (token) {
@@ -81,13 +94,10 @@ function MyPage() {
           setPhoneNumber(data.phone);
           setOriginalNickname(data.nickname); // 원본 닉네임 저장
           console.log("👉 서버에서 받은 프로필 이미지:", data.profileImage);
-          const baseImageUrl = "http://3.37.188.91:8080";
+          const baseImageUrl = "https://ddo857ydmq0nf.cloudfront.net/profiles/";
 
-          setProfileImage(
-            data.profileImage && data.profileImage !== "null"
-              ? `${baseImageUrl}${data.profileImage}`
-              : defaultProfileImage
-          );
+          setProfileImage(getProfileImageUrl(data.profileImage));
+
           if (data.residentNumber) {
             setBirthday(formatBirth(data.residentNumber));
           }
@@ -210,12 +220,7 @@ function MyPage() {
         config
       );
       const data = res.data;
-      const baseImageUrl = "http://3.37.188.91:8080";
-      setProfileImage(
-        data.profileImage && data.profileImage !== "null"
-          ? `${baseImageUrl}${data.profileImage}`
-          : defaultProfileImage
-      );
+      setProfileImage(getProfileImageUrl(data.profileImage));
       alert("회원 정보가 성공적으로 변경되었습니다!");
     } catch (err) {
       console.error("저장 실패", err);
@@ -330,9 +335,3 @@ function MyPage() {
 }
 
 export default MyPage;
-{
-  /*        <FormGroup>
-          <Label>연락처</Label>
-          <Input type="text" value={phoneNumber} disabled />
-        </FormGroup>*/
-}
