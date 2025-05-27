@@ -1,316 +1,87 @@
-🧩 병원 및 약국 정보 API
-API Gateway 엔드포인트
+![Image](https://github.com/user-attachments/assets/e451fcfd-d637-458f-8105-74f61b0ca939)
+## **길라의 빛**은 이용자에게 **맞춤형 병원·약국 추천**을 제공하고, **건강 정보를 자유롭게 교류**할 수 있도록 도와주는 **건강 커뮤니티 플랫폼**입니다.
 
-https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com
+## 🔍 주요 기능
 
-1. 병원 정보 전체 불러오기 (최대 500개)
-GET /api/hospitals
-요청 예시:
+### 🏥 메인 화면  
+```
+- 길라 사이트에 대한 전반적인 소개가 있습니다.
+- 병원&약국 찾기,QnA화면으로 넘어가기 기능을 구현하였습니다.
+- 회원가입/로그인 기능을 이용 할 수 있습니다.
+```
+### 🔐 회원가입 / 로그인 화면
+```
+- 사용자는 이메일, 비밀번호를 입력하여 로그인할 수 있습니다.
+- 회원가입 시에는 아이디,비밀번호, 비밀번호 확인,이메일을 입력받습니다.
+- 이메일로 인증코드를 받고 사용자 인증을 합니다.
+- 닉네임과 생일, 프로필 이미지를 설정 할 수 있습니다.
+- 아이디(이메일)/비밀번호 찾기 기능이 포함되어 있습니다.
+```
+### 🗺️ 병원/약국 찾기 화면  
+```
+-각각 증상 검색, 병원/약국 검색을 사용할 수 있습니다.
+  - 증상 검색: 증상을 입력하면, Ex) "배가 아파요"를 입력하면 주변에 적절한 진료 병원을 검색하고 표시합니다.
+  - 병원/약국 검색: 병원/약국 이름을 입력하면 해당하는 병원을 지도에 표시합니다.
 
-https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/hospitals
-2. 병원 이름으로 검색하기 (최대 500개)
-GET /api/hospitals/search
-파라미터 형식이므로 주의
-요청 예시:
+- 집계된 병원/약국들은 추천순, 거리순, 평점순으로 확인할 수 있습니다.
+- 병원/약국 리스트를 클릭하면 병원/약국 이름, 주소, 영업 유무, 평점, 운영 시간, 리뷰를 확인할 수 있습니다.
+- 평점과 리뷰를 작성할 수 있습니다.
+```
+### 💬 커뮤니티 게시판 화면  
+```
+- 사용자가 글을 작성할 때, 제목과 내용을 입력하고 증상을 선택하면 글을 올릴 수 있습니다.
+- 다른 사용자가 작성한 글을 확인할 수 있고, 댓글 작성과 "좋아요" 버튼 클릭이 가능합니다.
+- 항목별로 내가 작성한 글, 내가 작성한 댓글, 내가 좋아요를 누른 글을 따로 모아볼 수 있습니다.
+```
+### 👤 마이페이지 / FAQ 화면 
+```
+- 사용자의 개인정보(프로필 사진,이름(닉네임),비밀번호)를 수정 할 수 있습니다.
+- 본인이 병원/약국 리스트에서 작성한 리뷰들을 모아 볼 수 있습니다.
+- 회원탈퇴,로그아웃을 할 수 있습니다.
 
-https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/hospitals/search?name=강남
-📘 Hospital Review API 명세서
-Base URL: https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews
-🟢 1. 리뷰 등록 (Create)
-POST /api/reviews/{hospitalId}
-요청 예시: POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/1
+```
 
-{
-  "author": "hyunseo",
-  "rating": 5,
-  "content": "정말 친절한 병원이었어요!"
-}
-응답 예시:
+## 🚀 기술 스택
+<img src="https://github.com/user-attachments/assets/63ea693c-7077-4473-a818-8aaf87491ae8" width="600" />
 
-{
-    "id": 1,
-    "author": "hyunseo",
-    "rating": 5,
-    "content": "정말 친절한 병원이었어요!",
-    "likes": 0,
-    "createdAt": "2025-04-13T23:20:14.4346615",
-    "hospital": {
-        "id": 1,
-        "district": "노원구",
-        "name": "노원을지대학교병원",
-        "score": 2.1,
-        "address": "노원구 한글비석로 68",
-        "imgUrl": "//img1.kakaocdn.net/cthumb/local/C544x408.q50/?fname=https%3A%2F%2Fpostfiles.pstatic.net%2FMjAyMjA4MjJfMjY0%2FMDAxNjYxMTM0ODkzNjUz.CtiuHeME89IMdWq1GDva03MJc_eRwn7AutJp32lDfe4g.F_kRm5fCLC-AgL5-k3s3IJ4ARlc6s50-NY0wc7dkcz8g.JPEG.tkdal0614%2F1661134886627.jpg%3Ftype%3Dw966",
-        "reviews": "[{'작성자': '..', '별점': '1.0', '날짜': '2025.03.16.', '내용': '와 간호사 ㄹㅇ 싹퉁바가지없더라\\n어떻게 그런 응대로 아직도 근무하는지 의문점이 들정도임 ㅋㅋㅋㅋㅋㅋ', '좋아요': '0'}, {'작성자': 'fyggu', '별점': '1.0', '날짜': '2025.01.07.', '내용': '정신과상담 진짜 가지마세요\\n사람 약으로 돈버느거밖에 몰라요\\n받고 약 처방받았는데\\n부작용 나서 가만히 못... 더보기', '좋아요': '7'}, {'작성자': '사용자', '별점': '1.0', '날짜': '2024.12.26.', '내용': '치료받다가 교수님 말투가 너무 버럭버럭, 혼내듯이 말해서 뭘 물어보지도못하겠고 진료를 너무 급하게 보는느낌이라 있던 병 더심해질까봐 옮겼습니다. 더 큰병원 가려고 소견서 부탁드렸는데 자기 못믿어서 그런거 아... 더보기', '좋아요': '4'}]",
-        "openHour": "{'목': '08:30 ~ 17:30', '금': '08:30 ~ 17:30', '토': '휴무일', '일': '휴무일', '월': '08:30 ~ 17:30', '화': '08:30 ~ 17:30', '수': '08:30 ~ 17:30', '휴무일': '공휴일'}"
-    }
-}
-🟡 2. 리뷰 수정 (Update)
-PUT /api/reviews/{reviewId}
-요청 예시: PUT https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/1
+- **개발 환경**: IntelliJ IDEA, VS Code  
+- **프론트엔드**: React  
+- **백엔드**: Spring Boot  
+- **클라우드/인프라**: AWS RDS, API Gateway, EC2  
+- **외부 API**: Kakao Map API, ChatGPT API
 
-{
-  "author": "hyunseo",
-  "rating": 5,
-  "content": "정말 친절한 병원이었어요!"
-}
-응답 예시:
 
-{
-    "id": 1,
-    "author": "hyunseo",
-    "rating": 4,
-    "content": "의사 선생님이 더 친절하셨습니다!",
-    "likes": 0,
-    "createdAt": "2025-04-13T23:20:14",
-    "hospital": {
-        "id": 1,
-        "district": "노원구",
-        "name": "노원을지대학교병원",
-        "score": 2.1,
-        "address": "노원구 한글비석로 68",
-        "imgUrl": "//img1.kakaocdn.net/cthumb/local/C544x408.q50/?fname=https%3A%2F%2Fpostfiles.pstatic.net%2FMjAyMjA4MjJfMjY0%2FMDAxNjYxMTM0ODkzNjUz.CtiuHeME89IMdWq1GDva03MJc_eRwn7AutJp32lDfe4g.F_kRm5fCLC-AgL5-k3s3IJ4ARlc6s50-NY0wc7dkcz8g.JPEG.tkdal0614%2F1661134886627.jpg%3Ftype%3Dw966",
-        "reviews": "[{'작성자': '..', '별점': '1.0', '날짜': '2025.03.16.', '내용': '와 간호사 ㄹㅇ 싹퉁바가지없더라\\n어떻게 그런 응대로 아직도 근무하는지 의문점이 들정도임 ㅋㅋㅋㅋㅋㅋ', '좋아요': '0'}, {'작성자': 'fyggu', '별점': '1.0', '날짜': '2025.01.07.', '내용': '정신과상담 진짜 가지마세요\\n사람 약으로 돈버느거밖에 몰라요\\n받고 약 처방받았는데\\n부작용 나서 가만히 못... 더보기', '좋아요': '7'}, {'작성자': '사용자', '별점': '1.0', '날짜': '2024.12.26.', '내용': '치료받다가 교수님 말투가 너무 버럭버럭, 혼내듯이 말해서 뭘 물어보지도못하겠고 진료를 너무 급하게 보는느낌이라 있던 병 더심해질까봐 옮겼습니다. 더 큰병원 가려고 소견서 부탁드렸는데 자기 못믿어서 그런거 아... 더보기', '좋아요': '4'}]",
-        "openHour": "{'목': '08:30 ~ 17:30', '금': '08:30 ~ 17:30', '토': '휴무일', '일': '휴무일', '월': '08:30 ~ 17:30', '화': '08:30 ~ 17:30', '수': '08:30 ~ 17:30', '휴무일': '공휴일'}"
-    }
-}
-🔴 3. 리뷰 삭제 (Delete)
-DELETE /api/reviews/{reviewId}
-요청 예시: DELETE https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/1
+## 📷 시연영상
+> [📺 시연 영상 보기 (YouTube)](https://youtu.be/oEimd_xjvAA?si=DJpE7M_coUR3EduV)
 
-🔵 4. 병원 리뷰 목록 조회
-GET /api/reviews/hospital/{hospitalId}
-요청 예시: GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/hospital/1
 
-응답 예시:
+| 병원/약국 검색 시연영상                                 | 병원/약국 상세보기 시연영상                                  | 
+| ---------------------------------------------- |---------------------------------------------- | 
+|<img src="https://github.com/user-attachments/assets/efb22bcd-3ca9-42da-b7ee-39022f7ad4d4" width="600" />             |  <img src="https://github.com/user-attachments/assets/a7175ad9-9b51-4588-a387-bd63a71cb45c" width="600" />               |
 
-[
-    {
-        "id": 2,
-        "author": "..",
-        "rating": 1,
-        "content": "와 간호사 ㄹㅇ 싹퉁바가지없더라\n어떻게 그런 응대로 아직도 근무하는지 의문점이 들정도임 ㅋㅋㅋㅋㅋㅋ",
-        "likes": 0,
-        "createdAt": "2025-03-16T00:00:00",
-        "hospital": {
-            "id": 1,
-            "district": "노원구",
-            "name": "노원을지대학교병원",
-            "score": 2.1,
-            "address": "노원구 한글비석로 68",
-            "imgUrl": "//img1.kakaocdn.net/cthumb/local/C544x408.q50/?fname=https%3A%2F%2Fpostfiles.pstatic.net%2FMjAyMjA4MjJfMjY0%2FMDAxNjYxMTM0ODkzNjUz.CtiuHeME89IMdWq1GDva03MJc_eRwn7AutJp32lDfe4g.F_kRm5fCLC-AgL5-k3s3IJ4ARlc6s50-NY0wc7dkcz8g.JPEG.tkdal0614%2F1661134886627.jpg%3Ftype%3Dw966",
-            "reviews": "[{'작성자': '..', '별점': '1.0', '날짜': '2025.03.16.', '내용': '와 간호사 ㄹㅇ 싹퉁바가지없더라\\n어떻게 그런 응대로 아직도 근무하는지 의문점이 들정도임 ㅋㅋㅋㅋㅋㅋ', '좋아요': '0'}, {'작성자': 'fyggu', '별점': '1.0', '날짜': '2025.01.07.', '내용': '정신과상담 진짜 가지마세요\\n사람 약으로 돈버느거밖에 몰라요\\n받고 약 처방받았는데\\n부작용 나서 가만히 못... 더보기', '좋아요': '7'}, {'작성자': '사용자', '별점': '1.0', '날짜': '2024.12.26.', '내용': '치료받다가 교수님 말투가 너무 버럭버럭, 혼내듯이 말해서 뭘 물어보지도못하겠고 진료를 너무 급하게 보는느낌이라 있던 병 더심해질까봐 옮겼습니다. 더 큰병원 가려고 소견서 부탁드렸는데 자기 못믿어서 그런거 아... 더보기', '좋아요': '4'}]",
-            "openHour": "{'목': '08:30 ~ 17:30', '금': '08:30 ~ 17:30', '토': '휴무일', '일': '휴무일', '월': '08:30 ~ 17:30', '화': '08:30 ~ 17:30', '수': '08:30 ~ 17:30', '휴무일': '공휴일'}"
-        }
-    }
-]
-💖 5. 좋아요 토글
-POST /api/reviews/{reviewId}/like
-요청 헤더 주의. User-name을 보내야함.
-요청 예시: POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/reviews/101/like X-User-Name: hyunseo
+| 게시판 게시글/댓글 작성 시연영상                             | 게시판 수정/삭제 댓글 삭제 시연           | FAQ 시연영상                                | 
+| ---------------------------------------------- |---------------------------------------------- | ---------------------------------------------- | 
+|<img src="https://github.com/user-attachments/assets/47b1582d-3b2d-4249-a869-a0303533b9986" width="600" /> |<img src="https://github.com/user-attachments/assets/132fb7f8-a79a-42d8-a8c1-93e9cacc8136" width="600" /> | <img src="https://github.com/user-attachments/assets/fc451c72-f9c9-4876-abb8-948cbf2c9d88" width="600" />               |
+---
 
-🟢 6. 즐겨찾기 등록
-POST /api/favorites/{hospitalId}
-요청 헤더 주의. User-name을 보내야함. User테이블의 nickname에 해당.
-요청 예시: POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/favorites/1 X-User-Name: hyunseo
+## 📥 기대 효과
+1. ### 사용자 맞춤 의료 서비스 경험 제공
+    위치 기반 추천과 사이트 자체 추천 알고리즘 을 통해 사용자의 선호도와 건강 상태에 맞는 병원/약국을 안내하여 의료 접근성과 만족도를 향상시킵니다.
 
-🟡 7. 즐겨찾기 삭제
-DELETE /api/favorites/{hospitalId}
-요청 헤더 주의. User-name을 보내야함. User테이블의 nickname에 해당.
-요청 예시: DEELTE https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/favorites/1 X-User-Name: hyunseo
+2. ### 의료 서비스의 신뢰도 향상
+    별점과 리뷰 시스템을 통해 사용자 경험이 축적되어 신뢰할 수 있는 병원/약국 선택이 가능해집니다.
 
-🔵 8. 즐겨찾기 목록 조회
-GET /api/favorites
-요청 헤더 주의. User-name을 보내야함. User테이블의 nickname에 해당.
-요청 예시: GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/favorites X-User-Name: hyunseo
 
-🧩 유저 서비스 API 명세서
-API Gateway 엔드포인트
+3. ### 의료 사각지대 해소 및 사용자 간의 연대 강화
+    다양한 사용자의 리뷰와 소통을 통해 의료 정보 격차를 줄이고, 연대감과 소속감을 유도해 사용자간의 상호지원을 기대할수있습니다.
 
-https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com
 
-1. 회원가입 API
-POST /api/users/signup
-요청 예시: POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/signup
+---
 
-{
-  "userId": "user123",
-  "password": "password123",
-  "email": "test@example.com",
-  "phone": "01012345678",
-  "nickname": "테스터",
-  "profileImage": "https://example.com/profile.jpg",
-  "residentNumber": "010101"
-}
-2. 로그인 (JWT 발급)
-POST /api/users/login
-이메일, 아이디 둘 다 가능
-요청 예시: POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/login
+## 🧑‍💻 개발자
 
-{
-  "emailOrUserId": "test@example.com",
-  "password": "password123"
-}
-응답 예시:
+- **프론트엔드**: [김어진,김나영]
+- **백엔드**: [유현서,이종민]
 
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-3. 로그아웃
-POST /api/users/logout
-요청 예시: POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/logout
+---
 
-요청 헤더:
-
-Authorization: Bearer {토큰값}
-4. 액세스 토큰 재발급
-POST /api/users/token/refresh
-요청 예시: POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/token/refresh
-
-요청 헤더:
-
-Authorization: Bearer {리프레시 토큰값}
-응답 예시:
-
-{
-  "새로운 JWT 토큰"
-}
-5. 내 정보 조회
-GET /api/users/me
-요청 예시: GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/me
-
-요청 헤더:
-
-Authorization: Bearer {토큰값}
-응답 예시:
-
-{
-  "userId": "user123",
-  "email": "test@example.com",
-  "nickname": "테스터"
-}
-6. 회원 목록 전체 조회
-GET /api/users
-요청 예시: GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users
-
-응답 예시:
-
-[
-  {
-    "userId": "user123",
-    "email": "test@example.com",
-    "phone": "01012345678",
-    "nickname": "테스터",
-    "profileImage": "https://example.com/profile.jpg",
-    "createdAt": "2025-03-08T14:45:05.000",
-    "residentNumber": "010101"
-  },
-  {
-    "userId": "user456",
-    "email": "hello@example.com",
-    "phone": "01087654321",
-    "nickname": "테스트2",
-    "profileImage": "https://example.com/image.jpg",
-    "createdAt": "2025-03-08T15:00:00.000",
-    "residentNumber": "020202"
-  }
-]
-7. 이메일로 유저 정보 조회
-GET /api/users/email/{email}
-요청 예시: GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/email/test@example.com
-
-응답 예시:
-
-{
-  "userId": "user123",
-  "email": "test@example.com",
-  "phone": "01012345678",
-  "nickname": "테스터",
-  "profileImage": "https://example.com/profile.jpg",
-  "createdAt": "2025-03-08T14:45:05.000",
-  "residentNumber": "010101"
-}
-8. userId로 유저 조회
-GET /api/users/{userId}
-요청 예시: GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/{userId}
-
-9. 회원 정보 수정
-PUT /api/users/{userId}
-요청 예시:
-
-{
-  "nickname": "새로운닉네임",
-  "phone": "01087654321",
-  "profileImage": "https://example.com/new-profile.jpg"
-}
-10. 회원 탈퇴
-DELETE /api/users/{userId}
-요청 예시: DELETE https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123
-
-11. 비밀번호 변경
-PUT /api/users/{userId}/password
-요청 예시: PUT https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123/password
-
-요청 예시:
-
-{
-  "password": "newPassword123"
-}
-12. 닉네임 변경
-PATCH /api/users/{userId}/nickname
-요청 예시: PATCH https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123/nickname
-
-{
-  "nickname": "새로운닉네임"
-}
-13. 프로필 이미지 변경
-PATCH /api/users/{userId}/profile-image
-요청 예시: PATCH https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/user123/profile-image
-
-{
-  "profileImage": "https://example.com/new-profile.jpg"
-}
-14. 닉네임으로 유저 검색
-GET /api/users/search?nickname=닉네임
-요청 예시: GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/search?nickname=새로운닉네임
-
-15. 전체 유저 수 조회
-GET /api/users/count
-요청 예시: GET https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/count
-
-16. 비밀번호 리셋 (메일 보내기)
-POST /api/users/reset-password
-발신자: vmffotlka1@gmail.com
-스팸으로 분류되어 있을 수 있으니 주의
-요청 예시: POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/reset-password
-
-{
-  "email": "testuser@example.com"
-}
-성공 시:
-
-{
-  "message": "임시 비밀번호가 이메일로 전송되었습니다."
-}
-실패 시:
-
-{
-  "message": "등록되지 않은 이메일입니다."
-}
-17. 이메일 인증 (메일 보내기)
-POST /api/users/send-verification-email
-발신자: vmffotlka1@gmail.com
-스팸으로 분류되어 있을 수 있으니 주의
-요청 예시: POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/send-verification-email
-
-{
-  "email": "example@domain.com"
-}
-18. 이메일 인증코드 검증
-POST /api/users/verify-email
-요청 예시: POST https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/api/users/verify-email
-
-{
-  "email": "example@domain.com",
-  "code": "123456"  // 받은 인증 코드 입력
-}
