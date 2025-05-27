@@ -100,7 +100,6 @@ public class CommentService {
             }
         }
         postDTOList.sort(Comparator.comparing(PostDTO::getPostCreated_date).reversed());
-        Collections.reverse(postDTOList);
         return postDTOList;
 
     }
