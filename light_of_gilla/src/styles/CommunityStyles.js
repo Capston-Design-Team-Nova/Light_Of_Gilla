@@ -177,7 +177,7 @@ export const SearchInput = styled.input`
 
 export const TitleInput = styled.input`
   width: 90%;
-  
+  flex: 1;   
   padding: 10px;
   font-family: 'OurFont12';
   font-size: 16px;
@@ -186,26 +186,29 @@ export const TitleInput = styled.input`
   border-bottom: 1px solid #00000059;  /* ✅ 아래쪽 선만 표시 */
   background-color: transparent;   /* ✅ 원하면 배경 투명 */
   outline: none;                   /* ✅ 클릭했을 때 파란 테두리 제거 (선택사항) */
+  min-width: 0;
+
 
   ${mobile} {
-    width: 90%;
+    width: 100%;
   }
 `;
 
 export const ContentTextArea = styled.textarea`
-  width: 90%;
-  height: 300px;
-  
+  flex:1;
+  height: 300px; 
   padding: 10px;
   font-family: 'OurFont12';
   font-size: 16px;
   margin-bottom: 10px;
   border: 1px solid #00000059;
   border-radius: 2px;
-  resize: none;
+  resize: vertical; // ✅ 수직으로만 리사이징
+  min-width: 0;
 
   ${mobile} {
     width: 90%;
+    height: 250px;
   }
 `;
 
@@ -215,36 +218,41 @@ export const LowRow = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;  // Align vertically in the center
-    gap:40%;  // Space between the SelectBox and Button
-    margin-bottom: 10px;  // Optional: Add space below the row
+    gap: 40%;  // Space between the SelectBox and Button
+    margin-bottom: 0;  // Optional: Add space below the row
     width:90%;
 
     ${mobile} {
+    flex-wrap: wrap;           // ✅ 넘치면 줄바꿈 허용!
      flex-direction: row; /* 세로로 쌓기 */
     align-items: center;     /* 중앙 정렬 */
-    gap: 10px;               /* 위아래 간격 */
+    gap: 5px;               /* 위아래 간격 */
     width: 100%;
-    padding: 0 10px;
+    
+    
     }
 `;
 // CommunityStyles.js 등에 추가
 export const FormRow = styled.div`
   display: flex;
+  flex-wrap: wrap;  // ✅ 줄 바꿈 허용
   align-items: flex-start; 
-  width: 90%;
+  
+  width: 100%;   
   margin-bottom: 13px;
-
+gap: 8px;   
   
   ${mobile} {
     flex-direction: row;     // ✅ 모바일에서도 가로 정렬 유지
     align-items: center;     // ✅ 세로 정렬 중앙
     justify-content: flex-start;
-    width: 95%;
+    width: 98%;
     padding: 0 10px;
   }
   }
 `;
 
+//width: 90%;
 export const Label = styled.label`
   width: 60px; 
   font-size: 16px;
@@ -255,11 +263,12 @@ export const Label = styled.label`
   padding-top: 9px; 
 max-width: 100px;    /* ✅ 과도하게 늘어나지 않게 */
   flex-shrink: 0;      /* ✅ 줄어들지 않도록 방지 */
+  white-space: nowrap;
+
      ${mobile} {
     padding-top: 3px;         // ✅ 모바일에서 좀 더 위로 올림
     align-self: flex-start;   // ✅ 입력창보다 위 정렬
-     margin-left: 1px; 
-     margin-right: 0;
+     width: auto;
      ${({ $mobileHide }) => $mobileHide && `display: none;`}
   }
 `;

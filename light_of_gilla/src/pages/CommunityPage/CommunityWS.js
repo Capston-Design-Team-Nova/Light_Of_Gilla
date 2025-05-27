@@ -12,21 +12,13 @@ const mobile = '@media screen and (max-width: 480px)';
 
 export const Center = styled.div`
   width: 100%;
-  height: 100%; /* 높이를 명시적으로 설정 */
-  display: flex; /* Flexbox 활성화 */
-  flex-direction: column; /* 세로 정렬 */
-  justify-content: flex-start; /* 가로 정렬: 중앙 */
-  align-items: center; /* 세로 정렬: 중앙 */
-  background-position: center; /* 중앙에 위치 */
-  padding-top: 90px; /* PageHeader의 높이에 맞는 여백 추가 */
-  background-color: #FEF7FF;/*#ffece3;*/
-margin-top:1rem;
-  ${mobile} {
-    padding-bottom: 50px;
-    overflow-x:hidden;
-    margin-top: 0;
-  }
+  min-height: 100vh;
+  background-color: #FEF7FF;
+  padding-top: 90px;
+  overflow-x: hidden;
 `;
+
+
 //width: 100%;
 
 export const Main = styled.main`
@@ -36,37 +28,49 @@ export const Main = styled.main`
  
 `;
 
-export const Content = styled.div`
-  position: relative; // 기준이 되는 부모
-  width: calc(97% - 250px);
-    margin-left: 250px;
-  transition: margin-left 0.3s ease;
-  min-height: 50vh; /* 내용이 너무 적을 때는 최소 높이 보장 */
-  height: auto;
-  background-color: white;
-  border-radius: 15px;
-    box-shadow: 0 2px 4px rgba(187, 187, 187, 0.3),   /* 아래 */
-    0 -2px 4px rgba(187, 187, 187, 0.3),  /* 위 */
-    2px 0 4px rgba(187, 187, 187, 0.3),   /* 오른쪽 */
-    -2px 0 4px rgba(187, 187, 187, 0.3);  /* 왼쪽 */
-  overflow: visible; // 자식 요소 넘침 방지
+// Sidebar 옆 영역 전체를 담당
+export const ContentWrapper = styled.div`
+  margin-left: 250px;                     // ✅ 사이드바 피해서 시작
+  width: calc(100% - 250px);              // ✅ 사이드바 제외한 나머지 전체
+  max-height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-padding-top: 30px;
-  ${mobile} {
-  
-    width: 97%;
-    height: auto;
-    margin-top: 5px;
+  justify-content: center;                // ✅ 가운데 정렬
+  padding: 30px 0;
+  background-color: #FEF7FF;
+
+  @media screen and (max-width: 480px) {
     margin-left: 0;
+    width: 100%;
+    padding: 20px 0;
   }
 `;
 
+
+export const Content = styled.div`
+  width: 95%;                             // ✅ Content는 Wrapper 안의 90%만 사용
+  max-width: 1600px;
+  background-color: white;
+  border-radius: 15px;
+  padding: 30px 20px 10px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  overflow-x: hidden;
+   height: auto;          // ✅ 자동으로 내용에 따라 늘어나게
+   min-height:0;  
+
+   @media screen and (max-width: 480px) {
+    margin-left: 0;
+    width: 97%;
+   
+  }
+
+`;
+
+
+
 export const Button = styled.button`
   padding: 2px;
-  width: 100px;
+  width: 140px;
   height: 40px;
   background-color:#F9A825;  /* #FFB536;#D9A441;#be8600;#cd9b3f; #B0721E;  #E0A93A; #E8A334 #F0AD3D;*/
   color: white;
@@ -76,11 +80,13 @@ export const Button = styled.button`
   cursor: pointer;
   border: none;
   border-radius: 8px;
+  flex-shrink: 0;     // ✅ 줄어들지 않게
 
     ${mobile} {
-    
-   min-width: 60px; 
-   width: 90%;
+    font-size:16px;
+    margin-right:0.5rem;
+    min-width:50px;
+    width:26%;
   }
 `;
 export const Title = styled.div`
@@ -171,8 +177,9 @@ function CommunityWS() {
                         <img src={require("../../assets/images/햄버거버튼.png")} alt="메뉴" />
                     </ToggleButton>
                 )}
-                <Title isSidebarOpen={isSidebarOpen}>글쓰기 화면</Title>           
-                <Content isSidebarOpen={isSidebarOpen}>
+                <Title isSidebarOpen={isSidebarOpen}>글쓰기 화면</Title>
+                <ContentWrapper>
+                  <Content isSidebarOpen={isSidebarOpen}>
                     <FormRow>
                         <Label>제목:</Label>
                         <TitleInput
@@ -201,7 +208,9 @@ function CommunityWS() {
                     </FormRow>
                       
                     
-                </Content>
+                  </Content>
+                </ContentWrapper>           
+                
                 
             </Center>
         </Main>
