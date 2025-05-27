@@ -13,6 +13,9 @@ import {
   FooterButtons,
 } from "../../styles/LoginStyles";
 
+
+const defaultLogoImage = require("../../assets/images/logo.png"); // 로고 이미지
+
 const LoginModal = ({ onClose, onSwitch }) => {
   const [emailOrUserId, setEmailOrUserId] = useState("");
   const [password, setPassword] = useState("");
@@ -66,7 +69,9 @@ const LoginModal = ({ onClose, onSwitch }) => {
     <ModalBackground>
       <ModalContainer>
         <CloseButton onClick={onClose}>×</CloseButton>
-        <Title>GILLA</Title>
+        <Title>
+          <img src={defaultLogoImage} alt="길라의 빛 로고" width="200vw"/>
+        </Title>
         <InputField
           type="text"
           placeholder="이메일 또는 아이디 입력"
