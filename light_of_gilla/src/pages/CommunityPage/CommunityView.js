@@ -147,6 +147,7 @@ const LikeButton = styled.button`
   cursor: pointer;
   border:none;
   display: flex;
+  white-space: nowrap;
   align-items: center;           // ✅ 버튼 안 글자 중앙정렬
   font-size: 1.1rem;
 
@@ -205,11 +206,12 @@ const CommentForm = styled.form`
 
   ${mobile} {
     position: fixed;           // ✅ 모바일에서만 고정
-    bottom: 40px;
+    bottom:0;
     left: 0;
     width: 95%;
     z-index: 998;
     padding: 0.5rem 0.7rem;
+    padding-bottom: 50px;
     background: white;
     border-top: 1px solid #ccc;
     textarea {
@@ -224,26 +226,44 @@ const CommentForm = styled.form`
   }
 `;
 
-
 const MiddleRow = styled.div`
-    display: flex;
+  display: flex;
+  justify-content: space-between;     // ✅ 좌우 정렬 (웹)
+  align-items: center;
+  border-top: 0.5px solid #00000073;
+  border-bottom: 0.5px solid #00000073;
+  padding: 0.6rem 10rem;
+  flex-wrap:wrap;
+
+  ${mobile} {
+    justify-content: center;         // ✅ 모바일은 가운데 정렬
+    gap: 1rem;                        // ✅ 둘 간격
+    flex-wrap: nowrap;               // ✅ 줄바꿈 방지
+    padding: 0.6rem 0.5rem;
+  }
+`;
+
+
+const RowHalf = styled.div`
+  flex: 0 1 auto; 
+  width: auto;
+  min-width: 0;                       // ✅ 두 영역 너비 똑같이
+  display: flex;
+  justify-content: center;      // ✅ 가운데 정렬
+  align-items: center;
+  padding: 0 1rem;              // ✅ 패딩 동일하게
+  box-sizing: border-box;
+  
+
+  ${mobile} {
+    width: 40%;
+    flex-direction: row;
     justify-content: center;
-    align-items: center;
-    gap: 550px;
-    flex-wrap: wrap; /* 반응형 대응 */
-    border-top: 0.5px solid #00000073;
-    border-bottom: 0.5px solid  #00000073;
-    height: 57px;
-
-    ${mobile} {
-      width: 96%;
-      flex-direction: row;   // ✅ 세로 말고 가로 정렬
-      justify-content: center;
-      align-items: center;   // ✅ 같은 높이 맞추기
-      gap: 46px;             // ✅ 요소 사이 간격 설정
-      margin-left: 0;
-    }
-
+    padding:  0 ; 
+    min-width: 0;  
+    flex-shrink: 1;
+    white-space:nowrap;
+  }
 `;
 
 const H3 = styled.h3`
@@ -253,6 +273,8 @@ const H3 = styled.h3`
   height: 32px;                  // ✅ 버튼과 동일한 높이
   display: flex;
   align-items: center;           // ✅ 중앙 정렬
+white-space: nowrap;
+
  ${mobile} {
     font-size: 14px;
   }
@@ -532,10 +554,14 @@ const handleCommentDelete = async (commentId) => {
                     <Content1>{postData.content}</Content1>
                      <Category>#{postData.category}</Category>
                     <MiddleRow>
-                    <LikeButton onClick={handleLike}>
-                        {hasLiked ? "💗 좋아요 " : "♡ 좋아요 "} {likes}개  
-                    </LikeButton> 
+                      <RowHalf>
+                        <LikeButton onClick={handleLike}>
+                          {hasLiked ? "💗 좋아요 " : "♡ 좋아요 "} {likes}개
+                        </LikeButton>
+                      </RowHalf>
+                      <RowHalf>
                         <H3>💬 댓글 ({commentCount})</H3>
+                      </RowHalf>
                     </MiddleRow>
 
                     <CommentsWrapper>

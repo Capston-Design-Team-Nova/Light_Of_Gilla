@@ -180,7 +180,7 @@ export const TitleInput = styled.input`
   flex: 1;   
   padding: 10px;
   font-family: 'OurFont12';
-  font-size: 16px;
+  font-size: 1rem;
   margin-bottom: 20px;
   border: none;                    /* ✅ 기본 테두리 제거 */
   border-bottom: 1px solid #00000059;  /* ✅ 아래쪽 선만 표시 */
@@ -199,7 +199,7 @@ export const ContentTextArea = styled.textarea`
   height: 300px; 
   padding: 10px;
   font-family: 'OurFont12';
-  font-size: 16px;
+  font-size: 1rem;
   margin-bottom: 10px;
   border: 1px solid #00000059;
   border-radius: 2px;
@@ -214,7 +214,8 @@ export const ContentTextArea = styled.textarea`
 
 export const LowRow = styled.div`
     display: flex;  // This makes it a flex container
-    position:relative;
+    position: relative;
+    flex-wrap: wrap;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;  // Align vertically in the center
@@ -224,7 +225,7 @@ export const LowRow = styled.div`
 
     ${mobile} {
     flex-wrap: wrap;           // ✅ 넘치면 줄바꿈 허용!
-     flex-direction: row; /* 세로로 쌓기 */
+     flex-direction: row; /* 가로 쌓기 */
     align-items: center;     /* 중앙 정렬 */
     gap: 5px;               /* 위아래 간격 */
     width: 100%;

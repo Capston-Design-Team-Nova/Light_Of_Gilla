@@ -21,7 +21,7 @@ const options = symptoms.map(symptom => ({
 const customStyles = {
   control: (provided, state) => ({
     ...provided,
-    width: isMobile ? '180px' : '200px', 
+    width: isMobile ? '179px' : '200px', 
     minWidth: 0, 
     border: state.isFocused
       ? '2px solid #FFC86A' // ✅ 포커스 시 주황색 테두리
