@@ -402,7 +402,7 @@ const CommunityView = () => {
         setUserMap(map);
       })
       .catch(err => console.error("Error fetching users:", err));
-  }, []);  // 빈 deps → 컴포넌트 마운트 시 한 번만 실행
+  }, [comments]);  // 빈 deps → 컴포넌트 마운트 시 한 번만 실행
   
   // const [likes, setLikes] = useState(postData.likes);
   const [newComment, setNewComment] = useState({ writer: "", text: "" });
@@ -446,6 +446,15 @@ const CommunityView = () => {
   const handleCommentSubmit = (e) => {
     e.preventDefault();
     console.log("댓글 제출 클릭됨");
+
+    const name = localStorage.getItem("nickname"); // ✨ 여기서 실시간으로 가져옴
+
+    // 닉네임이 없는 경우 막기
+    if (!name) {
+      alert("닉네임 정보를 불러오지 못했습니다. 다시 로그인해주세요.");
+      return;
+    }
+
     const count = commentCount + 1; // UI 업데이트를 위해 좋아요 수 증가
     setCommentCount(count); // UI 먼저 업데이트
     
@@ -455,10 +464,12 @@ const CommunityView = () => {
     user_id: newComment.writer,
     comment: newComment.text,
     post_id: id,
-    nickName: name
+    nickName: name,
     
   };
   console.log("NickName:", newCommentObj.nickName);
+  console.log("댓글 작성 시 닉네임:", name);
+  console.log("localStorage nickname:", localStorage.getItem("nickname"));
   // 1. 백엔드로 댓글 전송 (POST 요청 예시)
   axios.post(`https://qbvq3zqekb.execute-api.ap-northeast-2.amazonaws.com/comment/save`, newCommentObj)
   .then(() => {
@@ -478,6 +489,7 @@ const CommunityView = () => {
   });
   };
 
+console.log("댓글 쓸 때 nickname:", name);
   const handleCommentKeyPress = (e) => {
     // Check if the Enter key was pressed (keyCode 13 or e.key === "Enter")
     if (e.key === "Enter" && !e.shiftKey) {
@@ -569,8 +581,10 @@ const handleCommentDelete = async (commentId) => {
                         {comments.map((c) => (
                         <CommentItem key={c.id} >
                           <ProfileImg
+                            
                             src={userMap[c.nickName] || defaultProfileImage}
-                            onError={e => { e.currentTarget.src = defaultProfileImage; }}
+                            onError={e => {e.currentTarget.onerror = null;
+    e.currentTarget.src = defaultProfileImage; }}
                             alt="댓글 작성자 이미지"/>
                           <CommentContent>
                             <Nickname>{c.nickName}</Nickname>
