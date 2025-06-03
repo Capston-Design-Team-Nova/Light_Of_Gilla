@@ -65,6 +65,7 @@ public class ReviewMigrationService {
         }
     }
 
+    @Transactional
     public void migrateReviews() {
         List<Hospital> hospitals = hospitalRepo.findAll();
         int total = 0;
@@ -72,11 +73,6 @@ public class ReviewMigrationService {
 
         for (Hospital hospital : hospitals) {
             Long hospitalId = hospital.getId();
-
-            // ✅ ID 1~10만 처리
-            if (hospitalId == null || hospitalId < 1 || hospitalId > 10) {
-                continue;
-            }
 
             String raw = hospital.getReviews();
             if (raw == null || raw.isBlank()) continue;
